@@ -11,6 +11,10 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.18'
+        classpath 'com.google.gms:google-services:4.3.15'
+
+        //noinspection GradleDependency
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
     }
 }
 
@@ -19,7 +23,7 @@ allprojects {
     buildDir = "../../${rootProject.name}_build/${project.name}"
     version = '1.8.7'
     ext {
-        appName = "NotTiled"
+        appName = "NotTiled-CN"
         gdxVersion = '1.11.0'
         roboVMVersion = '2.3.12'
         box2DLightsVersion = '1.5'

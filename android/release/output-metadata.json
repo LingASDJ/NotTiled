@@ -1,18 +1,20 @@
 {
-  "version": 2,
+  "version": 3,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.mirwanda.nottiled",
-  "variantName": "processReleaseResources",
+  "applicationId": "com.mirwanda.nottiledling",
+  "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 79,
-      "versionName": "1.7.4 A1",
+      "attributes": [],
+      "versionCode": 89,
+      "versionName": "1.8.7",
       "outputFile": "android-release.apk"
     }
-  ]
+  ],
+  "elementType": "File"
 }

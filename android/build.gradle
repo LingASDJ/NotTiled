@@ -1,3 +1,6 @@
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
+
 android {
     signingConfigs {
         debug {
@@ -7,7 +10,7 @@ android {
             keyPassword 'android'
         }
     }
-    buildToolsVersion "33.0.0"
+    buildToolsVersion "33.0.1"
     compileSdkVersion 33
     sourceSets {
         main {
@@ -25,11 +28,13 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.mirwanda.nottiled"
+        applicationId "com.mirwanda.nottiledling"
         minSdkVersion 19
         targetSdkVersion 33
         versionCode 89
         versionName "1.8.7"
+        //接入多Dex,解决代码方法超过65535的问题
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -95,4 +100,20 @@ task run(type: Exec) {
 
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mirwanda.nottiled/com.mirwanda.nottiled.AndroidLauncher'
+}
+
+dependencies {
+    implementation project(':core')
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.4.0')
+
+    //MDEX
+    implementation 'com.android.support:multidex:1.0.3'
+    // Declare the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
 }
