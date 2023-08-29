@@ -121,7 +121,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -133,14 +132,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -1292,11 +1288,12 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     String texta = "";
+    private float dotTimer = 0f; // 计时器，用于控制点的动态效果
+    private int dotCount = 0; // 当前显示的点的数量
+    private static final float DOT_INTERVAL = 0.5f; // 每个点的间隔时间
 
     public void drawLoadingScreen() {
         //if(!task.isDone()) {
-
-
 
         Gdx.gl.glEnable( GL20.GL_BLEND );
         Gdx.gl.glBlendFunc( GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA );
@@ -5797,12 +5794,13 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private void initSD() {
     }
 
+
+
     private void initErrorHandling() {
         Thread.setDefaultUncaughtExceptionHandler( new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread t, Throwable e) {
-                ErrorBung( (Exception) e, "errorlog.txt" );
-                Gdx.net.openURI( "https://www.mirwanda.com/p/nottiled-crashed.html?m=1" );
-                System.exit( 1 );
+                //ErrorBung( (Exception) e, "errorlog.txt" );
+                //System.exit( 1 );
             }
         } );
     }
@@ -6025,7 +6023,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             fallbackFontNames = new String[] {"chinese.ttf"};
         }
 
-        if (fallbackFontNames!=null) {
+        {
             //glyph stuff
             HashMap<String, BitmapFont> fallbackFonts = new HashMap<String, BitmapFont>();
 
@@ -6035,7 +6033,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 fallbackFonts.put(fallbackFontName, font);
             }
 
-            FreeTypeFontGenerator baseFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+
+            FreeTypeFontGenerator baseFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("chinese.ttf"));
 
             FreeTypeFontGenerator.FreeTypeBitmapFontData fallbackData = new FreeTypeFontGenerator.FreeTypeBitmapFontData() {
                 @Override
@@ -6056,10 +6055,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             };
 
             str1 = baseFontGenerator.generateFont(parameter, fallbackData);
-        }else{
-            //normal stuff
-            FreeTypeFontGenerator baseFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-            str1 = baseFontGenerator.generateFont(parameter);
         }
         /////////////////////////
         skin = new Skin();
@@ -8260,6 +8255,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             sbGenTerrain.setItems( srr.toArray() );
         }
     }
+
     private void loadTools() {
         ttools = new Table();
         ttools.setFillParent( true );
@@ -8305,7 +8301,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         } );
 
         vmirror.addListener( new ChangeListener() {
-            @Override
             public void changed(ChangeEvent event, Actor actor) {
                 runvmirror();
             }
@@ -8318,12 +8313,13 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             }
         } );
 
-        hvmirrorrev.addListener( new ChangeListener() {
+        hvmirrorrev.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 runhvmirrorrev();
             }
-        } );
+        });
+
 
         randomize.addListener( new ChangeListener() {
             @Override
@@ -9971,175 +9967,190 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     private void runhmirror() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
-        redolayer.clear();
-        for (int i = 0; i < Tw * Th; i++) {
-            boolean follower = true;
-            if (i == 0) follower = false;
-            int x = i % Tw;
-            int y = i / Tw;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+            redolayer.clear();
+            for (int i = 0; i < Tw * Th; i++) {
+                boolean follower = true;
+                if (i == 0) follower = false;
+                int x = i % Tw;
+                int y = i / Tw;
 
-            if (x < Tw / 2 && x != Tw / 2) {
-                int location = i + (Tw / 2 - x) * 2 - 1;
-                long to = layers.get(selLayer).getStr().get(i);
-                int newtset = layers.get(selLayer).getTset().get(i);
-                int layer = selLayer;
+                if (x < Tw / 2 && x != Tw / 2) {
+                    int location = i + (Tw / 2 - x) * 2 - 1;
+                    long to = layers.get(selLayer).getStr().get(i);
+                    int newtset = layers.get(selLayer).getTset().get(i);
+                    int layer = selLayer;
 
-                if (newtset!=-1) {
-                    for (tile t : tilesets.get( newtset ).getTiles()) {
-                        if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
-                            int[] tdata = t.getTerrain();
-                            int[] ndat = new int[]{tdata[1], tdata[0], tdata[3], tdata[2]};
+                    if (newtset != -1) {
+                        for (tile t : tilesets.get(newtset).getTiles()) {
+                            if (t.getTileID() + tilesets.get(newtset).getFirstgid() == to && t.isTerrainForEditor()) {
+                                int[] tdata = t.getTerrain();
+                                int[] ndat = new int[]{tdata[1], tdata[0], tdata[3], tdata[2]};
 
-                            java.util.List<Integer> lint = new ArrayList<Integer>();
+                                java.util.List<Integer> lint = new ArrayList<Integer>();
 
-                            for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
-                                tile xo = tilesets.get( newtset ).getTiles().get( u );
-                                if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
-                                    //tile found with the selected terrain
-                                    lint.add( u );
+                                for (int u = 0; u < tilesets.get(newtset).getTiles().size(); u++) {
+                                    tile xo = tilesets.get(newtset).getTiles().get(u);
+                                    if (xo.getTerrainString().equalsIgnoreCase(ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3])) {
+                                        //tile found with the selected terrain
+                                        lint.add(u);
+                                    }
                                 }
+                                //if it is found.
+                                if (lint.size() > 0) {
+                                    tile yo = tilesets.get(newtset).getTiles().get(lint.get((int) (Math.random() * lint.size())));
+                                    to = yo.getTileID() + tilesets.get(newtset).getFirstgid();
+                                }
+                                break;
                             }
-                            //if it is found.
-                            if (lint.size() > 0) {
-                                tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
-                                to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
-                            }
-                            break;
                         }
                     }
+
+                    updateTileData(layer, location, to, newtset);
                 }
-
-                updateTileData(layer,location,to,newtset);
-
             }
+            //updateMinimap();
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
         }
         backToMap();
-        //updateMinimap();
-
     }
+
 
     private void runvmirror() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
 
-        redolayer.clear();
-        for (int i = 0; i < Tw * Th; i++) {
-            boolean follower = true;
-            if (i == 0) follower = false;
-            int x = i % Tw;
-            int y = i / Tw;
+            redolayer.clear();
+            for (int i = 0; i < Tw * Th; i++) {
+                boolean follower = true;
+                if (i == 0) follower = false;
+                int x = i % Tw;
+                int y = i / Tw;
 
-            if (y < Th / 2 && y != Th / 2) {
-                int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
+                if (y < Th / 2 && y != Th / 2) {
+                    int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
 
-                long from = layers.get(selLayer).getStr().get(location);
-                long to = layers.get(selLayer).getStr().get(i);
-                int oldtset = layers.get(selLayer).getTset().get(location);
-                int newtset = layers.get(selLayer).getTset().get(i);
-                int layer = selLayer;
+                    long from = layers.get(selLayer).getStr().get(location);
+                    long to = layers.get(selLayer).getStr().get(i);
+                    int oldtset = layers.get(selLayer).getTset().get(location);
+                    int newtset = layers.get(selLayer).getTset().get(i);
+                    int layer = selLayer;
 
 
-                if (newtset!=-1) {
-                    for (tile t : tilesets.get( newtset ).getTiles()) {
-                        if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
-                            int[] tdata = t.getTerrain();
-                            int[] ndat = new int[]{tdata[2], tdata[3], tdata[0], tdata[1]};
+                    if (newtset!=-1) {
+                        for (tile t : tilesets.get( newtset ).getTiles()) {
+                            if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
+                                int[] tdata = t.getTerrain();
+                                int[] ndat = new int[]{tdata[2], tdata[3], tdata[0], tdata[1]};
 
-                            java.util.List<Integer> lint = new ArrayList<Integer>();
+                                java.util.List<Integer> lint = new ArrayList<Integer>();
 
-                            for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
-                                tile xo = tilesets.get( newtset ).getTiles().get( u );
-                                if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
-                                    //tile found with the selected terrain
-                                    lint.add( u );
+                                for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
+                                    tile xo = tilesets.get( newtset ).getTiles().get( u );
+                                    if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
+                                        //tile found with the selected terrain
+                                        lint.add( u );
+                                    }
                                 }
+                                //if it is found.
+                                if (lint.size() > 0) {
+                                    tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
+                                    to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
+                                }
+                                break;
                             }
-                            //if it is found.
-                            if (lint.size() > 0) {
-                                tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
-                                to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
-                            }
-                            break;
                         }
                     }
-                }
 
-                updateTileData(layer,location,to,newtset);
+                    updateTileData(layer,location,to,newtset);
+                }
             }
+
+            //updateMinimap();
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
         }
         backToMap();
-        //updateMinimap();
     }
+
 
     private void runhvmirror() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
 
-        runhmirror();
-        runvmirror();
+            runhmirror();
+            runvmirror();
+
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
+        }
         backToMap();
-        //updateMinimap();
-
     }
+
 
 
     private void runhvmirrorrev() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
 
-        redolayer.clear();
-        for (int i = 0; i < Tw * Th; i++) {
-            boolean follower = true;
-            if (i == 0) follower = false;
-            int x = i % Tw;
-            int y = i / Tw;
+            redolayer.clear();
+            for (int i = 0; i < Tw * Th; i++) {
+                boolean follower = true;
+                if (i == 0) follower = false;
+                int x = i % Tw;
+                int y = i / Tw;
 
-            if (y < Th / 2 && y != Th / 2) {
-                int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
-                location = location + (Tw / 2 - x) * 2 - 1;
-                long from = layers.get(selLayer).getStr().get(location);
-                long to = layers.get(selLayer).getStr().get(i);
-                int oldtset = layers.get(selLayer).getTset().get(location);
-                int newtset = layers.get(selLayer).getTset().get(i);
-                int layer = selLayer;
+                if (y < Th / 2 && y != Th / 2) {
+                    int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
+                    location = location + (Tw / 2 - x) * 2 - 1;
+                    long from = layers.get(selLayer).getStr().get(location);
+                    long to = layers.get(selLayer).getStr().get(i);
+                    int oldtset = layers.get(selLayer).getTset().get(location);
+                    int newtset = layers.get(selLayer).getTset().get(i);
+                    int layer = selLayer;
 
-                if (newtset!=-1) {
-                    for (tile t : tilesets.get( newtset ).getTiles()) {
-                        if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
-                            int[] tdata = t.getTerrain();
-                            int[] ndat = new int[]{tdata[3], tdata[2], tdata[1], tdata[0]};
+                    if (newtset != -1) {
+                        for (tile t : tilesets.get(newtset).getTiles()) {
+                            if (t.getTileID() + tilesets.get(newtset).getFirstgid() == to && t.isTerrainForEditor()) {
+                                int[] tdata = t.getTerrain();
+                                int[] ndat = new int[]{tdata[3], tdata[2], tdata[1], tdata[0]};
 
-                            java.util.List<Integer> lint = new ArrayList<Integer>();
+                                java.util.List<Integer> lint = new ArrayList<Integer>();
 
-                            for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
-                                tile xo = tilesets.get( newtset ).getTiles().get( u );
-                                if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
-                                    //tile found with the selected terrain
-                                    lint.add( u );
+                                for (int u = 0; u < tilesets.get(newtset).getTiles().size(); u++) {
+                                    tile xo = tilesets.get(newtset).getTiles().get(u);
+                                    if (xo.getTerrainString().equalsIgnoreCase(ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3])) {
+                                        //tile found with the selected terrain
+                                        lint.add(u);
+                                    }
                                 }
+                                //if it is found.
+                                if (lint.size() > 0) {
+                                    tile yo = tilesets.get(newtset).getTiles().get(lint.get((int) (Math.random() * lint.size())));
+                                    to = yo.getTileID() + tilesets.get(newtset).getFirstgid();
+                                }
+                                break;
                             }
-                            //if it is found.
-                            if (lint.size() > 0) {
-                                tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
-                                to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
-                            }
-                            break;
                         }
                     }
+
+                    updateTileData(layer, location, to, newtset);
+
                 }
-
-                updateTileData(layer,location,to,newtset);
-
             }
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
         }
-
-
         backToMap();
         resetCaches();
-
     }
+
 
     private void beg() {
 		/*
@@ -11082,10 +11093,12 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     }
 
+    /** 动态更新语言 无需重启软件*/
     public void updateLanguage(String newLanguage) {
         Json json = new Json();
         FileHandle f = Gdx.files.internal("languages/" + newLanguage);
         z = json.fromJson(language.class, f);
+        msgbox(z.restart);
         shapeName = z.rectangle;
         toolName = z.tile;
         viewModeName = z.stack;
@@ -11119,7 +11132,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         loadImageLayer();
         loadKryonet();
         initializePostProcessor();
-        msgbox(z.restart);
     }
 
 
@@ -13005,68 +13017,71 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                //try{
+                try {
+                    properties at = new properties();
+                    Json json = new Json();
+                    FileHandle f = Gdx.files.absolute(basepath + "NotTiled/sample/json/" + lptlist.getSelected());
+                    if (f.exists()) {
+                        at = json.fromJson(properties.class, f);
 
-                properties at = new properties();
-                Json json = new Json();
-                FileHandle f = Gdx.files.absolute(basepath+"NotTiled/sample/json/" + lptlist.getSelected());
-                at = json.fromJson(properties.class, f);
+                        switch (sender) {
+                            case "object":
+                                for(int x=at.getProperties().size()-1;x>=0;x--) {
+                                    property ap=at.getProperties().get(x);
+                                    if (ap.getName().equalsIgnoreCase("object_name")) {
+                                        selobjs.get(0).setName(ap.getValue());
+                                        tf.get(5).setText(ap.getValue());
+                                        at.getProperties().remove(x);
+                                    }
+                                    if (ap.getName().equalsIgnoreCase("object_type")) {
+                                        selobjs.get(0).setType(ap.getValue());
+                                        tf.get(6).setText(ap.getValue());
+                                        at.getProperties().remove(x);
+                                    }
+                                }
+                                selobjs.get(0).setProperties(at.getProperties());
 
-                switch (sender) {
-                    case "object":
-                        for(int x=at.getProperties().size()-1;x>=0;x--) {
-                            property ap=at.getProperties().get(x);
-                            if (ap.getName().equalsIgnoreCase("object_name")) {
-                                selobjs.get(0).setName(ap.getValue());
-                                tf.get(5).setText(ap.getValue());
-                                at.getProperties().remove(x);
-                            }
-                            if (ap.getName().equalsIgnoreCase("object_type")) {
-                                selobjs.get(0).setType(ap.getValue());
-                                tf.get(6).setText(ap.getValue());
-                                at.getProperties().remove(x);
-                            }
+                                break;
+                            case "tile":
+                                tilesets.get(selTsetID).getTiles().get(selTileID).setProperties(at.getProperties());
+
+                                break;
+                            case "tilesettings":
+                                tilesets.get(seltset).getTiles().get(selTileID).setProperties(at.getProperties());
+
+                                break;
+                            case "layer":
+                                layers.get(selLayer).setProperties(at.getProperties());
+
+                                break;
+                            case "tset":
+                                tilesets.get(seltset).setProperties(at.getProperties());
+
+                                break;
+
+                            case "map":
+                                properties = at.getProperties();
+                                break;
+
+                            case "auto":
+                                autotiles.get(selat).setProperties(at.getProperties());
+                                break;
                         }
-                        selobjs.get(0).setProperties(at.getProperties());
 
-                        break;
-                    case "tile":
-                        tilesets.get(selTsetID).getTiles().get(selTileID).setProperties(at.getProperties());
-
-                        break;
-                    case "tilesettings":
-                        tilesets.get(seltset).getTiles().get(selTileID).setProperties(at.getProperties());
-
-                        break;
-                    case "layer":
-                        layers.get(selLayer).setProperties(at.getProperties());
-
-                        break;
-                    case "tset":
-                        tilesets.get(seltset).setProperties(at.getProperties());
-
-                        break;
-
-                    case "map":
-                        properties = at.getProperties();
-                        break;
-
-                    case "auto":
-                        autotiles.get(selat).setProperties(at.getProperties());
-                        break;
+                        refreshProperties(at.getProperties());
+                        gotoStage(tPropsMgmt);
+                    } else {
+                        // JSON文件不存在，弹出警告
+                        msgbox(z.jsonerror);
+                    }
+                } catch (Exception e) {
+                    // 异常处理逻辑
+                    msgbox(z.error + e.getMessage());
                 }
-
-                refreshProperties(at.getProperties());
-                gotoStage(tPropsMgmt);
-						/*
-					}catch(Exception e)
-					{
-						msgbox("Error, dunno why...");
-					}
-					*/
 
             }
         });
+
 
         tpt = new Table();
         tpt.setFillParent(true);
@@ -14195,9 +14210,16 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     t.setMargin(0);
                 }
 
-                if (fTsPropFirstGid.getText() != "") {
-                    t.setFirstgid(Integer.parseInt(fTsPropFirstGid.getText()));
+                /** Fixe PC NFE Bug*/
+                if (!fTsPropFirstGid.getText().isEmpty()) {
+                    try {
+                        int firstGid = Integer.parseInt(fTsPropFirstGid.getText());
+                        t.setFirstgid(firstGid);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Must be a number");
+                    }
                 }
+
 
                 if (fTsPropSpacing.getText() != "") {
                     t.setSpacing(Integer.parseInt(fTsPropSpacing.getText()));
@@ -20477,6 +20499,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
         if (str!=0) {
             tileset ts = tilesets.get(tsetID);
+
             if (ts.getTiles().size() > 0) {
                 for (int j = 0; j < ts.getTiles().size(); j++) {
                     tile tt = ts.getTiles().get(j);
@@ -22186,8 +22209,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 //mygame.server = server;
             }
 
-
-            logNet("Server started on port :"+Integer.toString( port ));
+            logNet("Server started on port :"+ port);
             logNet(z.listeningon+" "+getLocalIpAddress());
             isServer = true;
             tbHost.setText(z.stopserver);
@@ -22210,8 +22232,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             if (mygame !=null){
                 // mygame.client = client;
             }
-
-
 
             lcollabstatus.setText(z.status+": "+z.connectedto + " "+aipi);
             logNet("Client connected to :"+aipi+":"+Integer.toString(portNum));
@@ -22524,7 +22544,10 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 }
             }
 
-            //select auto tile
+//            if (tilesets.isEmpty() && tapped(touch2, gui.autopicker)){
+//                msgbox(z.errornotiled);
+//                return true;
+//            }
             if (tapped(touch2, gui.autopicker)) {
                 if (mode == "tile") {
                     if (!softcue("autopick") && lockUI) return true;
@@ -25351,6 +25374,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         case PLAY:
                             switch(Gdx.app.getType()) {
                                 case Android:
+                                    // desktop specific code
+                                case iOS:
                                     c = new composer(seq.toString());
                                     c.save( "NotTiled/Temp/composer.mid" );
                                     composerPlayer = Gdx.audio.newMusic( Gdx.files.absolute( basepath+"NotTiled/Temp/composer.mid" ) );
@@ -25360,13 +25385,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                                 case Desktop:
                                     //Gdx.app.log("SEQ", seq.toString());
                                     new Player().play( seq );
-                                    break;
-                                // desktop specific code
-                                case iOS:
-                                    c = new composer(seq.toString());
-                                    c.save( "NotTiled/Temp/composer.mid" );
-                                    composerPlayer = Gdx.audio.newMusic( Gdx.files.absolute( basepath+"NotTiled/Temp/composer.mid" ) );
-                                    composerPlayer.play();
                                     break;
                                 // android specific code
                             }
