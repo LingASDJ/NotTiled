@@ -21761,8 +21761,11 @@ private void refreshGenerator(){
         Label lTitle = new Label(z.collaboration,skin);
         tbHost = new TextButton(z.runserver,skin);
         Label lRemote = new Label(z.remoteip,skin);
-        tfRemoteIP = new TextField("38.242.149.137",skin);
-        tfPort = new TextField("11112",skin);
+
+        //知捷云
+        tfRemoteIP = new TextField("pz-2.zjiecloud.cc",skin);
+
+        tfPort = new TextField("45372",skin);
         tbJoin = new TextButton(z.join,skin);
         roomName = new TextField("room1", skin);
         uniqueID = new TextField("Steve", skin);
@@ -22165,7 +22168,7 @@ private void refreshGenerator(){
             }
 
             client.start();
-            client.connect(5000, aipi, portNum , 54777);
+            client.connect(5000, aipi, portNum , 23281);
             if (mygame !=null){
                // mygame.client = client;
             }
@@ -22173,7 +22176,7 @@ private void refreshGenerator(){
 
 
             lcollabstatus.setText(z.status+": "+z.connectedto + " "+aipi);
-            logNet("Client connected to :"+aipi+":"+Integer.toString(portNum));
+            logNet("Client connected to :"+aipi+":"+ portNum);
             tbJoin.setText( z.disconnectclient);
             isClient=true;
             localIP = getLocalIpAddress();
