@@ -126,6 +126,11 @@ public class language
 	String mapwidth;
 	String mapheight;
 	String error;
+	String jsonerror;
+
+	String errornotfoundpng;
+
+	String errornotiled;
 	String file;
 	String selectfile;
 	String stampmode;

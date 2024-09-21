@@ -21,6 +21,24 @@ This app is far from perfect and is under active development. Updates will be de
 How to compile:
 Just in case you want to compile the app yourself, just download it and open it using Android Studio, it should just work. Let me know if it does not work. thanks!
 
+How to Build:
+## Android:
+Sync Gradlew--->Build--->Build Bundle--->Release
+
+## Desktop
+Debug:
+gradlew desktop:run
+
+---
+
+Release:
+gradlew desktop:dist
+
+## ios
+You have now set up the initial project on your computer. From this point compiling the game for Android or Desktop is simple, but iOS is significantly more complicated. This is due to a mixture of Apple's development process and the RoboVM tool that Shattered uses to cross-compile for iOS.
+
+I'll be frank, I do not have a set-by-step process down for how to get this working from scratch, good luck! A great starting point is: [Deploying your libGDX game to iOS in 2020](https://medium.com/@bschulte19e/deploying-your-libgdx-game-to-ios-in-2020-4ddce8fff26c). Some steps can be skipped as the actual application code is all done for you. Provisioning profiles and Xcode setup are the largest hurdles.
+
 Link: <br>
 <a href="https://play.google.com/store/apps/details?id=com.mirwanda.nottiled">Download on Playstore</a><br>
 <a href="https://www.youtube.com/channel/UCbH_vLnWmCxgwW3UUApnVfg">Demos in my Youtube channel</a><br>

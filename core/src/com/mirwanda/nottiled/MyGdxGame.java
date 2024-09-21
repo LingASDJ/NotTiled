@@ -121,7 +121,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -133,14 +132,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -644,7 +640,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         OS= face.getOS();
         //Gdx basepath now refere to Android/data/com.mirwanda.nottiled/files/
         basepath = Gdx.files.getExternalStoragePath();
-         dialogs = GDXDialogsSystem.install();
+        dialogs = GDXDialogsSystem.install();
         log("basepath = "+basepath);
         nullTable = new Table();
         vers = face.getVersione();
@@ -770,7 +766,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     float ab = touch.y;
                     //body.setTransform( 9999, 9999,0 );
                     //body.setAwake( false );
-                   // body.setAwake( false );
+                    // body.setAwake( false );
 
 
 
@@ -795,20 +791,20 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     ocam=tilecam;
                 }
 
-                    if (amountY >0) {
-                        ocam.zoom = ocam.zoom * 1.2f;
-                    }else{
-                        ocam.zoom = ocam.zoom * 0.8f;
-                    }
-                    if (ocam.zoom > Tsw * 2) {
-                        ocam.zoom = Tsw * 2;
-                    }
-                    if (ocam.zoom < Tsw / 320f)//zoom in
-                    {
-                        ocam.zoom = Tsw / 320f;
-                    }
+                if (amountY >0) {
+                    ocam.zoom = ocam.zoom * 1.2f;
+                }else{
+                    ocam.zoom = ocam.zoom * 0.8f;
+                }
+                if (ocam.zoom > Tsw * 2) {
+                    ocam.zoom = Tsw * 2;
+                }
+                if (ocam.zoom < Tsw / 320f)//zoom in
+                {
+                    ocam.zoom = Tsw / 320f;
+                }
 
-                    ocam.update();
+                ocam.update();
 
                 return false;
             }
@@ -826,7 +822,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         loadListener();
         loadMenuMap();
         loadPreferences();
-        initErrorHandling();
+        //initErrorHandling();
         loadOpen();
         loadLicense();
         loadTsetManagement();
@@ -916,13 +912,13 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     nativeUri = face.getUri();
 
 
-                        FileHandle file = Gdx.files.absolute( curdir + "/" + nativeFilename);
-                        file.writeBytes( nativeData, false );
+                    FileHandle file = Gdx.files.absolute( curdir + "/" + nativeFilename);
+                    file.writeBytes( nativeData, false );
 
 //                        FileHandle ff = Gdx.files.absolute( basepath + "/" + nativeFilename );
- //                       if (ff.extension().equalsIgnoreCase( "tmx" )) {
- //                           addandsaverecent( nativeUri, nativeFilename );
- //                       }
+                    //                       if (ff.extension().equalsIgnoreCase( "tmx" )) {
+                    //                           addandsaverecent( nativeUri, nativeFilename );
+                    //                       }
 
                     exitDialog( null );
                     status(z.importok+": "+nativeFilename,3);
@@ -1292,11 +1288,12 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     String texta = "";
+    private float dotTimer = 0f; // 计时器，用于控制点的动态效果
+    private int dotCount = 0; // 当前显示的点的数量
+    private static final float DOT_INTERVAL = 0.5f; // 每个点的间隔时间
 
     public void drawLoadingScreen() {
         //if(!task.isDone()) {
-
-
 
         Gdx.gl.glEnable( GL20.GL_BLEND );
         Gdx.gl.glBlendFunc( GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA );
@@ -1394,30 +1391,30 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 }
 
 
-                    if (timeToPan >= 0) {
-                        timeToPan -= delta;
-                        float progress = timeToPan < 0 ? 1 : 1f - timeToPan / panDuration;
-                        OrthographicCamera cammy;
-                        switch (panType) {
-                            case 1:
-                                cammy = tilecam;
-                                break;
-                            case 2:
-                                cammy = uicam;
-                                break;
-                            default:
-                                cammy = cam;
-                        }
-
-
-                        cammy.position.x = Interpolation.fade.apply( panOriginX, panTargetX, progress );
-                        cammy.position.y = Interpolation.fade.apply( panOriginY, panTargetY, progress );
-                        cammy.zoom = Interpolation.fade.apply( panOriginZoom, panTargetZoom, progress );
-                        //cammy.position.x = (float) Math.round(cammy.position.x * 100f) / 100f;
-                        //cammy.position.y = (float) Math.round(cammy.position.y * 100f) / 100f;
-
-                        cammy.update();
+                if (timeToPan >= 0) {
+                    timeToPan -= delta;
+                    float progress = timeToPan < 0 ? 1 : 1f - timeToPan / panDuration;
+                    OrthographicCamera cammy;
+                    switch (panType) {
+                        case 1:
+                            cammy = tilecam;
+                            break;
+                        case 2:
+                            cammy = uicam;
+                            break;
+                        default:
+                            cammy = cam;
                     }
+
+
+                    cammy.position.x = Interpolation.fade.apply( panOriginX, panTargetX, progress );
+                    cammy.position.y = Interpolation.fade.apply( panOriginY, panTargetY, progress );
+                    cammy.zoom = Interpolation.fade.apply( panOriginZoom, panTargetZoom, progress );
+                    //cammy.position.x = (float) Math.round(cammy.position.x * 100f) / 100f;
+                    //cammy.position.y = (float) Math.round(cammy.position.y * 100f) / 100f;
+
+                    cammy.update();
+                }
 
 
 
@@ -3566,7 +3563,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             for (TileCache cace : tcaches){
                 cace.getCache().dispose();
             }
-                tcaches.clear();
+            tcaches.clear();
             int maxx = Tw / widd;
             if (Tw % widd != 0) maxx++;
             //maxx=1;
@@ -3617,7 +3614,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         SpriteCache cache;
         for (int i = 0; i < tcaches.size(); i++) {
             if (tcaches.get( i ).isChanged()) {
-               // tcaches.get( i ).getCache().dispose();
+                // tcaches.get( i ).getCache().dispose();
                 TileCache tc = tcaches.get( i );
                 tc.getCache().dispose();
                 cache = new SpriteCache( buffersz, true );//max8191indice
@@ -3935,7 +3932,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                                             float p7 = offx + op1 + op7;
                                             float p8 = offy + op2 + op8;
 
-                                        //    sr.polygon(new float[]{p1, p2, p3, p4, p5, p6, p7, p8});
+                                            //    sr.polygon(new float[]{p1, p2, p3, p4, p5, p6, p7, p8});
 
 
                                         }
@@ -3948,7 +3945,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                             } else {
 
-                               sr.rect(ox.getX()+addx, ox.getYantingelag(Tsh) - ox.getH() + addy, ox.getW(), ox.getH());
+                                sr.rect(ox.getX()+addx, ox.getYantingelag(Tsh) - ox.getH() + addy, ox.getW(), ox.getH());
 
                             }
                         }
@@ -5545,7 +5542,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                     if (layers.size() > 0)
 
-                    if (layers.get( selLayer ).getName()!=null) str1draw( ui, layers.get( selLayer ).getName(), gui.layer );
+                        if (layers.get( selLayer ).getName()!=null) str1draw( ui, layers.get( selLayer ).getName(), gui.layer );
                     uidrawbutton( txlayer, z.layer, gui.layerpick, 1 );
                     uidrawbutton( txmenu, z.menu, gui.menu, 2 );
                     uidrawbutton( txmap, z.map, gui.map, 2 );
@@ -5797,12 +5794,13 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private void initSD() {
     }
 
+
+
     private void initErrorHandling() {
         Thread.setDefaultUncaughtExceptionHandler( new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread t, Throwable e) {
-                ErrorBung( (Exception) e, "errorlog.txt" );
-                Gdx.net.openURI( "https://www.mirwanda.com/p/nottiled-crashed.html?m=1" );
-                System.exit( 1 );
+                //ErrorBung( (Exception) e, "errorlog.txt" );
+                //System.exit( 1 );
             }
         } );
     }
@@ -6017,7 +6015,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         parameter.incremental = true;
         parameter.packer = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 2, false);
 
-        String[] fallbackFontNames = null;
+        String[] fallbackFontNames = new String[] {"chinese.ttf"};
 
         if (language.equalsIgnoreCase( "Japanese" )) {
             fallbackFontNames = new String[] {"japanese.otf"};
@@ -6025,7 +6023,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             fallbackFontNames = new String[] {"chinese.ttf"};
         }
 
-        if (fallbackFontNames!=null) {
+        {
             //glyph stuff
             HashMap<String, BitmapFont> fallbackFonts = new HashMap<String, BitmapFont>();
 
@@ -6035,7 +6033,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 fallbackFonts.put(fallbackFontName, font);
             }
 
-            FreeTypeFontGenerator baseFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+
+            FreeTypeFontGenerator baseFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("chinese.ttf"));
 
             FreeTypeFontGenerator.FreeTypeBitmapFontData fallbackData = new FreeTypeFontGenerator.FreeTypeBitmapFontData() {
                 @Override
@@ -6056,10 +6055,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             };
 
             str1 = baseFontGenerator.generateFont(parameter, fallbackData);
-        }else{
-            //normal stuff
-            FreeTypeFontGenerator baseFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-            str1 = baseFontGenerator.generateFont(parameter);
         }
         /////////////////////////
         skin = new Skin();
@@ -6082,7 +6077,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         if (!fh2.exists()) fh2.mkdirs();
 
         if (!isSampleReloaded) {
-             fh2 = Gdx.files.absolute( basepath+"NotTiled/" );
+            fh2 = Gdx.files.absolute( basepath+"NotTiled/" );
             if (!fh2.exists()) fh2.mkdirs();
             FileHandle fh3 = Gdx.files.absolute( basepath+"NotTiled/sample" );
             if (fh3.exists() && !fh3.isDirectory()) fh3.delete();
@@ -6883,7 +6878,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                     } else {
                         //sending filehandle, drive letter is irrelevant
-                            addImageTset( thefile );
+                        addImageTset( thefile );
                     }
 
                     CacheAllTset();
@@ -7273,7 +7268,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void changed(ChangeEvent event, Actor actor) {
                 log("selection index="+lrecentlist.getSelectedIndex());
                 try{
-                if (lrecentlist.getSelectedIndex()!=-1) {
+                    if (lrecentlist.getSelectedIndex()!=-1) {
                         FileHandle file = Gdx.files.absolute( recents.getPaths().get(lrecentlist.getSelectedIndex()) );
                         log("File extension="+file.extension());
                         if (file.extension().equalsIgnoreCase( "ntp" )) {
@@ -7297,7 +7292,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             loadjsonmap(file);
                         }
 
-                        }
+                    }
                 }catch(Exception e){
 
                 }
@@ -7319,7 +7314,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         bSaveAs.addListener( new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                    FileDialog( z.selectnewlocation, "saveas", "dir", new String[]{}, tMenu );
+                FileDialog( z.selectnewlocation, "saveas", "dir", new String[]{}, tMenu );
             }
         } );
 
@@ -7410,7 +7405,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //if (!face.buyadfree()) {
-                    Gdx.net.openURI( "https://www.mirwanda.com" );
+                Gdx.net.openURI( "https://www.mirwanda.com" );
                 //}
             }
         } );
@@ -7420,7 +7415,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //if (!face.buyadfree()) {
-                    Gdx.net.openURI( "https://www.mirwanda.com" );
+                Gdx.net.openURI( "https://www.mirwanda.com" );
                 //}
             }
         } );
@@ -7506,10 +7501,10 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         try {
             rwmod(new String[]{map.path(),thumbnail.path()});
 
-                FileHandle zip = Gdx.files.absolute( curdir + "/" + curfile + ".rwmod" );
-                byte[] b = zip.readBytes();
-                face.saveasFile( b,curfile+".rwmod" );
-                status(z.filesaved,5);
+            FileHandle zip = Gdx.files.absolute( curdir + "/" + curfile + ".rwmod" );
+            byte[] b = zip.readBytes();
+            face.saveasFile( b,curfile+".rwmod" );
+            status(z.filesaved,5);
 
 
         } catch (IOException e) {
@@ -7517,26 +7512,26 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         }
     }
 
-        public void rwmod(String[] args) throws IOException {
-            java.util.List<String> srcFiles = Arrays.asList(args);
-            FileOutputStream fos = new FileOutputStream(curdir+"/"+curfile+".rwmod");
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-            for (String srcFile : srcFiles) {
-                File fileToZip = new File(srcFile);
-                FileInputStream fis = new FileInputStream(fileToZip);
-                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-                zipOut.putNextEntry(zipEntry);
+    public void rwmod(String[] args) throws IOException {
+        java.util.List<String> srcFiles = Arrays.asList(args);
+        FileOutputStream fos = new FileOutputStream(curdir+"/"+curfile+".rwmod");
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+        for (String srcFile : srcFiles) {
+            File fileToZip = new File(srcFile);
+            FileInputStream fis = new FileInputStream(fileToZip);
+            ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+            zipOut.putNextEntry(zipEntry);
 
-                byte[] bytes = new byte[1024];
-                int length;
-                while((length = fis.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, length);
-                }
-                fis.close();
+            byte[] bytes = new byte[1024];
+            int length;
+            while((length = fis.read(bytes)) >= 0) {
+                zipOut.write(bytes, 0, length);
             }
-            zipOut.close();
-            fos.close();
+            fis.close();
         }
+        zipOut.close();
+        fos.close();
+    }
 
     private void setLinksMap() {
         if (landscape) {
@@ -7658,7 +7653,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             tMenu.defaults().width( btnx ).height( btny + 2 );
 
             //if (!face.ispro())
-                tMenu.add( bPatreon ).row();
+            tMenu.add( bPatreon ).row();
             tMenu.add( bNew ).row();
             tMenu.add( bOpen ).row();
             tMenu.add( bRecent ).row();
@@ -7762,17 +7757,17 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         for (int i=0;i<Tsw;i++){
             for (int j=0;j<Tsh;j++){
                 Color tc = new Color(pbg.getPixel( (int) (x * Tsw) + i, (int) (y * Tsh) + j));
-               // if (tc.a >0){
-                    tcell++;
-                    rr+=tc.r;
-                    gg+=tc.g;
-                    bb+=tc.b;
-                    aa+=tc.a;
+                // if (tc.a >0){
+                tcell++;
+                rr+=tc.r;
+                gg+=tc.g;
+                bb+=tc.b;
+                aa+=tc.a;
                 //}
 
             }
         }
-       // if (aa/tcell<0.5f) return;
+        // if (aa/tcell<0.5f) return;
         Color bg = new Color(rr/tcell,gg/tcell,bb/tcell,0);
 
         long cnum = 0;
@@ -8243,23 +8238,24 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         selLayer=mylayer;
 
 
-}
-
-private void refreshGenerator(){
-    /////////////
-    List<String> srr = new ArrayList<>();
-    FileHandle del = Gdx.files.absolute( basepath+"NotTiled/sample/generator/" );
-    FileHandle[] handle = del.list();
-
-    if (handle.length > 0) {
-        for (FileHandle file : handle) {
-            if (file.extension().equalsIgnoreCase("png")) {
-                srr.add(file.nameWithoutExtension());
-            }
-        }
-        sbGenTerrain.setItems( srr.toArray() );
     }
-}
+
+    private void refreshGenerator(){
+        /////////////
+        List<String> srr = new ArrayList<>();
+        FileHandle del = Gdx.files.absolute( basepath+"NotTiled/sample/generator/" );
+        FileHandle[] handle = del.list();
+
+        if (handle.length > 0) {
+            for (FileHandle file : handle) {
+                if (file.extension().equalsIgnoreCase("png")) {
+                    srr.add(file.nameWithoutExtension());
+                }
+            }
+            sbGenTerrain.setItems( srr.toArray() );
+        }
+    }
+
     private void loadTools() {
         ttools = new Table();
         ttools.setFillParent( true );
@@ -8305,7 +8301,6 @@ private void refreshGenerator(){
         } );
 
         vmirror.addListener( new ChangeListener() {
-            @Override
             public void changed(ChangeEvent event, Actor actor) {
                 runvmirror();
             }
@@ -8318,12 +8313,13 @@ private void refreshGenerator(){
             }
         } );
 
-        hvmirrorrev.addListener( new ChangeListener() {
+        hvmirrorrev.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 runhvmirrorrev();
             }
-        } );
+        });
+
 
         randomize.addListener( new ChangeListener() {
             @Override
@@ -8787,8 +8783,8 @@ private void refreshGenerator(){
         FileHandle fh = Gdx.files.absolute( curdir + "/" + filenamenya + ".lua" );
         fh.writeString( sb.toString(), false );
 
-            String b = fh.readString();
-            face.saveasFile( b, "export.lua" );
+        String b = fh.readString();
+        face.saveasFile( b, "export.lua" );
         backToMap();
         status( z.exportfinished,5 );
     }
@@ -9008,8 +9004,8 @@ private void refreshGenerator(){
         backToMap();
 
 
-            String b = fh.readString();
-            face.saveasFile( b, "export.json" );
+        String b = fh.readString();
+        face.saveasFile( b, "export.json" );
         status( z.exportfinished,5 );
 
     }
@@ -9476,13 +9472,13 @@ private void refreshGenerator(){
             PixmapIO.writePNG(fh, pm2);
             backToMap();
 
-        if (export) {
-            byte[] b = fh.readBytes();
-            face.saveasFile(b, "export.png");
-            status(z.exportfinished, 3);
-        }else{
-            status(z.filesaved, 1);
-        }
+            if (export) {
+                byte[] b = fh.readBytes();
+                face.saveasFile(b, "export.png");
+                status(z.exportfinished, 3);
+            }else{
+                status(z.filesaved, 1);
+            }
         } catch (Exception e) {
             msgbox(z.error);
             ErrorBung(e, "errorlog.txt");
@@ -9542,123 +9538,123 @@ private void refreshGenerator(){
                 Long mm = null;
                 flag = "00";
                 int jo = selLayer;
-                    if (layers.get(jo).getType() == layer.Type.TILE && layers.get(jo).isVisible()) {
-                        java.util.List<drawer> drawers = new ArrayList<drawer>();
-                        drawers.clear();
-                        for (int a = aa; a < bb; a++) {
-                            for (int b = cc; b < dd; b++) {
-                                //position=(Math.abs(a)*Tw)+Math.abs(b);
+                if (layers.get(jo).getType() == layer.Type.TILE && layers.get(jo).isVisible()) {
+                    java.util.List<drawer> drawers = new ArrayList<drawer>();
+                    drawers.clear();
+                    for (int a = aa; a < bb; a++) {
+                        for (int b = cc; b < dd; b++) {
+                            //position=(Math.abs(a)*Tw)+Math.abs(b);
 
-                                //num
-                                position = (abs(a) * Tw) + abs(b);
-
-
-
-                                ini = layers.get(jo).getStr().get(position);
-                                initset = layers.get(jo).getTset().get(position);
-                                if (initset == -1) continue;
-                                if (ini == 0) continue;//dont draw empty, amazing performance boost
-                                xpos = (b - posx);
-                                ypos = (a - posy);
+                            //num
+                            position = (abs(a) * Tw) + abs(b);
 
 
 
-                                if (orientation.equalsIgnoreCase("isometric")) {
-                                    offsetx = (xpos * Tsw / 2) + (ypos * Tsw / 2);
-                                    offsety = (xpos * Tsh / 2) - (ypos * Tsh / 2);
-                                }
+                            ini = layers.get(jo).getStr().get(position);
+                            initset = layers.get(jo).getTset().get(position);
+                            if (initset == -1) continue;
+                            if (ini == 0) continue;//dont draw empty, amazing performance boost
+                            xpos = (b - posx);
+                            ypos = (a - posy);
 
-                                mm = ini;
-                                flag = "00";
-                                if (ini > total) {
-                                    hex = Long.toHexString(ini);
-                                    trailer = "00000000" + hex;
-                                    hex = trailer.substring(trailer.length() - 8);
-                                    flag = hex.substring(0, 2);
-                                    mm = Long.decode("#00" + hex.substring(2, 8));
-                                }
-                                tiles = tilesets.get(initset).getTiles();
-                                tilesize = tiles.size();
-                                int poss =-1;
-                                if (tilesize > 0) {
-                                    for (int n = 0; n < tilesize; n++) {
-                                        if (tiles.get(n).getAnimation().size() > 0) {
-                                            if (mm == tiles.get(n).getTileID() + tilesets.get(initset).getFirstgid()) {
-                                                mm = (long) tiles.get(n).getActiveFrameID() + tilesets.get(initset).getFirstgid();
-                                            }
+
+
+                            if (orientation.equalsIgnoreCase("isometric")) {
+                                offsetx = (xpos * Tsw / 2) + (ypos * Tsw / 2);
+                                offsety = (xpos * Tsh / 2) - (ypos * Tsh / 2);
+                            }
+
+                            mm = ini;
+                            flag = "00";
+                            if (ini > total) {
+                                hex = Long.toHexString(ini);
+                                trailer = "00000000" + hex;
+                                hex = trailer.substring(trailer.length() - 8);
+                                flag = hex.substring(0, 2);
+                                mm = Long.decode("#00" + hex.substring(2, 8));
+                            }
+                            tiles = tilesets.get(initset).getTiles();
+                            tilesize = tiles.size();
+                            int poss =-1;
+                            if (tilesize > 0) {
+                                for (int n = 0; n < tilesize; n++) {
+                                    if (tiles.get(n).getAnimation().size() > 0) {
+                                        if (mm == tiles.get(n).getTileID() + tilesets.get(initset).getFirstgid()) {
+                                            mm = (long) tiles.get(n).getActiveFrameID() + tilesets.get(initset).getFirstgid();
                                         }
-
-                                        if (tiles.get(n).getTileID()==ini - tilesets.get(initset).getFirstgid()){
-                                            poss=n;
-                                        }
-
                                     }
 
-                                    if (poss>-1) {
-                                        tile tt = new tile();
-                                        tt.setTileID( ypos * widih + xpos );
-                                        tt.setProperties( tiles.get( poss ).getProperties() );
-                                        t.getTiles().add( tt );
+                                    if (tiles.get(n).getTileID()==ini - tilesets.get(initset).getFirstgid()){
+                                        poss=n;
                                     }
 
                                 }
 
-
-                                sprX = (int) (mm - tilesets.get(initset).getFirstgid()) % (tilesets.get(initset).getWidth());
-                                sprY = (int) (mm - tilesets.get(initset).getFirstgid()) / (tilesets.get(initset).getWidth());
-                                margin = tilesets.get(initset).getMargin();
-                                spacing = tilesets.get(initset).getSpacing();
-                                Tswa = tilesets.get(initset).getTilewidth();
-                                Tsha = tilesets.get(initset).getTileheight();
-
-
-                                tempdrawer = new drawer();
-                                tempdrawer.mm = mm;
-                                int Tswad = 0;
-                                int Tshad = 0;
-                                int ttx=0;
-                                int tty=0;
-
-                                Tswad = Tswa;
-                                Tshad = Tsha;
-
-                                switch (flag) {
-                                    case "20"://diagonal flip 'THIS ONE"
-                                        tempdrawer.setdrawer(initset, xpos * Tsw  + ttx - offsetx, ypos * Tsh + tty  - offsety, Tswad / 2f, Tshad / 2f, Tswad, Tshad, 1f, 1f, 90f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, true, false);
-                                        break;
-                                    case "40"://flipy nd
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 0f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, true);
-                                        break;
-                                    case "60"://270 degrees clockwise nd
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 90f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
-                                        break;
-                                    case "80"://flipx nd
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 0f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, true, false);
-                                        break;
-                                    case "a0"://90 degress cw
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx   - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 270f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
-                                        break;
-                                    case "c0"://180 degrees cw nd
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx   - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 180f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
-                                        break;
-                                    case "e0"://180 degrees ccw "AND THIS ONE"
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 270f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, true, false);
-                                        break;
-                                    case "00":
-                                        tempdrawer.setdrawer(initset, xpos * Tsw + ttx   - offsetx, ypos * Tsh +tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 0f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
-                                        break;
+                                if (poss>-1) {
+                                    tile tt = new tile();
+                                    tt.setTileID( ypos * widih + xpos );
+                                    tt.setProperties( tiles.get( poss ).getProperties() );
+                                    t.getTiles().add( tt );
                                 }
-                                drawers.add(tempdrawer);
 
-                            } //for  b
-                        }//for a
+                            }
 
-                        //java.util.Collections.sort(drawers);//fps hogger
 
-                        for (drawer drawer : drawers) {
-                            drawer.draw(pm2, tilesets, Tsw, Tsh);
-                        }
+                            sprX = (int) (mm - tilesets.get(initset).getFirstgid()) % (tilesets.get(initset).getWidth());
+                            sprY = (int) (mm - tilesets.get(initset).getFirstgid()) / (tilesets.get(initset).getWidth());
+                            margin = tilesets.get(initset).getMargin();
+                            spacing = tilesets.get(initset).getSpacing();
+                            Tswa = tilesets.get(initset).getTilewidth();
+                            Tsha = tilesets.get(initset).getTileheight();
+
+
+                            tempdrawer = new drawer();
+                            tempdrawer.mm = mm;
+                            int Tswad = 0;
+                            int Tshad = 0;
+                            int ttx=0;
+                            int tty=0;
+
+                            Tswad = Tswa;
+                            Tshad = Tsha;
+
+                            switch (flag) {
+                                case "20"://diagonal flip 'THIS ONE"
+                                    tempdrawer.setdrawer(initset, xpos * Tsw  + ttx - offsetx, ypos * Tsh + tty  - offsety, Tswad / 2f, Tshad / 2f, Tswad, Tshad, 1f, 1f, 90f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, true, false);
+                                    break;
+                                case "40"://flipy nd
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 0f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, true);
+                                    break;
+                                case "60"://270 degrees clockwise nd
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 90f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
+                                    break;
+                                case "80"://flipx nd
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 0f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, true, false);
+                                    break;
+                                case "a0"://90 degress cw
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx   - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 270f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
+                                    break;
+                                case "c0"://180 degrees cw nd
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx   - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 180f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
+                                    break;
+                                case "e0"://180 degrees ccw "AND THIS ONE"
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx  - offsetx, ypos * Tsh + tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 270f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, true, false);
+                                    break;
+                                case "00":
+                                    tempdrawer.setdrawer(initset, xpos * Tsw + ttx   - offsetx, ypos * Tsh +tty - offsety, Tsw / 2f, Tsh / 2f, Tswad, Tshad, 1f, 1f, 0f, (sprX * (Tswa + spacing)) + margin, (sprY * (Tsha + spacing)) + margin, Tswa, Tsha, false, false);
+                                    break;
+                            }
+                            drawers.add(tempdrawer);
+
+                        } //for  b
+                    }//for a
+
+                    //java.util.Collections.sort(drawers);//fps hogger
+
+                    for (drawer drawer : drawers) {
+                        drawer.draw(pm2, tilesets, Tsw, Tsh);
                     }
+                }
 
 
             }//no tileswt
@@ -9717,8 +9713,8 @@ private void refreshGenerator(){
             FileHandle fh = Gdx.files.absolute(curdir + "/" + filenamenya + ".png");
             PixmapIO.writePNG(fh, pm2);
 
-                byte[] b = fh.readBytes();
-                face.saveasFile( b, filenamenya+".png" );
+            byte[] b = fh.readBytes();
+            face.saveasFile( b, filenamenya+".png" );
 
             status(z.exportfinished,3);
         } catch (Exception e) {
@@ -9886,8 +9882,8 @@ private void refreshGenerator(){
             FileHandle fh = Gdx.files.absolute(curdir + "/" + filenamenya + ".png");
             PixmapIO.writePNG(fh, pm2);
             backToMap();
-                byte[] b = fh.readBytes();
-                face.saveasFile( b, "tileset.png" );
+            byte[] b = fh.readBytes();
+            face.saveasFile( b, "tileset.png" );
 
             status(z.exportfinished,3);
         } catch (Exception e) {
@@ -9971,175 +9967,190 @@ private void refreshGenerator(){
     }
 
     private void runhmirror() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
-        redolayer.clear();
-        for (int i = 0; i < Tw * Th; i++) {
-            boolean follower = true;
-            if (i == 0) follower = false;
-            int x = i % Tw;
-            int y = i / Tw;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+            redolayer.clear();
+            for (int i = 0; i < Tw * Th; i++) {
+                boolean follower = true;
+                if (i == 0) follower = false;
+                int x = i % Tw;
+                int y = i / Tw;
 
-            if (x < Tw / 2 && x != Tw / 2) {
-                int location = i + (Tw / 2 - x) * 2 - 1;
-                long to = layers.get(selLayer).getStr().get(i);
-                int newtset = layers.get(selLayer).getTset().get(i);
-                int layer = selLayer;
+                if (x < Tw / 2 && x != Tw / 2) {
+                    int location = i + (Tw / 2 - x) * 2 - 1;
+                    long to = layers.get(selLayer).getStr().get(i);
+                    int newtset = layers.get(selLayer).getTset().get(i);
+                    int layer = selLayer;
 
-                if (newtset!=-1) {
-                    for (tile t : tilesets.get( newtset ).getTiles()) {
-                        if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
-                            int[] tdata = t.getTerrain();
-                            int[] ndat = new int[]{tdata[1], tdata[0], tdata[3], tdata[2]};
+                    if (newtset != -1) {
+                        for (tile t : tilesets.get(newtset).getTiles()) {
+                            if (t.getTileID() + tilesets.get(newtset).getFirstgid() == to && t.isTerrainForEditor()) {
+                                int[] tdata = t.getTerrain();
+                                int[] ndat = new int[]{tdata[1], tdata[0], tdata[3], tdata[2]};
 
-                            java.util.List<Integer> lint = new ArrayList<Integer>();
+                                java.util.List<Integer> lint = new ArrayList<Integer>();
 
-                            for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
-                                tile xo = tilesets.get( newtset ).getTiles().get( u );
-                                if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
-                                    //tile found with the selected terrain
-                                    lint.add( u );
+                                for (int u = 0; u < tilesets.get(newtset).getTiles().size(); u++) {
+                                    tile xo = tilesets.get(newtset).getTiles().get(u);
+                                    if (xo.getTerrainString().equalsIgnoreCase(ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3])) {
+                                        //tile found with the selected terrain
+                                        lint.add(u);
+                                    }
                                 }
+                                //if it is found.
+                                if (lint.size() > 0) {
+                                    tile yo = tilesets.get(newtset).getTiles().get(lint.get((int) (Math.random() * lint.size())));
+                                    to = yo.getTileID() + tilesets.get(newtset).getFirstgid();
+                                }
+                                break;
                             }
-                            //if it is found.
-                            if (lint.size() > 0) {
-                                tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
-                                to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
-                            }
-                            break;
                         }
                     }
+
+                    updateTileData(layer, location, to, newtset);
                 }
-
-                updateTileData(layer,location,to,newtset);
-
             }
+            //updateMinimap();
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
         }
         backToMap();
-        //updateMinimap();
-
     }
+
 
     private void runvmirror() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
 
-        redolayer.clear();
-        for (int i = 0; i < Tw * Th; i++) {
-            boolean follower = true;
-            if (i == 0) follower = false;
-            int x = i % Tw;
-            int y = i / Tw;
+            redolayer.clear();
+            for (int i = 0; i < Tw * Th; i++) {
+                boolean follower = true;
+                if (i == 0) follower = false;
+                int x = i % Tw;
+                int y = i / Tw;
 
-            if (y < Th / 2 && y != Th / 2) {
-                int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
+                if (y < Th / 2 && y != Th / 2) {
+                    int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
 
-                long from = layers.get(selLayer).getStr().get(location);
-                long to = layers.get(selLayer).getStr().get(i);
-                int oldtset = layers.get(selLayer).getTset().get(location);
-                int newtset = layers.get(selLayer).getTset().get(i);
-                int layer = selLayer;
+                    long from = layers.get(selLayer).getStr().get(location);
+                    long to = layers.get(selLayer).getStr().get(i);
+                    int oldtset = layers.get(selLayer).getTset().get(location);
+                    int newtset = layers.get(selLayer).getTset().get(i);
+                    int layer = selLayer;
 
 
-                if (newtset!=-1) {
-                    for (tile t : tilesets.get( newtset ).getTiles()) {
-                        if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
-                            int[] tdata = t.getTerrain();
-                            int[] ndat = new int[]{tdata[2], tdata[3], tdata[0], tdata[1]};
+                    if (newtset!=-1) {
+                        for (tile t : tilesets.get( newtset ).getTiles()) {
+                            if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
+                                int[] tdata = t.getTerrain();
+                                int[] ndat = new int[]{tdata[2], tdata[3], tdata[0], tdata[1]};
 
-                            java.util.List<Integer> lint = new ArrayList<Integer>();
+                                java.util.List<Integer> lint = new ArrayList<Integer>();
 
-                            for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
-                                tile xo = tilesets.get( newtset ).getTiles().get( u );
-                                if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
-                                    //tile found with the selected terrain
-                                    lint.add( u );
+                                for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
+                                    tile xo = tilesets.get( newtset ).getTiles().get( u );
+                                    if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
+                                        //tile found with the selected terrain
+                                        lint.add( u );
+                                    }
                                 }
+                                //if it is found.
+                                if (lint.size() > 0) {
+                                    tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
+                                    to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
+                                }
+                                break;
                             }
-                            //if it is found.
-                            if (lint.size() > 0) {
-                                tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
-                                to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
-                            }
-                            break;
                         }
                     }
-                }
 
-                updateTileData(layer,location,to,newtset);
+                    updateTileData(layer,location,to,newtset);
+                }
             }
+
+            //updateMinimap();
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
         }
         backToMap();
-        //updateMinimap();
     }
+
 
     private void runhvmirror() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
 
-        runhmirror();
-        runvmirror();
+            runhmirror();
+            runvmirror();
+
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
+        }
         backToMap();
-        //updateMinimap();
-
     }
+
 
 
     private void runhvmirrorrev() {
-        if (layers.size()==0) return;
-        if (layers.get(selLayer).getType() != layer.Type.TILE) return;
+        try {
+            if (layers.size() == 0) return;
+            if (layers.get(selLayer).getType() != layer.Type.TILE) return;
 
-        redolayer.clear();
-        for (int i = 0; i < Tw * Th; i++) {
-            boolean follower = true;
-            if (i == 0) follower = false;
-            int x = i % Tw;
-            int y = i / Tw;
+            redolayer.clear();
+            for (int i = 0; i < Tw * Th; i++) {
+                boolean follower = true;
+                if (i == 0) follower = false;
+                int x = i % Tw;
+                int y = i / Tw;
 
-            if (y < Th / 2 && y != Th / 2) {
-                int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
-                location = location + (Tw / 2 - x) * 2 - 1;
-                long from = layers.get(selLayer).getStr().get(location);
-                long to = layers.get(selLayer).getStr().get(i);
-                int oldtset = layers.get(selLayer).getTset().get(location);
-                int newtset = layers.get(selLayer).getTset().get(i);
-                int layer = selLayer;
+                if (y < Th / 2 && y != Th / 2) {
+                    int location = i + ((Th / 2 - y) * 2 - 1) * Tw;
+                    location = location + (Tw / 2 - x) * 2 - 1;
+                    long from = layers.get(selLayer).getStr().get(location);
+                    long to = layers.get(selLayer).getStr().get(i);
+                    int oldtset = layers.get(selLayer).getTset().get(location);
+                    int newtset = layers.get(selLayer).getTset().get(i);
+                    int layer = selLayer;
 
-                if (newtset!=-1) {
-                    for (tile t : tilesets.get( newtset ).getTiles()) {
-                        if (t.getTileID() + tilesets.get( newtset ).getFirstgid() == to && t.isTerrainForEditor()) {
-                            int[] tdata = t.getTerrain();
-                            int[] ndat = new int[]{tdata[3], tdata[2], tdata[1], tdata[0]};
+                    if (newtset != -1) {
+                        for (tile t : tilesets.get(newtset).getTiles()) {
+                            if (t.getTileID() + tilesets.get(newtset).getFirstgid() == to && t.isTerrainForEditor()) {
+                                int[] tdata = t.getTerrain();
+                                int[] ndat = new int[]{tdata[3], tdata[2], tdata[1], tdata[0]};
 
-                            java.util.List<Integer> lint = new ArrayList<Integer>();
+                                java.util.List<Integer> lint = new ArrayList<Integer>();
 
-                            for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
-                                tile xo = tilesets.get( newtset ).getTiles().get( u );
-                                if (xo.getTerrainString().equalsIgnoreCase( ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3] )) {
-                                    //tile found with the selected terrain
-                                    lint.add( u );
+                                for (int u = 0; u < tilesets.get(newtset).getTiles().size(); u++) {
+                                    tile xo = tilesets.get(newtset).getTiles().get(u);
+                                    if (xo.getTerrainString().equalsIgnoreCase(ndat[0] + "," + ndat[1] + "," + ndat[2] + "," + ndat[3])) {
+                                        //tile found with the selected terrain
+                                        lint.add(u);
+                                    }
                                 }
+                                //if it is found.
+                                if (lint.size() > 0) {
+                                    tile yo = tilesets.get(newtset).getTiles().get(lint.get((int) (Math.random() * lint.size())));
+                                    to = yo.getTileID() + tilesets.get(newtset).getFirstgid();
+                                }
+                                break;
                             }
-                            //if it is found.
-                            if (lint.size() > 0) {
-                                tile yo = tilesets.get( newtset ).getTiles().get( lint.get( (int) (Math.random() * lint.size()) ) );
-                                to = yo.getTileID() + tilesets.get( newtset ).getFirstgid();
-                            }
-                            break;
                         }
                     }
+
+                    updateTileData(layer, location, to, newtset);
+
                 }
-
-                updateTileData(layer,location,to,newtset);
-
             }
+        } catch (Exception e) {
+            status(z.errornotfoundpng,3);
         }
-
-
         backToMap();
         resetCaches();
-
     }
+
 
     private void beg() {
 		/*
@@ -10415,7 +10426,7 @@ private void refreshGenerator(){
         bPropCp.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-            Gdx.app.getClipboard().setContents( fPropVal.getText() );
+                Gdx.app.getClipboard().setContents( fPropVal.getText() );
             }
         });
 
@@ -10480,33 +10491,33 @@ private void refreshGenerator(){
                     temproname = n;
                     temprotype = t;
                     temprovalue = v;
-                for (int o = 0; o < massprops.size(); o++) {
-                    boolean ada = false;
-                    int ka = 0;
-                    property tgt = null;
-                    java.util.List<property> ppt = null;
+                    for (int o = 0; o < massprops.size(); o++) {
+                        boolean ada = false;
+                        int ka = 0;
+                        property tgt = null;
+                        java.util.List<property> ppt = null;
 
-                    for (int k = 0; k < tilesets.get(seltset).getTiles().size(); k++) {
-                        if (tilesets.get(seltset).getTiles().get(k).getTileID() == o) {
-                            ppt = tilesets.get(seltset).getTiles().get(k).getProperties();
-                            if (ppt==null)
-                            {
-                                ada=false;
-                            }else{
-                            for (int j = 0; j < ppt.size(); j++) {
-                                if (ppt.get(j).getName().equalsIgnoreCase(temproname)) {
-                                    ada = true;
-                                    tgt = ppt.get(j);
-                                    ka = k;
+                        for (int k = 0; k < tilesets.get(seltset).getTiles().size(); k++) {
+                            if (tilesets.get(seltset).getTiles().get(k).getTileID() == o) {
+                                ppt = tilesets.get(seltset).getTiles().get(k).getProperties();
+                                if (ppt==null)
+                                {
+                                    ada=false;
+                                }else{
+                                    for (int j = 0; j < ppt.size(); j++) {
+                                        if (ppt.get(j).getName().equalsIgnoreCase(temproname)) {
+                                            ada = true;
+                                            tgt = ppt.get(j);
+                                            ka = k;
+                                        }
+                                    }
                                 }
-                            }
-                            }
 
+                            }
                         }
-                    }
 
-                    if (ada) {
-                        if (!massprops.get(o)) {
+                        if (ada) {
+                            if (!massprops.get(o)) {
                             /*
                             ppt.remove(tgt);
                             tile tt = tilesets.get(seltset).getTiles().get(ka);
@@ -10514,38 +10525,38 @@ private void refreshGenerator(){
                                 tilesets.get(seltset).getTiles().remove(tt);
                             }
                              */
+                            } else {
+                                tgt.setValue(temprovalue);
+                            }
                         } else {
-                            tgt.setValue(temprovalue);
-                        }
-                    } else {
-                        if (massprops.get(o)) {
-                            boolean adatile = false;
-                            for (int k = 0; k < tilesets.get(seltset).getTiles().size(); k++) {
-                                if (tilesets.get(seltset).getTiles().get(k).getTileID() == o) {
-                                    adatile = true;
-                                    ka = k;
+                            if (massprops.get(o)) {
+                                boolean adatile = false;
+                                for (int k = 0; k < tilesets.get(seltset).getTiles().size(); k++) {
+                                    if (tilesets.get(seltset).getTiles().get(k).getTileID() == o) {
+                                        adatile = true;
+                                        ka = k;
+                                    }
+                                }
+
+                                properties pt = new properties();
+                                pt.getProperties().add(new property(temproname, temprotype, temprovalue));
+                                if (!adatile) {
+                                    tile tile = new tile();
+                                    tile.setTileID(o);
+                                    tile.getProperties().add(new property(temproname, temprotype, temprovalue));
+                                    tilesets.get(seltset).getTiles().add(tile);
+                                } else {
+                                    tile tile = tilesets.get(seltset).getTiles().get(ka);
+                                    tile.getProperties().add(new property(temproname, temprotype, temprovalue));
                                 }
                             }
-
-                            properties pt = new properties();
-                            pt.getProperties().add(new property(temproname, temprotype, temprovalue));
-                            if (!adatile) {
-                                tile tile = new tile();
-                                tile.setTileID(o);
-                                tile.getProperties().add(new property(temproname, temprotype, temprovalue));
-                                tilesets.get(seltset).getTiles().add(tile);
-                            } else {
-                                tile tile = tilesets.get(seltset).getTiles().get(ka);
-                                tile.getProperties().add(new property(temproname, temprotype, temprovalue));
-                            }
                         }
+
+
                     }
-
-
+                    onToPicker();
+                    return;
                 }
-                onToPicker();
-                return;
-            }
 
                 if (sender == "mass") {
                     temproname = n;
@@ -11014,7 +11025,7 @@ private void refreshGenerator(){
                 backToMap();
                 resetCaches();
                 if (!language.equalsIgnoreCase(oldlang) || fontsize != oldfontsize  || sCustomFont != oldcustomfont) {
-                    msgbox(z.restart);
+                    updateLanguage(language);
                 }
             }
 
@@ -11082,6 +11093,49 @@ private void refreshGenerator(){
 
     }
 
+    /** 动态更新语言 无需重启软件*/
+    public void updateLanguage(String newLanguage) {
+        Json json = new Json();
+        FileHandle f = Gdx.files.internal("languages/" + newLanguage);
+        z = json.fromJson(language.class, f);
+        msgbox(z.restart);
+        shapeName = z.rectangle;
+        toolName = z.tile;
+        viewModeName = z.stack;
+        objViewModeName = z.all;
+        magnetName = z.lock;
+        face.changelanguage(newLanguage);
+        loadTouchpad();
+        loadExport();
+        loadListener();
+        loadMenuMap();
+        loadPreferences();
+        loadOpen();
+        loadLicense();
+        loadTsetManagement();
+        loadLayerManagement();
+        loadTileManagement();
+        loadFrameManagement();
+        loadAutoManagement();
+        loadTools();
+        loadImport();
+        loadNewLayer();
+        loadObjProp();
+        loadMapProperties();
+        loadTilesetProperties();
+        loadPropsManagement();
+        loadOnline();
+        loadNewFile();
+        loadTemplate();
+        loadPropEditor();
+        loadPropTemplate();
+        loadImageLayer();
+        loadKryonet();
+        initializePostProcessor();
+    }
+
+
+
     public void reloadLanguage() {
         Json json = new Json();
         FileHandle f = Gdx.files.internal("languages/" + language);
@@ -11103,7 +11157,6 @@ private void refreshGenerator(){
         } catch (Exception e) {
             ErrorBung(e, "nyut.txt");
         }
-
     }
 
     public void generateTutorials(){
@@ -11262,7 +11315,7 @@ private void refreshGenerator(){
 
         a=new tutorial();
         a.setName(z.t600, "07 RW Mapping using Terrain Autotile");
-    a.addStep(z.t601, "start", "Welcome back! Terrain autotile is a new feature that could help making maps easier. Now, open the menu.");
+        a.addStep(z.t601, "start", "Welcome back! Terrain autotile is a new feature that could help making maps easier. Now, open the menu.");
         a.addStep("lockUI","");
         a.addStep(z.t602, "menu","Click on the new file");
         a.addStep(z.t603, "new", "It uses 16x16 tile, I'll set it for you. The map size is up to you. When you are done, click [OK] button");
@@ -12700,16 +12753,16 @@ private void refreshGenerator(){
                     tbl.add(tat).width(btnx).row();
 
 
-                        tat.addListener(new ChangeListener() {
-                            @Override
-                            public void changed(ChangeEvent event, Actor actor) {
-                                selobjs.clear();
-                                selobjs.add((obj) actor.getUserObject() );
-                                requestupdatemarker=true;
-                                backToMap();
+                    tat.addListener(new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent event, Actor actor) {
+                            selobjs.clear();
+                            selobjs.add((obj) actor.getUserObject() );
+                            requestupdatemarker=true;
+                            backToMap();
 
-                            }
-                        });
+                        }
+                    });
 
                 }
 
@@ -12964,68 +13017,71 @@ private void refreshGenerator(){
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                //try{
+                try {
+                    properties at = new properties();
+                    Json json = new Json();
+                    FileHandle f = Gdx.files.absolute(basepath + "NotTiled/sample/json/" + lptlist.getSelected());
+                    if (f.exists()) {
+                        at = json.fromJson(properties.class, f);
 
-                properties at = new properties();
-                Json json = new Json();
-                FileHandle f = Gdx.files.absolute(basepath+"NotTiled/sample/json/" + lptlist.getSelected());
-                at = json.fromJson(properties.class, f);
+                        switch (sender) {
+                            case "object":
+                                for(int x=at.getProperties().size()-1;x>=0;x--) {
+                                    property ap=at.getProperties().get(x);
+                                    if (ap.getName().equalsIgnoreCase("object_name")) {
+                                        selobjs.get(0).setName(ap.getValue());
+                                        tf.get(5).setText(ap.getValue());
+                                        at.getProperties().remove(x);
+                                    }
+                                    if (ap.getName().equalsIgnoreCase("object_type")) {
+                                        selobjs.get(0).setType(ap.getValue());
+                                        tf.get(6).setText(ap.getValue());
+                                        at.getProperties().remove(x);
+                                    }
+                                }
+                                selobjs.get(0).setProperties(at.getProperties());
 
-                switch (sender) {
-                    case "object":
-                        for(int x=at.getProperties().size()-1;x>=0;x--) {
-                            property ap=at.getProperties().get(x);
-                            if (ap.getName().equalsIgnoreCase("object_name")) {
-                                selobjs.get(0).setName(ap.getValue());
-                                tf.get(5).setText(ap.getValue());
-                                at.getProperties().remove(x);
-                            }
-                            if (ap.getName().equalsIgnoreCase("object_type")) {
-                                selobjs.get(0).setType(ap.getValue());
-                                tf.get(6).setText(ap.getValue());
-                                at.getProperties().remove(x);
-                            }
+                                break;
+                            case "tile":
+                                tilesets.get(selTsetID).getTiles().get(selTileID).setProperties(at.getProperties());
+
+                                break;
+                            case "tilesettings":
+                                tilesets.get(seltset).getTiles().get(selTileID).setProperties(at.getProperties());
+
+                                break;
+                            case "layer":
+                                layers.get(selLayer).setProperties(at.getProperties());
+
+                                break;
+                            case "tset":
+                                tilesets.get(seltset).setProperties(at.getProperties());
+
+                                break;
+
+                            case "map":
+                                properties = at.getProperties();
+                                break;
+
+                            case "auto":
+                                autotiles.get(selat).setProperties(at.getProperties());
+                                break;
                         }
-                        selobjs.get(0).setProperties(at.getProperties());
 
-                        break;
-                    case "tile":
-                        tilesets.get(selTsetID).getTiles().get(selTileID).setProperties(at.getProperties());
-
-                        break;
-                    case "tilesettings":
-                        tilesets.get(seltset).getTiles().get(selTileID).setProperties(at.getProperties());
-
-                        break;
-                    case "layer":
-                        layers.get(selLayer).setProperties(at.getProperties());
-
-                        break;
-                    case "tset":
-                        tilesets.get(seltset).setProperties(at.getProperties());
-
-                        break;
-
-                    case "map":
-                        properties = at.getProperties();
-                        break;
-
-                    case "auto":
-                        autotiles.get(selat).setProperties(at.getProperties());
-                        break;
+                        refreshProperties(at.getProperties());
+                        gotoStage(tPropsMgmt);
+                    } else {
+                        // JSON文件不存在，弹出警告
+                        msgbox(z.jsonerror);
+                    }
+                } catch (Exception e) {
+                    // 异常处理逻辑
+                    msgbox(z.error + e.getMessage());
                 }
-
-                refreshProperties(at.getProperties());
-                gotoStage(tPropsMgmt);
-						/*
-					}catch(Exception e)
-					{
-						msgbox("Error, dunno why...");
-					}
-					*/
 
             }
         });
+
 
         tpt = new Table();
         tpt.setFillParent(true);
@@ -14154,9 +14210,16 @@ private void refreshGenerator(){
                     t.setMargin(0);
                 }
 
-                if (fTsPropFirstGid.getText() != "") {
-                    t.setFirstgid(Integer.parseInt(fTsPropFirstGid.getText()));
+                /** Fixe PC NFE Bug*/
+                if (!fTsPropFirstGid.getText().isEmpty()) {
+                    try {
+                        int firstGid = Integer.parseInt(fTsPropFirstGid.getText());
+                        t.setFirstgid(firstGid);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Must be a number");
+                    }
                 }
+
 
                 if (fTsPropSpacing.getText() != "") {
                     t.setSpacing(Integer.parseInt(fTsPropSpacing.getText()));
@@ -14607,48 +14670,48 @@ private void refreshGenerator(){
     Boolean requestavailable = false;
 
     public void fullfilrequest(){
-     switch (requestcode){
-         case "background":
-             background = new Texture(Gdx.files.absolute(requestdata));
-             break;
-         case "play":
-             playgame( basepath + "NotTiled/Temp", "index.tmx" );
-             break;
-         case "tmximport":
-             extractTSET( requestdata );
-             showtsetselection( tilesets2 );
-             break;
-         case "tsetfolder":
-             errors = "";
+        switch (requestcode){
+            case "background":
+                background = new Texture(Gdx.files.absolute(requestdata));
+                break;
+            case "play":
+                playgame( basepath + "NotTiled/Temp", "index.tmx" );
+                break;
+            case "tmximport":
+                extractTSET( requestdata );
+                showtsetselection( tilesets2 );
+                break;
+            case "tsetfolder":
+                errors = "";
 
-             for (int i = 0; i < nativeFilenames.size(); i++) {
-                 FileHandle fh = Gdx.files.absolute( basepath + "NotTiled/Temp/"+nativeFilenames.get(i) );
+                for (int i = 0; i < nativeFilenames.size(); i++) {
+                    FileHandle fh = Gdx.files.absolute( basepath + "NotTiled/Temp/"+nativeFilenames.get(i) );
 
-                 switch (fh.extension().toLowerCase()) {
-                     case "tsx":
-                         //loadtsx( fh.path(), tilesets, curdir ); //image only, tsx crash the app
-                         break;
-                     case "png":
-                     case "jpg":
-                     case "jpeg":
-                     case "gif":
-                     case "bmp":
-                         addImageTset( fh );
-                         break;
-                 }
-             }
-             int saiz = tilesets.size();
-             String[] srr = new String[saiz];
-             for (int i = 0; i < saiz; i++) {
-                 srr[i] = tilesets.get( i ).getName();
-             }
-             ltsetlist.setItems( srr );
-             ltsetlist.setSelectedIndex( saiz - 1 );
-             status( errors, 5 );
+                    switch (fh.extension().toLowerCase()) {
+                        case "tsx":
+                            //loadtsx( fh.path(), tilesets, curdir ); //image only, tsx crash the app
+                            break;
+                        case "png":
+                        case "jpg":
+                        case "jpeg":
+                        case "gif":
+                        case "bmp":
+                            addImageTset( fh );
+                            break;
+                    }
+                }
+                int saiz = tilesets.size();
+                String[] srr = new String[saiz];
+                for (int i = 0; i < saiz; i++) {
+                    srr[i] = tilesets.get( i ).getName();
+                }
+                ltsetlist.setItems( srr );
+                ltsetlist.setSelectedIndex( saiz - 1 );
+                status( errors, 5 );
 
-             break;
-     }
-     requestavailable=false;
+                break;
+        }
+        requestavailable=false;
     }
 
     public void requesttomainthread(String code, String data){
@@ -14691,36 +14754,36 @@ private void refreshGenerator(){
                 fPropVal.setText(asu);
                 break;
             case "open":
-                    if (file.extension().equalsIgnoreCase( "ntp" )) {
-                        log("loading ntp");
-                        backToMap();
-                        curdir = file.parent().path();
-                        log("file :"+file.name());
+                if (file.extension().equalsIgnoreCase( "ntp" )) {
+                    log("loading ntp");
+                    backToMap();
+                    curdir = file.parent().path();
+                    log("file :"+file.name());
 
-                        FileHandle tmpfolder = Gdx.files.absolute( basepath + "NotTiled/Temp" );
-                        log("tmpfolder :"+tmpfolder);
-                        unzip( file, tmpfolder );
-                        recents.addrecent( file.path(),file.name(),"legacy" );
-                        saveRecents();
-                        requesttomainthread( "play","" );
-                        addandsaverecent( file.path(), file.name());
-                    } else if (file.extension().equalsIgnoreCase( "tmx" )) {
-                        log("loading tmx");
-                        curdir = file.parent().path();
-                        loadtmx( openedfile );
+                    FileHandle tmpfolder = Gdx.files.absolute( basepath + "NotTiled/Temp" );
+                    log("tmpfolder :"+tmpfolder);
+                    unzip( file, tmpfolder );
+                    recents.addrecent( file.path(),file.name(),"legacy" );
+                    saveRecents();
+                    requesttomainthread( "play","" );
+                    addandsaverecent( file.path(), file.name());
+                } else if (file.extension().equalsIgnoreCase( "tmx" )) {
+                    log("loading tmx");
+                    curdir = file.parent().path();
+                    loadtmx( openedfile );
 
-                        addandsaverecent( file.path(), file.name());
-                    } else if (file.extension().equalsIgnoreCase( "png" )) {
-                        log("loading png");
-                        curdir = file.parent().path();
-                        loadpng(file);
-                    } else if (file.extension().equalsIgnoreCase( "json" )) {
-                        log("loading json");
-                        curdir = file.parent().path();
-                        loadjsonmap(file);
-                    } else  {
-                        status(z.error,5);
-                    }
+                    addandsaverecent( file.path(), file.name());
+                } else if (file.extension().equalsIgnoreCase( "png" )) {
+                    log("loading png");
+                    curdir = file.parent().path();
+                    loadpng(file);
+                } else if (file.extension().equalsIgnoreCase( "json" )) {
+                    log("loading json");
+                    curdir = file.parent().path();
+                    loadjsonmap(file);
+                } else  {
+                    status(z.error,5);
+                }
 
 
                 break;
@@ -14747,34 +14810,34 @@ private void refreshGenerator(){
             case "selfolder":
 
 
-                    errors = "";
-                    String dir = file.path();
-                    FileHandle[] filehandles;
-                    filehandles = Gdx.files.absolute( dir ).list();
-                    for (int i = 0; i < filehandles.length; i++) {
+                errors = "";
+                String dir = file.path();
+                FileHandle[] filehandles;
+                filehandles = Gdx.files.absolute( dir ).list();
+                for (int i = 0; i < filehandles.length; i++) {
 
-                        switch (filehandles[i].extension().toLowerCase()) {
-                            case "tsx":
-                                loadtsx( filehandles[i], tilesets, curdir );
-                                break;
-                            case "png":
-                            case "jpg":
-                            case "jpeg":
-                            case "gif":
-                            case "bmp":
-                                addImageTset( filehandles[i] );
-                                break;
+                    switch (filehandles[i].extension().toLowerCase()) {
+                        case "tsx":
+                            loadtsx( filehandles[i], tilesets, curdir );
+                            break;
+                        case "png":
+                        case "jpg":
+                        case "jpeg":
+                        case "gif":
+                        case "bmp":
+                            addImageTset( filehandles[i] );
+                            break;
 
-                        }
                     }
-                    int saiz = tilesets.size();
-                    String[] srr = new String[saiz];
-                    for (int i = 0; i < saiz; i++) {
-                        srr[i] = tilesets.get( i ).getName();
-                    }
-                    ltsetlist.setItems( srr );
-                    ltsetlist.setSelectedIndex( saiz - 1 );
-                    status( errors, 5 );
+                }
+                int saiz = tilesets.size();
+                String[] srr = new String[saiz];
+                for (int i = 0; i < saiz; i++) {
+                    srr[i] = tilesets.get( i ).getName();
+                }
+                ltsetlist.setItems( srr );
+                ltsetlist.setSelectedIndex( saiz - 1 );
+                status( errors, 5 );
 
                 break;
             case "seltsx":
@@ -14827,7 +14890,7 @@ private void refreshGenerator(){
 
                 return;
 
-                //change source button
+            //change source button
             case "replacetset":
                 f = file;
                 fTsPropSource.setText(convertToRelativePath(curdir,f.path()));
@@ -15642,7 +15705,7 @@ private void refreshGenerator(){
                         srz.attribute("", "name", t.getProperties().get(m).getName());
                     //if (!t.getProperties().get(m).getType().equalsIgnoreCase("") && !t.getProperties().get(m).getType().equalsIgnoreCase("string"))
                     //if (!t.getProperties().get(m).getValue().isEmpty())
-                        srz.attribute("", "value", t.getProperties().get(m).getValue());
+                    srz.attribute("", "value", t.getProperties().get(m).getValue());
                     srz.endTag(null, "property");
                 }
                 srz.endTag(null, "properties");
@@ -16201,51 +16264,51 @@ private void refreshGenerator(){
                             lj.encoding = encoding;
                             lj.compression = compression;
 
-                        if (encoding == null) encoding = "csv";
-                        if (encoding.equalsIgnoreCase("csv")) {
-                            lj.data=savecsv(i);
-                        } else if (encoding.equalsIgnoreCase("base64") && compression.equalsIgnoreCase("zlib")) {
-                            lj.data = decoder.savebase64zlib(i,layers);
-                        } else if (encoding.equalsIgnoreCase("base64") && compression.equalsIgnoreCase("gzip")) {
-                            lj.data = decoder.savebase64gzip(i,layers);
-                        } else if (encoding.equalsIgnoreCase("base64")) {
-                            lj.data = decoder.savebase64(i,layers);
-                        } else if (encoding.equalsIgnoreCase("xml")) {
-                            //not supported
-                        }
+                            if (encoding == null) encoding = "csv";
+                            if (encoding.equalsIgnoreCase("csv")) {
+                                lj.data=savecsv(i);
+                            } else if (encoding.equalsIgnoreCase("base64") && compression.equalsIgnoreCase("zlib")) {
+                                lj.data = decoder.savebase64zlib(i,layers);
+                            } else if (encoding.equalsIgnoreCase("base64") && compression.equalsIgnoreCase("gzip")) {
+                                lj.data = decoder.savebase64gzip(i,layers);
+                            } else if (encoding.equalsIgnoreCase("base64")) {
+                                lj.data = decoder.savebase64(i,layers);
+                            } else if (encoding.equalsIgnoreCase("xml")) {
+                                //not supported
+                            }
 
                             break;
                         case OBJECT:
                             lj.type = "objectgroup";
 
-                        if (l.getObjects().size()>0) {
-                            List<jsonmap.object> ojs = new ArrayList<>();
-                            for (int f = 0; f < l.getObjects().size(); f++) {
-                                jsonmap.object jo = new jsonmap.object();
-                                obj o = l.getObjects().get(f);
-                                jo.name=o.getName();
-                                jo.x=o.getX();
-                                jo.y=o.getY();
-                                jo.width=(int) o.getW();
-                                jo.height=(int) o.getH();
-                                jo.rotation=(int) o.getRotation();
+                            if (l.getObjects().size()>0) {
+                                List<jsonmap.object> ojs = new ArrayList<>();
+                                for (int f = 0; f < l.getObjects().size(); f++) {
+                                    jsonmap.object jo = new jsonmap.object();
+                                    obj o = l.getObjects().get(f);
+                                    jo.name=o.getName();
+                                    jo.x=o.getX();
+                                    jo.y=o.getY();
+                                    jo.width=(int) o.getW();
+                                    jo.height=(int) o.getH();
+                                    jo.rotation=(int) o.getRotation();
 
-                                if (o.getProperties().size()>0) {
-                                    List<jsonmap.property> tmprops = new ArrayList<>();
-                                    for (int z = 0; z < o.getProperties().size(); z++) {
-                                        property p = o.getProperties().get(z);
-                                        jsonmap.property pj = new jsonmap.property();
-                                        pj.name = p.getName();
-                                        pj.type = p.getType();
-                                        pj.value = p.getValue();
-                                        tmprops.add(pj);
+                                    if (o.getProperties().size()>0) {
+                                        List<jsonmap.property> tmprops = new ArrayList<>();
+                                        for (int z = 0; z < o.getProperties().size(); z++) {
+                                            property p = o.getProperties().get(z);
+                                            jsonmap.property pj = new jsonmap.property();
+                                            pj.name = p.getName();
+                                            pj.type = p.getType();
+                                            pj.value = p.getValue();
+                                            tmprops.add(pj);
+                                        }
+                                        jo.properties = tmprops.toArray(new jsonmap.property[tmprops.size()]);
                                     }
-                                    jo.properties = tmprops.toArray(new jsonmap.property[tmprops.size()]);
+                                    ojs.add(jo);
                                 }
-                                ojs.add(jo);
+                                lj.objects = ojs.toArray(new jsonmap.object[ojs.size()]);
                             }
-                            lj.objects = ojs.toArray(new jsonmap.object[ojs.size()]);
-                        }
                             break;
                         case IMAGE:
                             lj.type = "imagelayer";
@@ -16591,7 +16654,7 @@ private void refreshGenerator(){
                 layer l = layers.get(i);
                 log("-"+l.getName()+"-");
                 switch(l.getName()){
-                        //object layers
+                    //object layers
                     case "exits": //special layer to preserve old exits
                         if(l.getType()!= layer.Type.OBJECT) continue; //invalid type
                         //if this layer exists, the exit will be recreated.
@@ -16617,50 +16680,50 @@ private void refreshGenerator(){
                     case "items":
                         if(l.getType()!= layer.Type.OBJECT) continue; //invalid type
                         for(obj o : l.getObjects()){
-                        rpd.obj ro = new rpd.obj();
-                        rpd.tele tl = new rpd.tele();
-                        rpd.drop dr = new rpd.drop();
-                        ro.kind = o.getName();
-                        ro.x = (int) (o.getX() / Tsw);
-                        ro.y = (int) (o.getY() / Tsh);
-                        if (o.getProperties().size()>0){
-                            for(property p: o.getProperties()){
-                                try {
-                                    if (p.getName().equalsIgnoreCase("text"))
-                                        ro.text = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("levelId"))
-                                        ro.levelId = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("level"))
-                                        ro.level = Integer.parseInt(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("depth"))
-                                        ro.depth = Integer.parseInt(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("uses"))
-                                        ro.uses = Integer.parseInt(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("trapKind"))
-                                        ro.trapKind = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("aiState"))
-                                        ro.aiState = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("quantity"))
-                                        ro.quantity = Integer.parseInt(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("identified"))
-                                        ro.identified = Boolean.parseBoolean(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("script"))
-                                        ro.script = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("object_desc"))
-                                        ro.object_desc = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("target_levelId"))
-                                        tl.levelId = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("target_x"))
-                                        tl.x = Integer.parseInt(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("target_y"))
-                                        tl.y = Integer.parseInt(p.getValue());
-                                    if (p.getName().equalsIgnoreCase("loot_levelId"))
-                                        dr.levelId = p.getValue();
-                                    if (p.getName().equalsIgnoreCase("loot_kind"))
-                                        dr.kind = p.getValue();
-                                }catch(Exception e){}
+                            rpd.obj ro = new rpd.obj();
+                            rpd.tele tl = new rpd.tele();
+                            rpd.drop dr = new rpd.drop();
+                            ro.kind = o.getName();
+                            ro.x = (int) (o.getX() / Tsw);
+                            ro.y = (int) (o.getY() / Tsh);
+                            if (o.getProperties().size()>0){
+                                for(property p: o.getProperties()){
+                                    try {
+                                        if (p.getName().equalsIgnoreCase("text"))
+                                            ro.text = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("levelId"))
+                                            ro.levelId = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("level"))
+                                            ro.level = Integer.parseInt(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("depth"))
+                                            ro.depth = Integer.parseInt(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("uses"))
+                                            ro.uses = Integer.parseInt(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("trapKind"))
+                                            ro.trapKind = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("aiState"))
+                                            ro.aiState = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("quantity"))
+                                            ro.quantity = Integer.parseInt(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("identified"))
+                                            ro.identified = Boolean.parseBoolean(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("script"))
+                                            ro.script = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("object_desc"))
+                                            ro.object_desc = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("target_levelId"))
+                                            tl.levelId = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("target_x"))
+                                            tl.x = Integer.parseInt(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("target_y"))
+                                            tl.y = Integer.parseInt(p.getValue());
+                                        if (p.getName().equalsIgnoreCase("loot_levelId"))
+                                            dr.levelId = p.getValue();
+                                        if (p.getName().equalsIgnoreCase("loot_kind"))
+                                            dr.kind = p.getValue();
+                                    }catch(Exception e){}
+                                }
                             }
-                        }
 
                             if (tl.levelId!=null){
                                 ro.target=tl;
@@ -16684,7 +16747,7 @@ private void refreshGenerator(){
                         }
                         break;
 
-                        //tile layers
+                    //tile layers
                     case "logic":
                     case "base":
                     case "deco":
@@ -16819,142 +16882,142 @@ private void refreshGenerator(){
             Th = s.getHeight();
 
 
-        Tsw = 1;
-        Tsh = 1;
-        mapFormat = "csv";
-        renderorder = "right-down";
-        orientation = "orthogonal";
-        undolayer.clear();
-        redolayer.clear();
-        cliplayer = null;
-        clipsource = 0;
-        String isi = "";
-        String prName = "";
-        String prValue = "";
-        int lastPid = 0;
-        selgroup = 0;
-        selLayer = 0;
-        templastID = 1;
-        seltset = 0;
+            Tsw = 1;
+            Tsh = 1;
+            mapFormat = "csv";
+            renderorder = "right-down";
+            orientation = "orthogonal";
+            undolayer.clear();
+            redolayer.clear();
+            cliplayer = null;
+            clipsource = 0;
+            String isi = "";
+            String prName = "";
+            String prValue = "";
+            int lastPid = 0;
+            selgroup = 0;
+            selLayer = 0;
+            templastID = 1;
+            seltset = 0;
 
 
             layers.clear();
-        properties.clear();
-        tilesets.clear();
-        autotiles.clear();
-        int curgroupid = -1;
-        int curobjid = -1;
-        curid = 1;
-        layer l = new layer();
-        l.setType( layer.Type.TILE );
-        l.setVisible( true );
-        l.setName( "Tile 1" );
-        java.util.List<Long> ls = new ArrayList<Long>();
-        java.util.List<Integer> lts = new ArrayList<Integer>();
-        java.util.List<Integer> ltl = new ArrayList<Integer>();
+            properties.clear();
+            tilesets.clear();
+            autotiles.clear();
+            int curgroupid = -1;
+            int curobjid = -1;
+            curid = 1;
+            layer l = new layer();
+            l.setType( layer.Type.TILE );
+            l.setVisible( true );
+            l.setName( "Tile 1" );
+            java.util.List<Long> ls = new ArrayList<Long>();
+            java.util.List<Integer> lts = new ArrayList<Integer>();
+            java.util.List<Integer> ltl = new ArrayList<Integer>();
 
-        for (long i = 0; i < Tw * Th; i++) {
-            ls.add( (long) 0 );
-            lts.add( -1 );
-            ltl.add( -1 );
-        }
+            for (long i = 0; i < Tw * Th; i++) {
+                ls.add( (long) 0 );
+                lts.add( -1 );
+                ltl.add( -1 );
+            }
 
 
-        l.setStr( ls );
-        l.setTset( lts );
-        l.setTile( ltl );
-        layers.add( l );
-    //        if (1==1) return;
+            l.setStr( ls );
+            l.setTset( lts );
+            l.setTile( ltl );
+            layers.add( l );
+            //        if (1==1) return;
 
-        kartu = "world";
-        mode = "tile";
-        curspr = 0;
-       cam.position.set( Tsw * Tw / 2, -Tsh * Th / 2, 0 );
-        cam.zoom = .5f;
-        cam.update();
-        panTo( Tsw * Tw / 2, -Tsh * Th / 2, .25f, 1f );
+            kartu = "world";
+            mode = "tile";
+            curspr = 0;
+            cam.position.set( Tsw * Tw / 2, -Tsh * Th / 2, 0 );
+            cam.zoom = .5f;
+            cam.update();
+            panTo( Tsw * Tw / 2, -Tsh * Th / 2, .25f, 1f );
 
 ///////
 
-        Texture txt = new Texture(f);
-        Pixmap px = pixmapfromtexture(txt, "FF00FF");
+            Texture txt = new Texture(f);
+            Pixmap px = pixmapfromtexture(txt, "FF00FF");
 
-        List<Color> colors = new ArrayList<>();
+            List<Color> colors = new ArrayList<>();
 
-        for (int y=0;y<Th;y++){
-            for (int x = 0;x<Tw;x++){
-                Color c= new Color(px.getPixel(x,y));
-                if (!colors.contains(c)) colors.add(c);
-                l.getStr().set(y*Tw+x,(long) colors.indexOf(c)+1);
-                l.getTset().set(y*Tw+x,0);
+            for (int y=0;y<Th;y++){
+                for (int x = 0;x<Tw;x++){
+                    Color c= new Color(px.getPixel(x,y));
+                    if (!colors.contains(c)) colors.add(c);
+                    l.getStr().set(y*Tw+x,(long) colors.indexOf(c)+1);
+                    l.getTset().set(y*Tw+x,0);
+                }
             }
-        }
 
-        colors.add(new Color(1,1,1,1));
-        colors.add(new Color(0.5f,0.5f,0.5f,1));
-        colors.add(new Color(0,0,0,1));
-        colors.add(new Color(0,0,0,0.9f));
-        colors.add(new Color(0,0,0,0.8f));
-        colors.add(new Color(0,0,0,0.7f));
-        colors.add(new Color(0,0,0,0.6f));
-        colors.add(new Color(0,0,0,0.5f));
-        colors.add(new Color(0,0,0,0.4f));
-        colors.add(new Color(0,0,0,0.3f));
-        colors.add(new Color(0,0,0,0.2f));
-        colors.add(new Color(0,0,0,0.1f));
-        log("colors size "+colors.size());
+            colors.add(new Color(1,1,1,1));
+            colors.add(new Color(0.5f,0.5f,0.5f,1));
+            colors.add(new Color(0,0,0,1));
+            colors.add(new Color(0,0,0,0.9f));
+            colors.add(new Color(0,0,0,0.8f));
+            colors.add(new Color(0,0,0,0.7f));
+            colors.add(new Color(0,0,0,0.6f));
+            colors.add(new Color(0,0,0,0.5f));
+            colors.add(new Color(0,0,0,0.4f));
+            colors.add(new Color(0,0,0,0.3f));
+            colors.add(new Color(0,0,0,0.2f));
+            colors.add(new Color(0,0,0,0.1f));
+            log("colors size "+colors.size());
 
-        double wide = Math.ceil(Math.sqrt(colors.size()));
-        double tall = Math.ceil(colors.size()/wide);
-        int tl = (int) tall;
-        int wd = (int) wide;
+            double wide = Math.ceil(Math.sqrt(colors.size()));
+            double tall = Math.ceil(colors.size()/wide);
+            int tl = (int) tall;
+            int wd = (int) wide;
 
-        log("wd="+wd+"/tl="+tl);
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Pixmap pm2 = new Pixmap(wd, tl, Pixmap.Format.RGBA8888);
-        log("tagbl");
-        int cnt=0;
-        int xx=0,yy=0;
-        for (Color c: colors){
-            pm2.drawPixel(xx,yy,Color.rgba8888(c));
-            xx+=1;
-            if (xx==wd){
-                xx=0; yy+=1;
+            log("wd="+wd+"/tl="+tl);
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Pixmap pm2 = new Pixmap(wd, tl, Pixmap.Format.RGBA8888);
+            log("tagbl");
+            int cnt=0;
+            int xx=0,yy=0;
+            for (Color c: colors){
+                pm2.drawPixel(xx,yy,Color.rgba8888(c));
+                xx+=1;
+                if (xx==wd){
+                    xx=0; yy+=1;
+                }
             }
-        }
-          cnt++;
-        log("tagal");
-        log("drawing to pixel ok");
+            cnt++;
+            log("tagal");
+            log("drawing to pixel ok");
 
-        //save it to PNG
-        FileHandle fh = Gdx.files.absolute(basepath+"NotTiled/Temp/"+swatches+".png");
-        PixmapIO.writePNG(fh, pm2);
-        log("written to file");
+            //save it to PNG
+            FileHandle fh = Gdx.files.absolute(basepath+"NotTiled/Temp/"+swatches+".png");
+            PixmapIO.writePNG(fh, pm2);
+            log("written to file");
 
-        //import it
-        fImportWidth.setText( 1 + "" );
-        fImportHeight.setText( 1 + "" );
-        cImportEmbed.setChecked( true );
-        fh = Gdx.files.absolute(basepath+"NotTiled/Temp/"+swatches+".png");
-        log("adding image tset");
+            //import it
+            fImportWidth.setText( 1 + "" );
+            fImportHeight.setText( 1 + "" );
+            cImportEmbed.setChecked( true );
+            fh = Gdx.files.absolute(basepath+"NotTiled/Temp/"+swatches+".png");
+            log("adding image tset");
 
-        addImageTset( fh );
-        CacheAllTset();
-        log("cached tset");
-        seltset = tilesets.size() - 1;
-        curtset = tilesets.size() - 1;
-        backToMap();
-        cue( "importok" );
-        fh.delete();
+            addImageTset( fh );
+            CacheAllTset();
+            log("cached tset");
+            seltset = tilesets.size() - 1;
+            curtset = tilesets.size() - 1;
+            backToMap();
+            cue( "importok" );
+            fh.delete();
 
-        //////
-        resetCaches();
-        resetSwatches();
-        firstload = loadtime;
-        resetMinimap();
-        resetcam( false );
-        loadingfile = false;
-        log("open png ok");
+            //////
+            resetCaches();
+            resetSwatches();
+            firstload = loadtime;
+            resetMinimap();
+            resetcam( false );
+            loadingfile = false;
+            log("open png ok");
 
         } catch (Exception e) {
             errors += "\nError: " + f.name();
@@ -17244,7 +17307,7 @@ private void refreshGenerator(){
                                 //if it is in windows, it is not internal, and if it is not started with C:
                                 if (Gdx.files.getExternalStoragePath().contains("\\"))
                                 {
-                                        if(!curdir.startsWith("C:")) curdir="C:"+curdir;
+                                    if(!curdir.startsWith("C:")) curdir="C:"+curdir;
                                     curdir=curdir.replace("\\","/");
                                     source=source.replace("\\","/");
 
@@ -17305,16 +17368,16 @@ private void refreshGenerator(){
                                     foredirext = curdir;
 
 
-                                        while (tempdiro.substring(0, 3).equalsIgnoreCase("../")) {
-                                            tempdiro = tempdiro.substring(3);
-                                            if (foredirext.lastIndexOf("/")==-1){
-                                                foredirext = "";
+                                    while (tempdiro.substring(0, 3).equalsIgnoreCase("../")) {
+                                        tempdiro = tempdiro.substring(3);
+                                        if (foredirext.lastIndexOf("/")==-1){
+                                            foredirext = "";
 
-                                            }else
-                                            {
-                                                foredirext = foredirext.substring(0, foredirext.lastIndexOf("/"));
-                                            }
+                                        }else
+                                        {
+                                            foredirext = foredirext.substring(0, foredirext.lastIndexOf("/"));
                                         }
+                                    }
 
 
                                     if (tempdiri.lastIndexOf("/", tempdiri.lastIndexOf("/") - 1) != -1) {
@@ -17411,10 +17474,10 @@ private void refreshGenerator(){
                                         tempdiri = tempdiri.substring(tempdiri.lastIndexOf("/", tempdiri.lastIndexOf("/") - 1));
                                     }
 
-                                        FileHandle filehand = Gdx.files.absolute(foredirext + "/" + tempdiro);
-                                        if (!filehand.exists()) {
-                                            filehand = Gdx.files.internal("empty.jpeg");
-                                        }
+                                    FileHandle filehand = Gdx.files.absolute(foredirext + "/" + tempdiro);
+                                    if (!filehand.exists()) {
+                                        filehand = Gdx.files.internal("empty.jpeg");
+                                    }
 
 
                                     try {
@@ -17533,51 +17596,51 @@ private void refreshGenerator(){
                                 case "map":
                                 case "tile":
                                     xtree.add("object");
-                                tempobj = new obj();
-                                if (myParser.getAttributeValue(null, "id") != null) {
-                                    int pID = Integer.parseInt(myParser.getAttributeValue(null, "id"));
-                                    lastPid = pID;
-                                } else {
-                                    lastPid += 1;
-                                }
+                                    tempobj = new obj();
+                                    if (myParser.getAttributeValue(null, "id") != null) {
+                                        int pID = Integer.parseInt(myParser.getAttributeValue(null, "id"));
+                                        lastPid = pID;
+                                    } else {
+                                        lastPid += 1;
+                                    }
 
-                                tempobj.setId(lastPid);
-                                String pName = "";
-                                String pType = "";
-                                pName = myParser.getAttributeValue(null, "name");
-                                pType = myParser.getAttributeValue(null, "type");
-                                tempobj.setName(pName);
-                                tempobj.setType(pType);
-                                tempobj.setX(Float.parseFloat(myParser.getAttributeValue(null, "x")));
-                                tempobj.setY(Float.parseFloat(myParser.getAttributeValue(null, "y")));
-
-                                if (myParser.getAttributeValue(null, "gid") != null) {
-                                    tempobj.setShape("image");
-                                    tempobj.setGid(Integer.parseInt(myParser.getAttributeValue(null, "gid")));
+                                    tempobj.setId(lastPid);
+                                    String pName = "";
+                                    String pType = "";
+                                    pName = myParser.getAttributeValue(null, "name");
+                                    pType = myParser.getAttributeValue(null, "type");
+                                    tempobj.setName(pName);
+                                    tempobj.setType(pType);
+                                    tempobj.setX(Float.parseFloat(myParser.getAttributeValue(null, "x")));
                                     tempobj.setY(Float.parseFloat(myParser.getAttributeValue(null, "y")));
-                                }
 
-                                float pWidth, pHeight;
-                                if (myParser.getAttributeValue(null, "width") != null) {
-                                    try {
-                                        pWidth = Float.parseFloat(myParser.getAttributeValue(null, "width"));
-                                        pHeight = Float.parseFloat(myParser.getAttributeValue(null, "height"));
-                                    } catch (Exception e) {
+                                    if (myParser.getAttributeValue(null, "gid") != null) {
+                                        tempobj.setShape("image");
+                                        tempobj.setGid(Integer.parseInt(myParser.getAttributeValue(null, "gid")));
+                                        tempobj.setY(Float.parseFloat(myParser.getAttributeValue(null, "y")));
+                                    }
+
+                                    float pWidth, pHeight;
+                                    if (myParser.getAttributeValue(null, "width") != null) {
+                                        try {
+                                            pWidth = Float.parseFloat(myParser.getAttributeValue(null, "width"));
+                                            pHeight = Float.parseFloat(myParser.getAttributeValue(null, "height"));
+                                        } catch (Exception e) {
+                                            pWidth = Tsw;
+                                            pHeight = Tsh;
+                                            tempobj.setShape("point");
+                                        }
+                                    } else {
                                         pWidth = Tsw;
                                         pHeight = Tsh;
                                         tempobj.setShape("point");
-                                    }
-                                } else {
-                                    pWidth = Tsw;
-                                    pHeight = Tsh;
-                                    tempobj.setShape("point");
 
-                                }
-                                tempobj.setW(pWidth);
-                                tempobj.setH(pHeight);
-                                tempobj.setupBox2D(world);
-                                if (myParser.getAttributeValue(null, "rotation") != null)
-                                    tempobj.setRotation(Float.parseFloat(myParser.getAttributeValue(null, "rotation")));
+                                    }
+                                    tempobj.setW(pWidth);
+                                    tempobj.setH(pHeight);
+                                    tempobj.setupBox2D(world);
+                                    if (myParser.getAttributeValue(null, "rotation") != null)
+                                        tempobj.setRotation(Float.parseFloat(myParser.getAttributeValue(null, "rotation")));
 
                             }
                         }
@@ -17617,7 +17680,7 @@ private void refreshGenerator(){
                                 case "tile":
                                     tempTile.getObjects().add(tempobj);
                                     log("OBJECT ADDED ON TILE!");
-                                break;
+                                    break;
                                 case "map":
                                     layers.get(layers.size() - 1).getObjects().add(tempobj);
                                     curid=lastPid+1;
@@ -18205,7 +18268,7 @@ private void refreshGenerator(){
                         }
 
                         if (name.equals("data")) {
-                       }
+                        }
 
 
                         break;
@@ -18295,8 +18358,8 @@ private void refreshGenerator(){
         }
 
 //        gamecam.position.set(-100, -100, 0);
-  //      gamecam.zoom =  0.5f;
-    //    gamecam.update();
+        //      gamecam.zoom =  0.5f;
+        //    gamecam.update();
 
         resetMinimap();
 
@@ -18523,38 +18586,38 @@ private void refreshGenerator(){
 
                                 String foredir = "", tempdir = "", combo = "";
 
-                                    Texture bucket;
-                                    String base64 = v;
-                                    if(base64!=null) {
-                                        try {
-                                            byte[] decodedBytes = Base64Coder.decode(base64);
-                                            bucket = new Texture(new Pixmap(decodedBytes, 0, decodedBytes.length));
-                                            tempTset.setTexture(bucket);
+                                Texture bucket;
+                                String base64 = v;
+                                if(base64!=null) {
+                                    try {
+                                        byte[] decodedBytes = Base64Coder.decode(base64);
+                                        bucket = new Texture(new Pixmap(decodedBytes, 0, decodedBytes.length));
+                                        tempTset.setTexture(bucket);
 
-                                            if (tempTset.getTrans() != null) {
-                                                tempTset.setTexture(chromaKey(tempTset.getTexture(), tempTset.getTrans()));
-                                            }
-
-                                            tempTset.setPixmap(pixmapfromtexture(bucket, tempTset.getTrans()));
-
-                                            tempTset.setOriginalwidth(bucket.getWidth());
-                                            tempTset.setOriginalheight(bucket.getHeight());
-                                            if (tempTset.getColumns() == 0) {
-                                                tempTset.setColumns((tempTset.getOriginalwidth() - tempTset.getMargin() * 2 + tempTset.getSpacing()) / (tempTset.getTilewidth() + tempTset.getSpacing()));
-                                                tempTset.setWidth(tempTset.getColumns());
-                                                tempTset.setHeight((tempTset.getOriginalheight() - tempTset.getMargin() * 2 + tempTset.getSpacing()) / (tempTset.getTileheight() + tempTset.getSpacing()));
-                                                tempTset.setTilecount(tempTset.getWidth() * tempTset.getHeight());
-                                            }
-
-                                            templastID += tempTset.getWidth() * tempTset.getHeight();
-
-                                            alreadyloaded = true;
-                                        }catch(Exception e){
-                                            e.printStackTrace();
-                                            log("reading base64 failed");
-                                            log("alreadyloaded="+alreadyloaded);
+                                        if (tempTset.getTrans() != null) {
+                                            tempTset.setTexture(chromaKey(tempTset.getTexture(), tempTset.getTrans()));
                                         }
+
+                                        tempTset.setPixmap(pixmapfromtexture(bucket, tempTset.getTrans()));
+
+                                        tempTset.setOriginalwidth(bucket.getWidth());
+                                        tempTset.setOriginalheight(bucket.getHeight());
+                                        if (tempTset.getColumns() == 0) {
+                                            tempTset.setColumns((tempTset.getOriginalwidth() - tempTset.getMargin() * 2 + tempTset.getSpacing()) / (tempTset.getTilewidth() + tempTset.getSpacing()));
+                                            tempTset.setWidth(tempTset.getColumns());
+                                            tempTset.setHeight((tempTset.getOriginalheight() - tempTset.getMargin() * 2 + tempTset.getSpacing()) / (tempTset.getTileheight() + tempTset.getSpacing()));
+                                            tempTset.setTilecount(tempTset.getWidth() * tempTset.getHeight());
+                                        }
+
+                                        templastID += tempTset.getWidth() * tempTset.getHeight();
+
+                                        alreadyloaded = true;
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                        log("reading base64 failed");
+                                        log("alreadyloaded="+alreadyloaded);
                                     }
+                                }
 
                             }
 
@@ -19108,14 +19171,14 @@ private void refreshGenerator(){
 
 
                         ////
-                       // if (tilesets.get(seltset).getTiles().get(selTileID).getProperties()!=null) {
-                            refreshProperties( tilesets.get( seltset ).getTiles().get( selTileID ).getProperties() );
+                        // if (tilesets.get(seltset).getTiles().get(selTileID).getProperties()!=null) {
+                        refreshProperties( tilesets.get( seltset ).getTiles().get( selTileID ).getProperties() );
 
-                            lPropID.setText( z.properties + ": " + tilesets.get( seltset ).getTiles().get( selTileID ).getTileID() );
-                            sender = "tilesettings";
-                            gotoStage( tPropsMgmt );
-                            return true;
-                      // }
+                        lPropID.setText( z.properties + ": " + tilesets.get( seltset ).getTiles().get( selTileID ).getTileID() );
+                        sender = "tilesettings";
+                        gotoStage( tPropsMgmt );
+                        return true;
+                        // }
 
                     }
 
@@ -19220,98 +19283,98 @@ private void refreshGenerator(){
             }
         }
         //pempek
-            if (tilesets.size() > 0) {
-                if (kartu.equalsIgnoreCase("tile")) {
+        if (tilesets.size() > 0) {
+            if (kartu.equalsIgnoreCase("tile")) {
 
-                    //longpressing in a tile picker
-                    if (tapped(touch2, gui.tilesetsmid)) {
-                        loadList("tset");
-                        return true;
-                    }
-
-                    if (tapped(touch2, gui.tilesetsright)) {
-
-                        seltset += 1;
-                        if (seltset >= tilesets.size()) {
-                            seltset = 0;
-                        }
-                        //curspr = tilesets.get(seltset).getFirstgid();
-
-
-                        adjustPickAuto();
-                        recenterpick();
-                        resetMassprops();
-                        return true;
-
-                    } else if (tapped(touch2, gui.tilesetsleft)) {
-
-                        seltset -= 1;
-                        if (seltset <= -1) {
-                            seltset = tilesets.size() - 1;
-                        }
-                        //curspr = tilesets.get(seltset).getFirstgid();
-
-
-                        adjustPickAuto();
-                        recenterpick();
-                        resetMassprops();
-                        return true;
-
-                    }
-
-                } else if (kartu.equalsIgnoreCase("pickanim")) {
-                    switch (tilePicker) {
-                        case "newimgobj":
-                        case "props":
-                        case "rnda":
-                        case "rndb":
-                        case "repa":
-                        case "repb":
-                        case "gena":
-                        case "genb":
-                        case "sw1":
-                        case "sw2":
-                        case "sw3":
-                        case "sw4":
-                        case "sw5":
-                        case "sw6":
-                            if (tapped(touch2, gui.tilesetsright)) {
-                                seltset += 1;
-                                if (seltset >= tilesets.size()) {
-                                    seltset = 0;
-                                }
-                                recenterpick();
-                                return true;
-                            } else if (tapped(touch2, gui.tilesetsleft)) {
-
-                                seltset -= 1;
-                                if (seltset <= -1) {
-                                    seltset = tilesets.size() - 1;
-                                }
-                                recenterpick();
-                                return true;
-                            }
-                            break;
-                        case "terraineditor":
-                            if (tapped(touch2, gui.tilesetsmid)) {
-                                tileset tt = tilesets.get( selTsetID );
-                                if (tt.getTerrains().size() > 0) {
-                                    tt.setSelTerrain( tt.getSelTerrain() + 1 );
-                                    if (tt.getSelTerrain() >= tt.getTerrains().size()) {
-                                        tt.setSelTerrain( 0 );
-                                    }
-                                }
-                                return true;
-                            }
-                    }
+                //longpressing in a tile picker
+                if (tapped(touch2, gui.tilesetsmid)) {
+                    loadList("tset");
+                    return true;
                 }
 
+                if (tapped(touch2, gui.tilesetsright)) {
 
-            } else {
-                FileDialog(z.selectfile, "quickaddtset", "file", new String[]{".tmx",".tsx", ".png", ".jpg", ".jpeg", ".bmp", ".gif"}, nullTable);
-                cue("addtileset");
+                    seltset += 1;
+                    if (seltset >= tilesets.size()) {
+                        seltset = 0;
+                    }
+                    //curspr = tilesets.get(seltset).getFirstgid();
+
+
+                    adjustPickAuto();
+                    recenterpick();
+                    resetMassprops();
+                    return true;
+
+                } else if (tapped(touch2, gui.tilesetsleft)) {
+
+                    seltset -= 1;
+                    if (seltset <= -1) {
+                        seltset = tilesets.size() - 1;
+                    }
+                    //curspr = tilesets.get(seltset).getFirstgid();
+
+
+                    adjustPickAuto();
+                    recenterpick();
+                    resetMassprops();
+                    return true;
+
+                }
+
+            } else if (kartu.equalsIgnoreCase("pickanim")) {
+                switch (tilePicker) {
+                    case "newimgobj":
+                    case "props":
+                    case "rnda":
+                    case "rndb":
+                    case "repa":
+                    case "repb":
+                    case "gena":
+                    case "genb":
+                    case "sw1":
+                    case "sw2":
+                    case "sw3":
+                    case "sw4":
+                    case "sw5":
+                    case "sw6":
+                        if (tapped(touch2, gui.tilesetsright)) {
+                            seltset += 1;
+                            if (seltset >= tilesets.size()) {
+                                seltset = 0;
+                            }
+                            recenterpick();
+                            return true;
+                        } else if (tapped(touch2, gui.tilesetsleft)) {
+
+                            seltset -= 1;
+                            if (seltset <= -1) {
+                                seltset = tilesets.size() - 1;
+                            }
+                            recenterpick();
+                            return true;
+                        }
+                        break;
+                    case "terraineditor":
+                        if (tapped(touch2, gui.tilesetsmid)) {
+                            tileset tt = tilesets.get( selTsetID );
+                            if (tt.getTerrains().size() > 0) {
+                                tt.setSelTerrain( tt.getSelTerrain() + 1 );
+                                if (tt.getSelTerrain() >= tt.getTerrains().size()) {
+                                    tt.setSelTerrain( 0 );
+                                }
+                            }
+                            return true;
+                        }
+                }
             }
-            return false;
+
+
+        } else {
+            FileDialog(z.selectfile, "quickaddtset", "file", new String[]{".tmx",".tsx", ".png", ".jpg", ".jpeg", ".bmp", ".gif"}, nullTable);
+            cue("addtileset");
+        }
+        return false;
     }
 
 
@@ -19936,7 +19999,7 @@ private void refreshGenerator(){
     public void showPropBox2D(obj ox){
         //markermode=false;
         //selobjs.set( 0,ox);
-           // Gdx.app.log( "PP",activeobjtool+"");
+        // Gdx.app.log( "PP",activeobjtool+"");
         //cumi
         if (activeobjtool == 7) {
             obj oc = new obj();
@@ -20112,7 +20175,7 @@ private void refreshGenerator(){
 
                          */
 
-                    //find the anchor first, then use the anchor as the basis of the calculation
+                        //find the anchor first, then use the anchor as the basis of the calculation
 
 
                     case "C":
@@ -20135,7 +20198,7 @@ private void refreshGenerator(){
                         if (o.getRotation()==0) {
                             o.setW( ae - o.getX() );
                         }else{
-                             n1 = Math.sqrt(Math.pow(ae-o.getX(),2)+Math.pow(-ab+Tsh-o.getY(),2 ));
+                            n1 = Math.sqrt(Math.pow(ae-o.getX(),2)+Math.pow(-ab+Tsh-o.getY(),2 ));
                             o.setW( (float) n1 );
                         }
                         break;
@@ -20159,7 +20222,7 @@ private void refreshGenerator(){
                 if (o.getW()<5) o.setW(5);
 
 
-               // o.updateVerticesActive( world,Tsh );
+                // o.updateVerticesActive( world,Tsh );
 
             }
 
@@ -20436,6 +20499,7 @@ private void refreshGenerator(){
 
         if (str!=0) {
             tileset ts = tilesets.get(tsetID);
+
             if (ts.getTiles().size() > 0) {
                 for (int j = 0; j < ts.getTiles().size(); j++) {
                     tile tt = ts.getTiles().get(j);
@@ -20504,40 +20568,40 @@ private void refreshGenerator(){
 
         if (stamp && !roll && !smartStamp) {
             cue("stamp");
-                //log("culprit");
-                int widih = endSelect % tilesets.get( curtset ).getWidth() - startSelect % tilesets.get( curtset ).getWidth() + 1;
-                int heih = endSelect / tilesets.get( curtset ).getWidth() - startSelect / tilesets.get( curtset ).getWidth() + 1;
+            //log("culprit");
+            int widih = endSelect % tilesets.get( curtset ).getWidth() - startSelect % tilesets.get( curtset ).getWidth() + 1;
+            int heih = endSelect / tilesets.get( curtset ).getWidth() - startSelect / tilesets.get( curtset ).getWidth() + 1;
 
-                for (int yy = 0; yy < heih; yy++) {
-                    for (int xx = 0; xx < widih; xx++) {
-                        if ((num + xx + (yy * Tw)) < Th * Tw) {
-                            if ((num + xx + (yy * Tw)) % Tw >= num % Tw) {
-
-
-                                int onset = 0;
-                                if (orientation.equalsIgnoreCase( "isometric" )) {
-                                    onset = yy - xx * Tw;
-                                }
-
-                                int nyum = num + xx + (yy * Tw) + onset;
-                                if (nyum < 0) return;
-                                long oi = (long) curspr + xx + (yy * tilesets.get( curtset ).getWidth());
-
-                                Long from = layers.get( selLayer ).getStr().get( nyum );
-                                int tzet = layers.get( selLayer ).getTset().get( nyum );
-                                int tzeto = seltset;
-
-                                updateTileData(selLayer,nyum,oi,curtset);
+            for (int yy = 0; yy < heih; yy++) {
+                for (int xx = 0; xx < widih; xx++) {
+                    if ((num + xx + (yy * Tw)) < Th * Tw) {
+                        if ((num + xx + (yy * Tw)) % Tw >= num % Tw) {
 
 
+                            int onset = 0;
+                            if (orientation.equalsIgnoreCase( "isometric" )) {
+                                onset = yy - xx * Tw;
                             }
+
+                            int nyum = num + xx + (yy * Tw) + onset;
+                            if (nyum < 0) return;
+                            long oi = (long) curspr + xx + (yy * tilesets.get( curtset ).getWidth());
+
+                            Long from = layers.get( selLayer ).getStr().get( nyum );
+                            int tzet = layers.get( selLayer ).getTset().get( nyum );
+                            int tzeto = seltset;
+
+                            updateTileData(selLayer,nyum,oi,curtset);
+
+
                         }
                     }
                 }
+            }
 
-                //layers.get(selLayer).getStr().set(tilesets.get(seltset).getFirstgid()-1, (long) curspr);
+            //layers.get(selLayer).getStr().set(tilesets.get(seltset).getFirstgid()-1, (long) curspr);
 
-                return;
+            return;
 
             //so basically if not stamp and roll
         } else {
@@ -20621,51 +20685,51 @@ private void refreshGenerator(){
                         //this loop detect the surrounding of a tile
                         final int numa = num;
 
-                                Terrainify(numa, t, new int[]{8,0,1,2,3,4,5,6,7},false);
-                                //log(numanuma.size()+"");
+                        Terrainify(numa, t, new int[]{8,0,1,2,3,4,5,6,7},false);
+                        //log(numanuma.size()+"");
 
-                                while(!numanuma.isEmpty()) {
-                                    int gogo = 0;
-                                    int[] dir = new int[]{};
-                                    switch ((int) numanuma.get( 0 ).dir) {
-                                        case 0:
-                                            dir = new int[]{0, 1, 3};
-                                            break;
-                                        case 1:
-                                            dir = new int[]{1};
-                                            break;
-                                        case 2:
-                                            dir = new int[]{2, 1, 4};
-                                            break;
-                                        case 3:
-                                            dir = new int[]{3};
-                                            break;
-                                        case 4:
-                                            dir = new int[]{4};
-                                            break;
-                                        case 5:
-                                            dir = new int[]{5, 3, 6};
-                                            break;
-                                        case 6:
-                                            dir = new int[]{6};
-                                            break;
-                                        case 7:
-                                            dir = new int[]{7, 6, 4};
-                                            break;
-                                        case 8:
-                                            dir = new int[]{8};
-                                            break;
-                                    }
+                        while(!numanuma.isEmpty()) {
+                            int gogo = 0;
+                            int[] dir = new int[]{};
+                            switch ((int) numanuma.get( 0 ).dir) {
+                                case 0:
+                                    dir = new int[]{0, 1, 3};
+                                    break;
+                                case 1:
+                                    dir = new int[]{1};
+                                    break;
+                                case 2:
+                                    dir = new int[]{2, 1, 4};
+                                    break;
+                                case 3:
+                                    dir = new int[]{3};
+                                    break;
+                                case 4:
+                                    dir = new int[]{4};
+                                    break;
+                                case 5:
+                                    dir = new int[]{5, 3, 6};
+                                    break;
+                                case 6:
+                                    dir = new int[]{6};
+                                    break;
+                                case 7:
+                                    dir = new int[]{7, 6, 4};
+                                    break;
+                                case 8:
+                                    dir = new int[]{8};
+                                    break;
+                            }
 
-                                        Terrainify( (int) numanuma.get( 0 ).num, numanuma.get( 0 ).t, dir, false );
-                                    try {
-                                        numanuma.remove( 0 );
-                                    }catch (Exception e){}
+                            Terrainify( (int) numanuma.get( 0 ).num, numanuma.get( 0 ).t, dir, false );
+                            try {
+                                numanuma.remove( 0 );
+                            }catch (Exception e){}
 
-                                }
+                        }
 
 
-                     }
+                    }
 
                     //// END OF NEW TERRAIN CODE
 
@@ -20696,7 +20760,7 @@ private void refreshGenerator(){
 
                     int newmapstartselect=-1, newmapendselect=-1; //for move tool
 
-                        //loop for clearing (move tool)
+                    //loop for clearing (move tool)
                     for (int yy = 0; yy <= heih; yy++) {
                         for (int xx = 0; xx <= widih; xx++) {
                             if ((numa + xx + (yy * Tw)) < Th * Tw) {
@@ -20735,8 +20799,8 @@ private void refreshGenerator(){
 
                         }
                     }
-                        //followe = false;
-                        //loop for drawing
+                    //followe = false;
+                    //loop for drawing
                     if (movetool!=selectTool.CLONE){
                         for (int yy = 0; yy <= heih; yy++) {
                             for (int xx = 0; xx <= widih; xx++) {
@@ -21121,7 +21185,7 @@ private void refreshGenerator(){
                             }else{
                                 tile tu = tilesets.get(curtset).getTiles().get(u);
                                 if (tu.getTerrainString().equalsIgnoreCase( ATid + "," + ATid + "," + ATid + "," + ATid ))
-                                lint.add(u);
+                                    lint.add(u);
                             }
                         }
 
@@ -21222,7 +21286,7 @@ private void refreshGenerator(){
                     int[] dd = xx.getTerrain();
                     if (dd != null) {
 
-                      //  cc= terrainInt( i,aa,dd );
+                        //  cc= terrainInt( i,aa,dd );
                     }
 
                     //creating the first generation of path
@@ -21230,7 +21294,7 @@ private void refreshGenerator(){
                         //tile found with the selected terrain
                         sirch ss = new sirch();
                         ss.distance+=ss.distance;
-                    //    ss.hist.add( aa[0] );
+                        //    ss.hist.add( aa[0] );
                         ss.hist.add( dd[0] );
                         ss.id=u;
                         sears.add(ss);
@@ -21436,7 +21500,7 @@ private void refreshGenerator(){
                                 cc.command = "roomCreateOK";
                                 connection.sendTCP(cc);
                                 logNet("[S] Created room: " + cmd.room);
-                                }
+                            }
                             else
                             {
                                 cc = new command();
@@ -21552,8 +21616,8 @@ private void refreshGenerator(){
 
                             break;
                         //}catch(Exception e){
-                            //    ErrorBung( e,"MOMON.TXT" );
-                            //}
+                        //    ErrorBung( e,"MOMON.TXT" );
+                        //}
                         case "disconnect":
                             logNet("[S] Disconnect Request...");
                             int flag=-1;
@@ -21916,8 +21980,8 @@ private void refreshGenerator(){
 
     public void logNet(String s){
         try {
-           // netLog.setText(netLog.getText()+ s +"\n");
-           // netLog.setCursorPosition( netLog.getText().length() );
+            // netLog.setText(netLog.getText()+ s +"\n");
+            // netLog.setCursorPosition( netLog.getText().length() );
             lcollabstatus.setText( s );
             status(s,5);
         }catch(Exception e){}
@@ -21997,39 +22061,39 @@ private void refreshGenerator(){
             tbHost.setText(z.host);
             activeClients.clear();
             logNet("Server stopped");
-         }catch(Exception e){}
+        }catch(Exception e){}
     }
 
-        private void stopClient() {
-            try {
-                if (isCreateRoom) {
-                    destroyRoom();
-                }
-                if (isJoinRoom) {
-                    leaveRoom();
-                }
-
-                command cc = new command();
-                cc.command="disconnect";
-                cc.from=myID;
-                client.sendTCP( cc );
-                client.close();
-                client.stop();
-
-                isClient = false;
-                isCreateRoom = false;
-                isJoinRoom = false;
-                activeRoom = "";
-                tbCreateRoom.setText(z.createroom);
-                tbJoinRoom.setText(z.joinroom);
-                tbJoin.setText( z.join );
-                logNet("Client disconnected" );
-
-
-
-            } catch (Exception e) {
+    private void stopClient() {
+        try {
+            if (isCreateRoom) {
+                destroyRoom();
             }
+            if (isJoinRoom) {
+                leaveRoom();
+            }
+
+            command cc = new command();
+            cc.command="disconnect";
+            cc.from=myID;
+            client.sendTCP( cc );
+            client.close();
+            client.stop();
+
+            isClient = false;
+            isCreateRoom = false;
+            isJoinRoom = false;
+            activeRoom = "";
+            tbCreateRoom.setText(z.createroom);
+            tbJoinRoom.setText(z.joinroom);
+            tbJoin.setText( z.join );
+            logNet("Client disconnected" );
+
+
+
+        } catch (Exception e) {
         }
+    }
 
 
     private void destroyRoom() {
@@ -22148,8 +22212,7 @@ private void refreshGenerator(){
                 //mygame.server = server;
             }
 
-
-            logNet("Server started on port :"+Integer.toString( port ));
+            logNet("Server started on port :"+ port);
             logNet(z.listeningon+" "+getLocalIpAddress());
             isServer = true;
             tbHost.setText(z.stopserver);
@@ -22170,10 +22233,8 @@ private void refreshGenerator(){
             client.start();
             client.connect(5000, aipi, portNum , 23281);
             if (mygame !=null){
-               // mygame.client = client;
+                // mygame.client = client;
             }
-
-
 
             lcollabstatus.setText(z.status+": "+z.connectedto + " "+aipi);
             logNet("Client connected to :"+aipi+":"+ portNum);
@@ -22297,19 +22358,19 @@ private void refreshGenerator(){
 
     private void updateObjectCollision(){
         if (layers.size()==0) return;
-       // if (layers.get(selLayer).getType()!=layer.Type.OBJECT) return;
+        // if (layers.get(selLayer).getType()!=layer.Type.OBJECT) return;
 
-           // for (layer l: layers){
-           // if (l.getType()==layer.Type.OBJECT){
+        // for (layer l: layers){
+        // if (l.getType()==layer.Type.OBJECT){
 
-                com.badlogic.gdx.utils.Array<Body> bds = new com.badlogic.gdx.utils.Array<Body>();
-                world.getBodies( bds );
-                for ( Body bd : bds){
-                    if (bd==body) continue;
-                    if (world.getBodyCount()==0) break;
-                    world.destroyBody( bd );
-                }
-            //}
+        com.badlogic.gdx.utils.Array<Body> bds = new com.badlogic.gdx.utils.Array<Body>();
+        world.getBodies( bds );
+        for ( Body bd : bds){
+            if (bd==body) continue;
+            if (world.getBodyCount()==0) break;
+            world.destroyBody( bd );
+        }
+        //}
         //}
 
         for (obj ob : layers.get(selLayer).getObjects()){
@@ -22486,7 +22547,10 @@ private void refreshGenerator(){
                 }
             }
 
-            //select auto tile
+//            if (tilesets.isEmpty() && tapped(touch2, gui.autopicker)){
+//                msgbox(z.errornotiled);
+//                return true;
+//            }
             if (tapped(touch2, gui.autopicker)) {
                 if (mode == "tile") {
                     if (!softcue("autopick") && lockUI) return true;
@@ -22500,9 +22564,9 @@ private void refreshGenerator(){
 
             if (activetool==3 && !stamp && !assemblymode) {
                 if (tapped( touch2, gui.addmacro )) {
-                   if (mapstartSelect==mapendSelect) return true;
+                    if (mapstartSelect==mapendSelect) return true;
                     getNewTextInput(pAddMacro, z.addnew+" :"+z.macro, "", "");
-                   return true;
+                    return true;
                 }
             }
 
@@ -22750,16 +22814,16 @@ private void refreshGenerator(){
 
 
 
-                        for (int i=0;i<layers.get(loh.getLayer()).getObjects().size()-1;i++){
-                            obj o = layers.get(loh.getLayer()).getObjects().get(i);
-                              if (o.getId()==newo.getId()){
-                                  layers.get(loh.getLayer()).getObjects().set(i,newo);
-                                  break;
-                              }
+                    for (int i=0;i<layers.get(loh.getLayer()).getObjects().size()-1;i++){
+                        obj o = layers.get(loh.getLayer()).getObjects().get(i);
+                        if (o.getId()==newo.getId()){
+                            layers.get(loh.getLayer()).getObjects().set(i,newo);
+                            break;
                         }
+                    }
                     redolayerobject.add( loh );
-                        undolayerobject.remove( loh );
-                     updateObjectCollision();
+                    undolayerobject.remove( loh );
+                    updateObjectCollision();
                 }
             }
 
@@ -23298,23 +23362,23 @@ private void refreshGenerator(){
 
 
             //if (autotiles.size() > 0) {
-                //autotile
-                if (tapped( touch2, gui.autotile )) {
-                    if (mode == "tile") {
-                        editGUI( gui.autotile );
-                        return true;
+            //autotile
+            if (tapped( touch2, gui.autotile )) {
+                if (mode == "tile") {
+                    editGUI( gui.autotile );
+                    return true;
 
-                    }
                 }
+            }
 
-                //select auto tile
-                if (tapped( touch2, gui.autopicker )) {
-                    if (mode == "tile") {
-                        editGUI( gui.autopicker );
-                        return true;
-                    }
+            //select auto tile
+            if (tapped( touch2, gui.autopicker )) {
+                if (mode == "tile") {
+                    editGUI( gui.autopicker );
+                    return true;
                 }
-           // }
+            }
+            // }
             if (mode == "tile") {
                 if (tapped( touch2, gui.tool1 )) {
                     editGUI( gui.tool1 );
@@ -24068,7 +24132,7 @@ private void refreshGenerator(){
                         }
                     }
 
-                        break;
+                    break;
                 case "completion":
                     for (int k = 0; k < Tw * Th; k++) {
 
@@ -24148,31 +24212,31 @@ private void refreshGenerator(){
 
                         }
 
-                            int tgt = k;
-                            layers.get(am.getDestlayer()).getStr().set(tgt, (long) am.getCell(repNum));
-                            repNum+=1;
+                        int tgt = k;
+                        layers.get(am.getDestlayer()).getStr().set(tgt, (long) am.getCell(repNum));
+                        repNum+=1;
 
                         try {
-                                switch (am.objectfill) {
-                                    case "all":
-                                        obj tt = new obj();
-                                        tt.setName(am.getObjectname());
-                                        tt.setX(Tsw * (tgt % Tw));
-                                        tt.setY(Tsh * (tgt / Tw));
-                                        tt.setW(Tsw);
-                                        tt.setH(Tsh);
-                                        layers.get(am.getObjectgroup()).getObjects().add(tt);
-                                        break;
-                                }
-                            } catch (Exception e) {
-                                ErrorBung(e, "autobug4.txt");
-                            }
-                            for (int l = 0; l < tilesets.size(); l++) {
-                                if (am.getCell(repNum) >= tilesets.get(l).getFirstgid() && am.getCell(repNum) < tilesets.get(l).getFirstgid() + tilesets.get(l).getTilecount()) {
-                                    layers.get(am.getDestlayer()).getTset().set(tgt, l);
+                            switch (am.objectfill) {
+                                case "all":
+                                    obj tt = new obj();
+                                    tt.setName(am.getObjectname());
+                                    tt.setX(Tsw * (tgt % Tw));
+                                    tt.setY(Tsh * (tgt / Tw));
+                                    tt.setW(Tsw);
+                                    tt.setH(Tsh);
+                                    layers.get(am.getObjectgroup()).getObjects().add(tt);
                                     break;
-                                }//if
-                            }//l
+                            }
+                        } catch (Exception e) {
+                            ErrorBung(e, "autobug4.txt");
+                        }
+                        for (int l = 0; l < tilesets.size(); l++) {
+                            if (am.getCell(repNum) >= tilesets.get(l).getFirstgid() && am.getCell(repNum) < tilesets.get(l).getFirstgid() + tilesets.get(l).getTilecount()) {
+                                layers.get(am.getDestlayer()).getTset().set(tgt, l);
+                                break;
+                            }//if
+                        }//l
                     }//k
                     break;
 
@@ -24354,7 +24418,7 @@ private void refreshGenerator(){
         property todel=null;
         for(property p : properties){
             if (p.getName().equalsIgnoreCase( sws )){
-               todel=p;
+                todel=p;
             }
         }
         properties.remove( todel );
@@ -24407,15 +24471,15 @@ private void refreshGenerator(){
 
                             long oi = aspr;
                             int num = newnum;
-                                if (num <0) continue;
-                                if (num >= Tw*Th) continue;
-                                updateTileData(selLayer,num,oi,atst);
+                            if (num <0) continue;
+                            if (num >= Tw*Th) continue;
+                            updateTileData(selLayer,num,oi,atst);
 
 
                         } //comma
                     } // properties
 
-                return true;
+                    return true;
                 }
 
                 if (swatches && mode == "tile" ) {
@@ -24740,7 +24804,7 @@ private void refreshGenerator(){
                     return true;
                 }
                 if (tapped(touch2, gui.mode)) {
-                   // getNewTextInput(pNewObjLayerSC, z.addnew, z.object + " " + (layers.size() + 1), "");
+                    // getNewTextInput(pNewObjLayerSC, z.addnew, z.object + " " + (layers.size() + 1), "");
                     return true;
                 }
                 if (tapped(touch2, gui.objectpickermid)) {
@@ -24938,37 +25002,37 @@ private void refreshGenerator(){
 
 
 
-                                switch (i) {
-                                    case 0:
-                                        t.setTerrain( -1, -1, -1, e );
-                                        break;
-                                    case 1:
-                                        t.setTerrain( -1, -1, e, e );
-                                        break;
-                                    case 2:
-                                        t.setTerrain( -1, -1, e, -1 );
-                                        break;
-                                    case 3:
-                                        t.setTerrain( -1, e, -1, e );
-                                        break;
-                                    case 4:
-                                        t.setTerrain( e, -1, e, -1 );
-                                        break;
-                                    case 5:
-                                        t.setTerrain( -1, e, -1, -1 );
-                                        break;
-                                    case 6:
-                                        t.setTerrain( e, e, -1, -1 );
-                                        break;
-                                    case 7:
-                                        t.setTerrain( e, -1, -1, -1 );
-                                        break;
-                                    case 8:
-                                        t.setTerrain( e, e, e, e );
-                                        break;
-                                }
-
+                            switch (i) {
+                                case 0:
+                                    t.setTerrain( -1, -1, -1, e );
+                                    break;
+                                case 1:
+                                    t.setTerrain( -1, -1, e, e );
+                                    break;
+                                case 2:
+                                    t.setTerrain( -1, -1, e, -1 );
+                                    break;
+                                case 3:
+                                    t.setTerrain( -1, e, -1, e );
+                                    break;
+                                case 4:
+                                    t.setTerrain( e, -1, e, -1 );
+                                    break;
+                                case 5:
+                                    t.setTerrain( -1, e, -1, -1 );
+                                    break;
+                                case 6:
+                                    t.setTerrain( e, e, -1, -1 );
+                                    break;
+                                case 7:
+                                    t.setTerrain( e, -1, -1, -1 );
+                                    break;
+                                case 8:
+                                    t.setTerrain( e, e, e, e );
+                                    break;
                             }
+
+                        }
 
 
                         return true;
@@ -25153,9 +25217,9 @@ private void refreshGenerator(){
 
         if (ismusic) {
             playmusic( playback.MIDI, filenya );
-                FileHandle fh = Gdx.files.absolute(basepath + "NotTiled/Temp/composer.mid");
-                byte[] b = fh.readBytes();
-                face.saveasFile( b, "music.mid" );
+            FileHandle fh = Gdx.files.absolute(basepath + "NotTiled/Temp/composer.mid");
+            byte[] b = fh.readBytes();
+            face.saveasFile( b, "music.mid" );
 
             backToMap();
             status( z.exportfinished, 3 );
@@ -25252,110 +25316,105 @@ private void refreshGenerator(){
                     wavwidth = (2+(xstop-xstart))*4;
                     Pattern seq = new Pattern();
                     int index=-1; boolean indexup;
-                for (int y=ystart;y<=ystop;y++){
-                    indexup=false;
-                    for (int x=xstart;x<=xstop;x++){
-                        int num = y*Tw+x;
-                        Long spr = layers.get( selLayer ).getStr().get( num );
-                        int tst = layers.get( selLayer ).getTset().get( num );
-                        if (tst==-1) { continue;}
+                    for (int y=ystart;y<=ystop;y++){
+                        indexup=false;
+                        for (int x=xstart;x<=xstop;x++){
+                            int num = y*Tw+x;
+                            Long spr = layers.get( selLayer ).getStr().get( num );
+                            int tst = layers.get( selLayer ).getTset().get( num );
+                            if (tst==-1) { continue;}
 
-                        Long cspr = spr-tilesets.get(tst).getFirstgid();
+                            Long cspr = spr-tilesets.get(tst).getFirstgid();
 
-                        for (tile t: tilesets.get(tst).getTiles()){
-                            if (t.getTileID()==cspr){
-                                for (property p: t.getProperties()){
-                                    if (p.getName().equalsIgnoreCase( "chords" )){
-                                        if (!indexup) {index++; indexup=true;}
-                                        ChordProgression cp = new ChordProgression(p.getValue());
-                                        Pattern tp = cp.getPattern();
-                                        seq.add( tp );
-                                    }
-                                    if (p.getName().equalsIgnoreCase( "pattern" )){
-                                        if (!indexup) {index++; indexup=true;}
-                                        Pattern tp = new Pattern(p.getValue().replace( "!",""+(x-xstart) ));
-                                        //if (!tp.toString().contains( "[" )) tp.setVoice( index );
-                                        //voice setting sendiri -_-!
-                                        seq.add( tp );
-                                    }
-                                    if (p.getName().equalsIgnoreCase( "rhythm" )){
-                                        if (!indexup) {index++; indexup=true;}
-                                        String ss[] = p.getValue().split( "\\n" );
-                                        Rhythm r=new Rhythm();
-                                        for (String s:ss){
-                                            r.addLayer( s );
+                            for (tile t: tilesets.get(tst).getTiles()){
+                                if (t.getTileID()==cspr){
+                                    for (property p: t.getProperties()){
+                                        if (p.getName().equalsIgnoreCase( "chords" )){
+                                            if (!indexup) {index++; indexup=true;}
+                                            ChordProgression cp = new ChordProgression(p.getValue());
+                                            Pattern tp = cp.getPattern();
+                                            seq.add( tp );
                                         }
+                                        if (p.getName().equalsIgnoreCase( "pattern" )){
+                                            if (!indexup) {index++; indexup=true;}
+                                            Pattern tp = new Pattern(p.getValue().replace( "!",""+(x-xstart) ));
+                                            //if (!tp.toString().contains( "[" )) tp.setVoice( index );
+                                            //voice setting sendiri -_-!
+                                            seq.add( tp );
+                                        }
+                                        if (p.getName().equalsIgnoreCase( "rhythm" )){
+                                            if (!indexup) {index++; indexup=true;}
+                                            String ss[] = p.getValue().split( "\\n" );
+                                            Rhythm r=new Rhythm();
+                                            for (String s:ss){
+                                                r.addLayer( s );
+                                            }
 
-                                        seq.add(r.getPattern());
+                                            seq.add(r.getPattern());
+                                        }
                                     }
                                 }
                             }
                         }
+
                     }
 
-                }
-
-                int tempo=120;
-                for (property p : properties){
-                    if (p.getName().equalsIgnoreCase( "tempo" )){
-                        tempo=Integer.parseInt( p.getValue() );
+                    int tempo=120;
+                    for (property p : properties){
+                        if (p.getName().equalsIgnoreCase( "tempo" )){
+                            tempo=Integer.parseInt( p.getValue() );
+                        }
                     }
-                }
-                seq.setTempo(tempo);
+                    seq.setTempo(tempo);
 
-                //Gdx.app.log( "ASD",seq.toString() );
-                switch (pbt){
-                    case MIDI:
-                        composer c = new composer(seq.toString());
-                        c.save( curdir+"/"+filenya+".mid" );
-                        MidiFileManager.savePatternToMidi(seq , Gdx.files.absolute(curdir+"/"+filenya+"v2.midi").file());
-                        break;
-                    case PLAY:
-                        switch(Gdx.app.getType()) {
-                            case Android:
-                                c = new composer(seq.toString());
-                                c.save( "NotTiled/Temp/composer.mid" );
-                                composerPlayer = Gdx.audio.newMusic( Gdx.files.absolute( basepath+"NotTiled/Temp/composer.mid" ) );
-                                composerPlayer.play();
-                                break;
+                    //Gdx.app.log( "ASD",seq.toString() );
+                    switch (pbt){
+                        case MIDI:
+                            composer c = new composer(seq.toString());
+                            c.save( curdir+"/"+filenya+".mid" );
+                            MidiFileManager.savePatternToMidi(seq , Gdx.files.absolute(curdir+"/"+filenya+"v2.midi").file());
+                            break;
+                        case PLAY:
+                            switch(Gdx.app.getType()) {
+                                case Android:
+                                    // desktop specific code
+                                case iOS:
+                                    c = new composer(seq.toString());
+                                    c.save( "NotTiled/Temp/composer.mid" );
+                                    composerPlayer = Gdx.audio.newMusic( Gdx.files.absolute( basepath+"NotTiled/Temp/composer.mid" ) );
+                                    composerPlayer.play();
+                                    break;
                                 // android specific code
-                            case Desktop:
-                                //Gdx.app.log("SEQ", seq.toString());
-                                new Player().play( seq );
-                                break;
+                                case Desktop:
+                                    //Gdx.app.log("SEQ", seq.toString());
+                                    new Player().play( seq );
+                                    break;
+                                // android specific code
+                            }
+                            break;
+                        case WAV:
+                            recordAudio(wavwidth,filenya);
+                            switch(Gdx.app.getType()) {
+                                case Android:
+                                    Music m = Gdx.audio.newMusic( Gdx.files.absolute( curdir + "/" + filenya + ".mid" ) );
+                                    m.play();
+                                    break;
+                                // android specific code
+                                case Desktop:
+                                    new Player().play( seq );
+                                    midiplaying=false;
+                                    play=null;
+                                    break;
                                 // desktop specific code
-                            case iOS:
-                                c = new composer(seq.toString());
-                                c.save( "NotTiled/Temp/composer.mid" );
-                                composerPlayer = Gdx.audio.newMusic( Gdx.files.absolute( basepath+"NotTiled/Temp/composer.mid" ) );
-                                composerPlayer.play();
-                                break;
+                                case iOS:
+                                    m = Gdx.audio.newMusic( Gdx.files.absolute( curdir + "/" + filenya + ".mid" ) );
+                                    m.play();
+                                    break;
                                 // android specific code
-                        }
-                        break;
-                    case WAV:
-                        recordAudio(wavwidth,filenya);
-                        switch(Gdx.app.getType()) {
-                            case Android:
-                                Music m = Gdx.audio.newMusic( Gdx.files.absolute( curdir + "/" + filenya + ".mid" ) );
-                                m.play();
-                                break;
-                            // android specific code
-                            case Desktop:
-                                new Player().play( seq );
-                                midiplaying=false;
-                                play=null;
-                                break;
-                            // desktop specific code
-                            case iOS:
-                                m = Gdx.audio.newMusic( Gdx.files.absolute( curdir + "/" + filenya + ".mid" ) );
-                                m.play();
-                                break;
-                            // android specific code
-                        }
-                        break;
+                            }
+                            break;
 
-                }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     //msgbox(e.printStackTrace(););
@@ -25778,7 +25837,7 @@ private void refreshGenerator(){
                 selectedGUI.setY( touch2.y  *100 / ssy -height/2);
                 selectedGUI.setH( touch2.y *100 / ssy +height/2 );
             }
-           // Gdx.app.log( "HEHE",p1+"/"+ ssx+" : "+ p2+"/"+ssy);
+            // Gdx.app.log( "HEHE",p1+"/"+ ssx+" : "+ p2+"/"+ssy);
 
             return true;
         }
@@ -26011,10 +26070,10 @@ private void refreshGenerator(){
                         onset=Tsw*Tw/2;
                     }
                     if (!orientation.equalsIgnoreCase("isometric")){
-                    if (cam.position.x < 0-onset) cam.position.x = 0-onset;
-                    if (cam.position.x > Tsw * Tw -onset) cam.position.x = Tsw * Tw -onset;
-                    if (cam.position.y < -Tsh * Th) cam.position.y = -Tsh * Th;
-                    if (cam.position.y > 0) cam.position.y = 0;
+                        if (cam.position.x < 0-onset) cam.position.x = 0-onset;
+                        if (cam.position.x > Tsw * Tw -onset) cam.position.x = Tsw * Tw -onset;
+                        if (cam.position.y < -Tsh * Th) cam.position.y = -Tsh * Th;
+                        if (cam.position.y > 0) cam.position.y = 0;
                     }
 
                     cam.update();
@@ -26219,7 +26278,7 @@ private void refreshGenerator(){
 
                         }
                     }
-                   // status(pon[0]+"-"+pon[1]+"-"+pon[2]+"-"+pon[3]+"-"+pon[4]+"-"+pon[5]+"-"+pon[6]+"-"+pon[7]+"-"+pon[8],5);
+                    // status(pon[0]+"-"+pon[1]+"-"+pon[2]+"-"+pon[3]+"-"+pon[4]+"-"+pon[5]+"-"+pon[6]+"-"+pon[7]+"-"+pon[8],5);
                 }
 
                 //and then, draw the stamp here, check this later for stamp on isometric...
@@ -26247,34 +26306,34 @@ private void refreshGenerator(){
                                     if (xx > 0 && xx < widih && yy == heih) curspr = pon[7];
                                     if (xx == widih && yy == heih) curspr = pon[8];
                                 }
-                                    //log(curspr+"");
+                                //log(curspr+"");
 
                                 switch (currentShape)
                                 {
                                     case RECTANGLE:
 
-                                            boolean terrar = false;
-                                            //if (xx==0 || yy ==0 || xx==widih-1 || yy==heih-1) terrar=true;
+                                        boolean terrar = false;
+                                        //if (xx==0 || yy ==0 || xx==widih-1 || yy==heih-1) terrar=true;
 
-                                            // this code halves the needed taptile with terrain true.
+                                        // this code halves the needed taptile with terrain true.
 
-                                            if (xx == 0 && yy == 0) terrar = true;
-                                            if (xx == widih && yy == 0) terrar = true;
-                                            if (xx == widih && yy == heih) terrar = true;
-                                            if (yy == heih && xx == 0) terrar = true;
-                                            if (xx == 0 && yy % 2 == 0) terrar = true;
-                                            if (yy == 0 && xx % 2 == 0) terrar = true;
-                                            if (xx == widih && yy % 2 == 0) terrar = true;
-                                            if (yy == heih && xx % 2 == 0) terrar = true;
+                                        if (xx == 0 && yy == 0) terrar = true;
+                                        if (xx == widih && yy == 0) terrar = true;
+                                        if (xx == widih && yy == heih) terrar = true;
+                                        if (yy == heih && xx == 0) terrar = true;
+                                        if (xx == 0 && yy % 2 == 0) terrar = true;
+                                        if (yy == 0 && xx % 2 == 0) terrar = true;
+                                        if (xx == widih && yy % 2 == 0) terrar = true;
+                                        if (yy == heih && xx % 2 == 0) terrar = true;
 
-                                            final boolean ft = terrar;
-                                            final boolean firstonex = firstone;
-                                            final int numa = num;
-                                            final int xxx = xx;
-                                            final int yyy = yy;
-                                            final int Ttw = Tw;
-                                            final int newcurspr = curspr;
-                                            final boolean stampy = stamp;
+                                        final boolean ft = terrar;
+                                        final boolean firstonex = firstone;
+                                        final int numa = num;
+                                        final int xxx = xx;
+                                        final int yyy = yy;
+                                        final int Ttw = Tw;
+                                        final int newcurspr = curspr;
+                                        final boolean stampy = stamp;
 
                                         if (stampy) {
                                             tapTile( numa + xxx + (yyy * Ttw), !firstonex, ft, true, newcurspr );
@@ -26295,7 +26354,7 @@ private void refreshGenerator(){
                                         double skor = (radx*radx+rady*rady);
                                         //double skor = Math.sqrt(Math.pow(radx,2)*Math.pow(rady,2));
                                         //skor = Math.pow(radx+rady,2)/Math.pow(myrad,2); //DIAMOND
-                                       if (skor <=myrad*myrad) tapTile(num + xx + (yy * Tw), !firstone, true,false,curspr);
+                                        if (skor <=myrad*myrad) tapTile(num + xx + (yy * Tw), !firstone, true,false,curspr);
                                         if (firstone) firstone = false;
                                         break;
 
