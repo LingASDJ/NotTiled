@@ -7512,7 +7512,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         previousProcessor = Gdx.input.getInputProcessor();
         Gdx.input.setInputProcessor(stage);
 
-        dialog = new Dialog( z.info, skin, "dialog" ) {
+        Dialog dialog = new Dialog( z.info, skin, "dialog" ) {
             @Override
             protected void result(Object object) {
                 if (kartu.equalsIgnoreCase( "world" )) {
