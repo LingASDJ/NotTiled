@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+
+import cat.ereza.customactivityoncrash.config.CaocConfig;
 //import javax.annotation.*;
 //import org.solovyev.android.checkout.*;
 
@@ -218,6 +220,13 @@ public class MainActivity extends AndroidApplication implements Interface
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+		CaocConfig.Builder.create()
+				.backgroundMode(CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
+				.minTimeBetweenCrashesMs(2000) //default: 3000
+				.errorActivity(ErrorActivity.class) //default: null (default error activity)
+				.apply();
+
         myPrefs = getSharedPreferences("NotTiled", 0);
 		prefs = myPrefs.edit();
 

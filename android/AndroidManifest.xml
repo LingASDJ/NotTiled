@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +21,13 @@
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-0329741361926795~9960638706"/>
         -->
-        
+        <activity
+            android:name=".ErrorActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
+            android:exported="false"
+            android:screenOrientation="nosensor"
+            android:theme="@style/DungeonTheme"
+            tools:ignore="DiscouragedApi" />
     <activity
                  android:name="com.mirwanda.nottiled.MainActivity"
                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"

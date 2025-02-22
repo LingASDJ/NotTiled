@@ -1,135 +1,32 @@
-## Java
-
-*.class
-*.war
-*.ear
+# Built application files
 *.apk
-hs_err_pid*
+*.smali
+*.so
+*.hprof
 
-## Robovm
-/ios/robovm-build/
+# Files for the Dalvik VM
+*.dex
 
-## GWT
-/html/war/
-/html/gwt-unitCache/
-.apt_generated/
-.gwt/
-gwt-unitCache/
-www-test/
-.gwt-tmp/
+# Java class files
+*.class
 
-## Android Studio and Intellij and Android in general
-/android/libs/armeabi/
-/android/libs/armeabi-v7a/
-/android/libs/arm64-v8a/
-/android/libs/x86/
-/android/libs/x86_64/
-/android/gen/
-/android/generated/
-/android/intermediaries/
-/android/users/
-.idea/
-*.ipr
-*.iws
-*.iml
-/android/out/
-com_crashlytics_export_strings.xml
-
-## Eclipse
-
-.classpath
-.project
-.metadata/
-/android/bin/
-/core/bin/
-/desktop/bin/
-/html/bin/
-/ios/bin/
-/ios-moe/bin/
-*.tmp
-*.bak
-*.swp
-*~.nib
-.settings/
-.loadpath
-.externalToolBuilders/
-*.launch
-
-## NetBeans
-
-/nbproject/private/
-/android/nbproject/private/
-/core/nbproject/private/
-/desktop/nbproject/private/
-/html/nbproject/private/
-/ios/nbproject/private/
-/ios-moe/nbproject/private/
-
-/build/
-/android/build/
-/core/build/
-/desktop/build/
-/html/build/
-/ios/build/
-/ios-moe/build/
-
-/nbbuild/
-/android/nbbuild/
-/core/nbbuild/
-/desktop/nbbuild/
-/html/nbbuild/
-/ios/nbbuild/
-/ios-moe/nbbuild/
-
-/dist/
-/android/dist/
-/core/dist/
-/desktop/dist/
-/html/dist/
-/ios/dist/
-/ios-moe/dist/
-
-/nbdist/
-/android/nbdist/
-/core/nbdist/
-/desktop/nbdist/
-/html/nbdist/
-/ios/nbdist/
-/ios-moe/nbdist/
-/core/users/
-/desktop/users/
-
-nbactions.xml
-nb-configuration.xml
-
-## Gradle
-
-/local.properties
+# Gradle build files
 .gradle/
-gradle-app.setting
-/build/
-/android/build/
-/core/build/
-/desktop/build/
-/html/build/
-/ios/build/
-/ios-moe/build/
+build/
+release/
 
-## OS Specific
-.DS_Store
-Thumbs.db
+# Local configuration file (sdk path, etc)
+local.properties
 
-## iOS
-/ios/xcode/*.xcodeproj/*
-!/ios/xcode/*.xcodeproj/xcshareddata
-!/ios/xcode/*.xcodeproj/project.pbxproj
-/ios/xcode/native/
-/ios/IOSLauncher.app
-/ios/IOSLauncher.app.dSYM
-
-/ios-moe/xcode/*.xcodeproj/*
-!/ios-moe/xcode/*.xcodeproj/xcshareddata
-!/ios-moe/xcode/*.xcodeproj/project.pbxproj
-/ios-moe/xcode/native/
+#intellij project files
+*.iml
+*.idea
+core/src/main/assets/messages/actors/actors - 副本.txt
+core/src/main/assets/messages/items/items - 副本.txt
+replay_pid14552.log
+hs_err_pid14552.log
+android/src/google-services.json
+android/src/debug/google-services.json
 android/google-services.json
-android/release/android-release.apk
+google-services.json
+desktop/bin

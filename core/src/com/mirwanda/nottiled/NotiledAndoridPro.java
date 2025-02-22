@@ -86,10 +86,6 @@ import com.bitfire.postprocessing.effects.CrtMonitor;
 import com.bitfire.postprocessing.effects.Curvature;
 import com.bitfire.postprocessing.effects.Vignette;
 import com.bitfire.postprocessing.effects.Zoomer;
-import com.bitfire.postprocessing.filters.Combine;
-import com.bitfire.postprocessing.filters.CrtScreen;
-import com.bitfire.postprocessing.filters.RadialBlur;
-import com.bitfire.utils.ShaderLoader;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -100,8 +96,10 @@ import com.github.czyzby.noise4j.map.generator.cellular.CellularAutomataGenerato
 import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator;
 import com.mirwanda.nottiled.ai.ATGraph;
 import com.mirwanda.nottiled.ai.AutoTile;
-import com.mirwanda.nottiled.langs.SelectLangs;
+
 import com.mirwanda.nottiled.platformer.game;
+import com.mirwanda.nottiled.utils.NotTiledServer;
+import com.mirwanda.nottiled.utils.NotTiledUntils;
 import com.poisson.DiskGenerator;
 import com.poisson.Point;
 
@@ -152,7 +150,7 @@ import de.tomgrill.gdxdialogs.core.listener.TextPromptListener;
 
 
 public class NotiledAndoridPro extends ApplicationAdapter implements GestureListener {
-    private static final boolean isDesktop = false;
+  
     final TextField.TextFieldFilter tffint = new TextField.TextFieldFilter.DigitsOnlyFilter();
     final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tfffloat = (p1, c) -> Character.toString( c ).matches( "[0-9.-]+" );
     final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tffcolor = (p1, c) -> Character.toString( c ).matches( "[a-fA-F0-9#]+" );
@@ -169,46 +167,46 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     public Vignette vignette;
     public boolean frompick;
     private layer.Type newLayerType;
-    GDXDialogs dialogs;
-    String oldlang;
-    Integer oldfontsize;
-    String oldcustomfont;
-    PostProcessor postProcessor;
-    Slider slfirstgen;
-    String temproname = "";
-    String temprotype = "";
-    String temprovalue = "";
+    public GDXDialogs dialogs;
+    public String oldlang;
+    public Integer oldfontsize;
+    public String oldcustomfont;
+    public PostProcessor postProcessor;
+    public Slider slfirstgen;
+    public String temproname = "";
+    public String temprotype = "";
+    public String temprovalue = "";
     private List<Integer> swatchValue = new ArrayList<Integer>();
 
-    Texture txMinimap;
+    public Texture txMinimap;
     float delta;
 
 
 
     public enum selectTool {PICKER, COPY, MOVE, FLIP, CLONE}
 
-    selectTool movetool = selectTool.PICKER;
-    String debugMe = " ";
-    Table lastStage;
-    String sender;
+    public selectTool movetool = selectTool.PICKER;
+    public String debugMe = " ";
+    public Table lastStage;
+    public String sender;
     boolean swatches = false;
     int senderID;
     int selTsetID;
-    String fps = "";
+    public String fps = "";
 
 
     boolean backing;
-    String shapeName = "rectangle", rotationName = "0", toolName = "Tile", viewModeName = "Stack", objViewModeName = "All";
+    public String shapeName = "rectangle", rotationName = "0", toolName = "Tile", viewModeName = "Stack", objViewModeName = "All";
     int magnet = 1;
     boolean eraser = false;
-    String magnetName = "lock";
+    public String magnetName = "lock";
     int activetool = 0, activeobjtool = 0, activeobjtoolmode = 0;
     float blink = 0;
     boolean turun = false;
 
-    boolean sShowGrid = true, sShowFPS, sAutoSave, sSaveTsx = false, sShowGID = false, sMinimap;
-    boolean sShowCoords;
-    String sCustomFont = "";
+    public boolean sShowGrid = true, sShowFPS, sAutoSave, sSaveTsx = false, sShowGID = false, sMinimap;
+    public boolean sShowCoords;
+    public String sCustomFont = "";
     boolean sCustomUI;
     boolean sShowCustomGrid = false;
     boolean sResizeTiles = false;
@@ -236,7 +234,8 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     int nssx = 480;
     int nssy = 800;
 
-    int btnx = 440, btny = 50;
+    public int btnx = 440;
+    public int btny = 50;
     int selat;
     int startSelect, endSelect, initialSelect;
     boolean rising = false;
@@ -253,7 +252,9 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     int curtset=0;
     String encoding = "";
     String compression = "";
-    String texFile = "", curdir = "/sdcard/Assets/", curfile = "";
+    String texFile = "";
+    public String curdir = "/sdcard/Assets/";
+    public String curfile = "";
     SpriteBatch batch, ui;
     myShapeRenderer uis;
     ShapeRendererPlus sr;
@@ -267,9 +268,10 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     boolean drag, roll, stamp = false;
     BitmapFont str1;
     decoder decoder = new decoder();
-    Skin skin,skin2;
+    public Skin skin;
+    Skin skin2;
     List<property> properties = new ArrayList<property>();
-    List<layer> layers = new ArrayList<layer>();
+    public List<layer> layers = new ArrayList<layer>();
     layer cliplayer = new layer();
     int clipsource = 0;
     List<tileset> tilesets = new ArrayList<tileset>();
@@ -278,8 +280,8 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     List<autotile> autotiles = new ArrayList<autotile>();
     List<TextField> tf = new ArrayList<TextField>();
     List<Label> tla = new ArrayList<Label>();
-    List<layerhistory> undolayer = new ArrayList<layerhistory>();
-    List<layerhistory> redolayer = new ArrayList<layerhistory>();
+    public List<layerhistory> undolayer = new ArrayList<layerhistory>();
+    public List<layerhistory> redolayer = new ArrayList<layerhistory>();
 
     List<layerobjecthistory> undolayerobject = new ArrayList<>();
     List<layerobjecthistory> redolayerobject = new ArrayList<>();
@@ -321,8 +323,10 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     TextButton bTileMgmt, bTileSettingsMgmt, bPreference, bProperties, bTsetMgmt, bBack2, bAutoMgmt, bFeedback;
     TextButton bUIEditor;
     Table tRecent;
-    Table tCollab, tCollab1, tCollab2;
-    Label lcollabstatus;
+    public Table tCollab;
+    public Table tCollab1;
+    public Table tCollab2;
+    public Label lcollabstatus;
     TextButton bRecent, bRecentOpen, bRecentBack;
     com.badlogic.gdx.scenes.scene2d.ui.List<String> lrecentlist;
     com.badlogic.gdx.scenes.scene2d.ui.List<String> ltutorial;
@@ -600,7 +604,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         // TODO: Implement this method
     }
 
-    String basepath;
+    public String basepath;
     float waittoloadlist=-1;
 
     @Override
@@ -814,8 +818,10 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         loadPropEditor();
         loadPropTemplate();
         loadImageLayer();
-        loadKryonet();
-        initializePostProcessor();
+
+        NotTiledServer.loadKryonet(this);
+        NotTiledUntils.initializePostProcessor(this);
+
         createSwatches();
         log( "Initialization complete" );
 
@@ -1674,47 +1680,6 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
                 }
             }
         }
-
-
-    }
-
-    void initializePostProcessor() { //I DONT EVEN KNOW WHAT THESE MEANS LOL
-        ShaderLoader.BasePath = "data/shaders/";
-        postProcessor = new PostProcessor( false, true, isDesktop );
-
-        postProcessor.setClearColor( .5f, .5f, .5f, 1 );
-        int vpW = Gdx.graphics.getWidth();
-        int vpH = Gdx.graphics.getHeight();
-        // create the effects you want
-        bloom = new Bloom( (int) (Gdx.graphics.getWidth() * 0.25f), (int) (Gdx.graphics.getHeight() * 0.25f) );
-        curvature = new Curvature();
-        zoomer = new Zoomer( vpW, vpH, isDesktop ? RadialBlur.Quality.VeryHigh : RadialBlur.Quality.Low );
-        int effects = CrtScreen.Effect.TweakContrast.v | CrtScreen.Effect.PhosphorVibrance.v | CrtScreen.Effect.Scanlines.v | CrtScreen.Effect.Tint.v;
-        crt = new CrtMonitor( vpW, vpH, false, false, CrtScreen.RgbMode.ChromaticAberrations, effects );
-        crt.setTint( 0.8f, 0.8f, .8f );
-        Combine combine = crt.getCombinePass();
-        combine.setSource1Intensity( 0f );
-        combine.setSource2Intensity( 1f );
-        combine.setSource1Saturation( 0f );
-        combine.setSource2Saturation( 1f );
-        vignette = new Vignette( vpW, vpH, false );
-        // add them to the postprocessor
-        postProcessor.addEffect( curvature );
-        postProcessor.addEffect( zoomer );
-        postProcessor.addEffect( vignette );
-        postProcessor.addEffect( crt );
-        postProcessor.addEffect( bloom );
-        bloom.setBaseIntesity( 0.0f );
-        bloom.setBlurAmount( 1 );//5
-        zoomer.setBlurStrength( -0.1f );
-        zoomer.setOrigin( Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2 );
-        curvature.setZoom( 1f );
-        vignette.setIntensity( 1f );
-        bloom.setEnabled( false );
-        crt.setEnabled( false );
-        vignette.setEnabled( false );
-        curvature.setEnabled( false );
-        zoomer.setEnabled( false );
     }
 
     private void clsEnter() {
@@ -3531,7 +3496,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     }
 
     boolean isupdatingcache=false;
-    private void updateCache(int num) {
+    public void updateCache(int num) {
         //// magic
         int posx = (num % Tw) / widd;
         int posy = (num / Tw) / heii;
@@ -4693,6 +4658,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
 
     @Override
     public void pause() {
+
     }
 
     @Override
@@ -7540,8 +7506,12 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
+    private InputProcessor previousProcessor;
+
     private void msgbox(String msg) {
-        Gdx.input.setInputProcessor( stage );
+        previousProcessor = Gdx.input.getInputProcessor();
+        Gdx.input.setInputProcessor(stage);
+
         dialog = new Dialog( z.info, skin, "dialog" ) {
             @Override
             protected void result(Object object) {
@@ -7561,7 +7531,8 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
 
         dialog.add( lab ).width( btnx - 50 ).row();
         dialog.button( z.ok );
-        dialog.show( stage );
+
+        dialog.show(stage);
     }
 
     Pixmap pbg, pts;
@@ -10704,11 +10675,11 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         loadViewMode();
 
         sbLanguage = new SelectBox(skin);
-        ArrayList<String> srr = new ArrayList<>();
+
+        java.util.List<String> srr = new ArrayList<String>();
         srr.add("English");
         srr.add("Chinese");
         sbLanguage.setItems((Object[])srr.toArray(new String[0]));
-
         bBack3 = new TextButton(z.back, skin);
         bBack3.addListener(new ChangeListener() {
             @Override
@@ -10739,7 +10710,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
                 tfCustomFont.setText(sCustomFont);
                 frwpath.setText(rwpath);
 
-                SelectLangs.getLangs(skin,z);
+                sbLanguage.setSelected(language);
 
                 cbResize.setChecked(sResizeTiles);
                 oldlang = language;
@@ -10988,8 +10959,9 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         loadPropEditor();
         loadPropTemplate();
         loadImageLayer();
-        loadKryonet();
-        initializePostProcessor();
+
+        NotTiledServer.loadKryonet(this);
+        NotTiledUntils.initializePostProcessor(this);
     }
 
 
@@ -21230,31 +21202,31 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
-    Server server;
-    TextButton tbHost;
-    TextButton tbJoin;
-    TextButton tbCreateRoom;
-    TextButton tbJoinRoom;
-    TextButton clearLog, pushUpdateBtn;
+    public Server server;
+    public TextButton tbHost;
+    public TextButton tbJoin;
+    public TextButton tbCreateRoom;
+    public TextButton tbJoinRoom;
+    public TextButton clearLog, pushUpdateBtn;
 
-    TextArea netLog;
-    TextField roomName;
-    TextField uniqueID;
-    Client client;
-    Kryo serverkryo;
-    Kryo clientkryo;
-    TextField tfRemoteIP;
-    TextField tfPort;
-    String localIP;
-    boolean isServer = false;
-    boolean isClient = false;
-    boolean isCreateRoom = false;
-    boolean isJoinRoom = false;
-    String activeRoom = "";
-    String myID="";
+    public TextArea netLog;
+    public TextField roomName;
+    public TextField uniqueID;
+    public Client client;
+    public Kryo serverkryo;
+    public Kryo clientkryo;
+    public TextField tfRemoteIP;
+    public TextField tfPort;
+    public String localIP;
+    public boolean isServer = false;
+    public boolean isClient = false;
+    public boolean isCreateRoom = false;
+    public boolean isJoinRoom = false;
+    public String activeRoom = "";
+    public String myID="";
     public List<actvClients> activeClients = new ArrayList<actvClients>();
 
-    TextPromptListener til;
+    public TextPromptListener til;
 
 
     public void pushUpdate(){
@@ -21295,545 +21267,11 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     }
 
     String serverMapData="";
-    String clientMapData="";
-    final int BufferSize = 512;
+    public String clientMapData="";
+    public final int BufferSize = 512;
     final int WaitTime = 20;
 
-    private void loadKryonet(){
-        server = new Server(9999999,9999999);
-        serverkryo = server.getKryo();
-        serverkryo.register(TextChat.class);
-        serverkryo.register(layerhistory.class);
-        serverkryo.register(PlayerState.class);
-        serverkryo.register(command.class);
 
-        client = new Client();
-        clientkryo = client.getKryo();
-        clientkryo.register(TextChat.class);
-        clientkryo.register(layerhistory.class);
-        clientkryo.register(PlayerState.class);
-        clientkryo.register(command.class);
-
-        server.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
-                if (object instanceof TextChat) {
-                    TextChat request = (TextChat)object;
-                    broadcast(request.text);
-                    lcollabstatus.setText(request.text);
-
-                } else if (object instanceof command) {
-                    command cmd = (command) object;
-                    switch (cmd.command){
-                        case "registerID":
-                            actvClients acv = new actvClients();
-                            acv.id = cmd.data;
-                            acv.room="";
-                            activeClients.add(acv);
-                            logNet("[S] Registration requested by: " + acv.id);
-                            activeClients.add( acv );
-                            command cc = new command();
-                            cc.from=acv.id;
-                            cc.command = "registered";
-                            connection.sendTCP(cc);
-
-                            break;
-                        case "createRoom":
-                            boolean roomok=true;
-                            for (actvClients av : activeClients){
-                                if (av.creator && av.room.equalsIgnoreCase( cmd.room )){
-                                    roomok=false;
-                                }
-                            }
-
-                            if (roomok){
-
-
-                                for (actvClients av : activeClients){
-                                    if (av.id.equalsIgnoreCase( cmd.from )){
-                                        av.room = cmd.room;
-                                        av.creator = true;
-                                    }
-                                }
-                                cc = new command();
-                                cc.command = "roomCreateOK";
-                                connection.sendTCP(cc);
-                                logNet("[S] Created room: " + cmd.room);
-                            }
-                            else
-                            {
-                                cc = new command();
-                                cc.command = "roomCreateFailed";
-                                connection.sendTCP(cc);
-                                logNet("[S] Room not created: " + cmd.room);
-                            }
-                            break;
-                        case "destroyRoom":
-                            for (actvClients av : activeClients){
-                                if (av.room.equalsIgnoreCase( cmd.room )){
-                                    av.room = "";
-                                    av.creator = false;
-                                }
-                            }
-                            cc = new command();
-                            cc.command = "roomDestroyed";
-                            cc.room = cmd.room;
-                            server.sendToAllTCP( cc );
-                            logNet("[S] Broadcasted room destruction: " + cmd.room);
-                            break;
-
-
-                        case "joinRequest":
-                            //check if the room is available
-                            boolean isavail = false;
-                            for (actvClients av : activeClients){
-                                if (av.room.equalsIgnoreCase( cmd.room ) && av.creator){
-                                    isavail=true;
-                                }
-                            }
-
-                            if (isavail){
-                                //room is available
-                                for (actvClients av : activeClients){
-                                    if (av.id.equalsIgnoreCase( cmd.from )){
-                                        av.room = cmd.room;
-                                    }
-                                }
-
-                                cc = new command();
-                                cc.command = "joinRequestAccepted";
-                                cc.room = cmd.room;
-                                connection.sendTCP(cc);
-                                logNet("[S] Join Request accepted for: " + cmd.from + " @ room:" + cmd.room);
-
-                                logNet("[SB] broadcasting join information");
-                                cc = new command();
-                                cc.command = "joinInformation";
-                                cc.room = cmd.room;
-                                cc.data = cmd.from;
-                                server.sendToAllTCP( cc );
-                            } else{
-                                //room is not available
-                                cc = new command();
-                                cc.command = "joinRequestRejected";
-                                cc.room = cmd.room;
-                                connection.sendTCP(cc);
-                                logNet("[S] Join Request rejected for: " + cmd.from + " @ room:" + cmd.room);
-
-                            }
-
-
-
-                            break;
-                        case "leaveRequest":
-                            for (actvClients av : activeClients){
-                                if (av.id.equalsIgnoreCase( cmd.from )){
-                                    av.room = "";
-                                }
-                            }
-                            logNet("[S] left room for: " +cmd.from +" @ "+ cmd.room);
-                            cc = new command();
-                            cc.command = "leaveRequestAccepted";
-                            cc.room = cmd.room;
-                            connection.sendTCP( cc );
-
-                            logNet("[SB] broadcasting leave information");
-                            cc = new command();
-                            cc.command = "leaveInformation";
-                            cc.room = cmd.room;
-                            cc.data = cmd.from;
-                            server.sendToAllTCP( cc );
-
-                            break;
-                        case "startdata":
-                        case "data":
-                        case "startDataAll":
-                        case "dataAll":
-                        case "draw":
-                            //try {
-                            server.sendToAllTCP( cmd );
-
-                            break;
-                        case "readThisBoy":
-                            cc = new command();
-                            cc.command = "mapInformation";
-                            cc.from = cmd.from;
-                            cc.room = cmd.room;
-                            server.sendToAllTCP( cc );
-                            logNet("[SB] broadcasting map information");
-
-
-                            break;
-                        case "allReadThis":
-                            cc = new command();
-                            cc.command = "mapInformationAll";
-                            cc.from = cmd.from;
-                            cc.room = cmd.room;
-                            server.sendToAllTCP( cc );
-                            logNet("[SB] broadcasting open map information");
-
-
-                            break;
-                        //}catch(Exception e){
-                        //    ErrorBung( e,"MOMON.TXT" );
-                        //}
-                        case "disconnect":
-                            logNet("[S] Disconnect Request...");
-                            int flag=-1;
-                            for (int i=0;i<activeClients.size();i++){
-                                if (activeClients.get( i ).id.equalsIgnoreCase( cmd.from )){
-
-                                    flag=i;
-                                }
-
-                            }
-                            if (flag!=-1){
-                                activeClients.remove( flag );
-                                logNet("[S] Client erased.");
-                            }
-
-                    }
-                } else if (object instanceof layerhistory) {
-                    layerhistory response = (layerhistory)object;
-                    Gdx.app.log("hi","received from client");
-                    pushdata(response);
-                }
-            }
-        });
-
-        client.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
-
-                if (object instanceof command) {
-                    command cmd = (command) object;
-                    switch (cmd.command) {
-                        case "registered":
-                            logNet( z.regroom + cmd.from);
-                            break;
-                        case "roomCreateFailed":
-                            logNet( z.regalredyexits);
-                            break;
-                        case "roomCreateOK":
-                            isCreateRoom = true;
-                            activeRoom = roomName.getText();
-                            tbCreateRoom.setText(z.destyroom);
-                            logNet(z.createseroom + roomName.getText());
-                            break;
-                        case "roomDestroyed":
-                            if (cmd.room.equalsIgnoreCase( activeRoom )){
-                                isCreateRoom = false;
-                                isJoinRoom = false;
-                                activeRoom = "";
-                                tbCreateRoom.setText(z.createroom);
-                                tbJoinRoom.setText(z.joinroom);
-                                logNet(z.destyroomalt + roomName.getText());
-                            }
-                            break;
-                        case "joinRequestAccepted":
-                            logNet( z.joinroomalt +cmd.room);
-                            logNet( z.loadingmap);
-                            isJoinRoom = true;
-                            activeRoom = cmd.room;
-                            tbJoinRoom.setText( z.leaveroom );
-                            break;
-                        case "joinRequestRejected":
-                            logNet( z.failedroom +cmd.room);
-                            break;
-                        case "leaveRequestAccepted":
-                            logNet( z.leftroom +cmd.room);
-                            isJoinRoom = false;
-                            activeRoom = "";
-                            tbJoinRoom.setText( z.joinroom);
-
-                            break;
-                        case "leaveInformation":
-                            if (cmd.room.equalsIgnoreCase(activeRoom)) {
-                                logNet( z.console +cmd.data+z.playerleaveroom);
-                            }
-                            break;
-                        case "startData":
-                            if (cmd.from.equalsIgnoreCase( myID )) {
-                                clientMapData = "";
-                            }
-                            break;
-                        case "data":
-                            if (cmd.from.equalsIgnoreCase( myID )) {
-                                clientMapData += cmd.data;
-                            }
-                            break;
-                        case "startDataAll":
-                            if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
-                                clientMapData = "";
-                            }
-                            break;
-                        case "dataAll":
-                            if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
-                                clientMapData += cmd.data;
-                            }
-                            break;
-                        case "joinInformation":
-                            if (cmd.room.equalsIgnoreCase(activeRoom) && !cmd.data.equalsIgnoreCase( myID )) {
-                                logNet( z.console +cmd.data+z.playerjoinroom);
-                                if (isCreateRoom){
-                                    //send the map
-                                    saveMap(curdir + "/" + curfile);
-                                    //read map as text
-                                    FileHandle ff = Gdx.files.absolute( curdir +"/"+ curfile );
-                                    logNet( z.sendmapdata);
-
-                                    String dat = ff.readString();
-                                    ///////
-                                    command cc = new command();
-                                    cc.command = "startData";
-                                    cc.from = cmd.data;
-                                    cc.room = cmd.room;
-                                    connection.sendTCP( cc );
-
-                                    int len = dat.length();
-                                    for (int i=0;i<len;i+=BufferSize){
-                                        String part = dat.substring(i, Math.min(len, i + BufferSize));
-                                        cc = new command();
-                                        cc.command = "data";
-                                        cc.room = cmd.room;
-                                        cc.from = cmd.data;
-                                        cc.data = part;
-                                        slowdown();
-                                        connection.sendTCP( cc );
-                                    }
-                                    ///////
-                                    cc = new command();
-                                    cc.command = "readThisBoy";
-                                    cc.from = cmd.data;
-                                    connection.sendTCP( cc );
-
-
-
-
-
-                                }else
-                                {
-                                    //pause until that guy finished opening;
-                                }
-                            }
-                            break;
-                        case "mapInformation":
-                            if (cmd.from.equalsIgnoreCase( myID )) {
-                                logNet( z.sendmapar);
-                                FileHandle fh = Gdx.files.absolute( basepath+"NotTiled/tempNetworkMap.tmx" );
-                                fh.writeString( clientMapData,false);
-                                clientMapData="";
-                                backToMap();
-                                loadtmx( basepath+"NotTiled/tempNetworkMap.tmx"  );
-                            }
-                            break;
-                        case "mapInformationAll":
-                            if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
-                                logNet( z.sendmapar);
-                                FileHandle fh = Gdx.files.absolute( curdir + "/" + curfile);
-
-                                fh.writeString( clientMapData,false);
-                                clientMapData="";
-                                backToMap();
-                                loadtmx( curdir + "/" + curfile );
-                            }
-                            break;
-                        case "draw":
-                            if (cmd.room.equalsIgnoreCase(activeRoom) && !cmd.from.equalsIgnoreCase( myID )) {
-                                layerhistory h = (layerhistory) cmd.lh;
-                                if (h.undo) {
-
-                                    long frm = h.from;
-                                    long toe = h.to;
-                                    int frmts = h.oldtset;
-                                    int toets = h.newtset;
-                                    int frmtl = h.oldtile;
-                                    int toetl = h.newtile;
-                                    h.from = toe;
-                                    h.to = frm;
-                                    h.oldtset = toets;
-                                    h.newtset = frmts;
-                                    h.undo = false;
-                                    h.oldtile = toetl;
-                                    h.newtile = frmtl;
-                                }
-                                undolayer.add(h);
-                                redolayer.clear();
-                                layers.get(h.getLayer()).getStr().set(h.getLocation(), h.getTo());
-                                layers.get(h.getLayer()).getTset().set(h.getLocation(), h.getNewtset());
-                                layers.get(h.getLayer()).getTile().set(h.getLocation(), h.getNewtile());
-                                updateCache(h.getLocation());
-                            }
-                            break;
-                    }
-                }
-
-            }
-
-        });
-
-        tCollab = new Table();
-        tCollab.setFillParent(true);
-        tCollab.defaults().width(btnx).height(btny).padBottom(2);
-
-        tCollab1 = new Table();
-        tCollab1.defaults().width(btnx).height(btny).padBottom(2);
-
-        tCollab2 = new Table();
-        tCollab2.defaults().width(btnx).height(btny).padBottom(2);
-
-        Label lTitle = new Label(z.collaboration,skin);
-        tbHost = new TextButton(z.runserver,skin);
-        Label lRemote = new Label(z.remoteip,skin);
-
-        //知捷云
-        tfRemoteIP = new TextField("pz-2.zjiecloud.cc",skin);
-
-        tfPort = new TextField("45372",skin);
-        tbJoin = new TextButton(z.join,skin);
-        roomName = new TextField("room1", skin);
-        uniqueID = new TextField("Steve", skin);
-        tbCreateRoom = new TextButton(z.createroom,skin);
-        tbJoinRoom = new TextButton(z.joinroom,skin);
-        clearLog = new TextButton(z.clearlog,skin);
-        pushUpdateBtn = new TextButton(z.pushupdate,skin);
-        tbJoin = new TextButton(z.join,skin);
-        netLog = new TextArea("",skin);
-        TextButton tbBack = new TextButton(z.back,skin);
-        lcollabstatus = new Label(z.status+": "+z.readytoconnect,skin);
-        final TextField tfMessage = new TextField("",skin);
-        TextButton tbSendMsg = new TextButton(z.sendmessage,skin);
-
-        pushUpdateBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                pushUpdate();
-            }
-        });
-
-        tbSendMsg.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                if (isServer){
-                    broadcast( tfMessage.getText() );
-                    tfMessage.setText( "" );
-                }
-                if (isClient){
-                    talktoserver(tfMessage.getText());
-                    tfMessage.setText("");
-                }
-            }
-        });
-
-
-        tbBack.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                backToMap();
-            }
-        });
-
-        til = new TextPromptListener() {
-
-            @Override
-            public void confirm(String input) {
-                if (input == "") {
-                    return;
-                }
-
-                runServer(Integer.parseInt(input));
-            }
-
-            @Override
-            public void cancel() {
-            }
-
-        };
-
-
-        tbHost.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (!isServer) {
-                    runServer( Integer.parseInt( tfPort.getText() ) );
-                }else
-                {
-                    stopServer();
-                }
-            }
-        });
-
-        tbJoin.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                if (!isClient) {
-                    runClient(tfRemoteIP.getText(), Integer.parseInt(tfPort.getText()));
-                }else
-                {
-                    stopClient();
-                }
-            }
-        });
-
-        tbCreateRoom.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                if (!isCreateRoom) {
-                    createRoom();
-                }else
-                {
-                    destroyRoom();
-                }
-            }
-        });
-
-        tbJoinRoom.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                if (!isJoinRoom) {
-                    joinRoom();
-                }else
-                {
-                    leaveRoom();
-                }
-            }
-        });
-
-        clearLog.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                netLog.setText("");
-            }
-        });
-
-        tCollab1.add(lTitle).colspan(2).row();
-        //tCollab1.add(new Label(z.port,skin)).width(btnx/2);
-        //tCollab1.add(tfPort).width(btnx/2).row();
-        //tCollab1.add(tbHost).colspan(2).row();
-        //tCollab1.add(lRemote).width(btnx/2);
-        //tCollab1.add(tfRemoteIP).width(btnx/2).row();
-        tCollab1.add(new Label(z.uniqueid,skin)).width(btnx/2);
-        tCollab1.add(uniqueID).width(btnx/2).row();
-        tCollab1.add(tbJoin).colspan(2).row();
-
-        tCollab1.add(new Label(z.room,skin)).width(btnx/2);
-        tCollab1.add(roomName).width(btnx/2).row();
-        tCollab1.add(tbCreateRoom).colspan(2).row();
-        tCollab1.add(tbJoinRoom).colspan(2).row();
-        //tCollab1.add(clearLog).colspan(2).row();
-        tCollab1.add(pushUpdateBtn).colspan(2).row();
-
-        tCollab1.add(tbBack).colspan(2).row();
-        tCollab1.add(lcollabstatus).colspan(2).row();
-
-        tCollab2.add(new Label(z.netlog,skin)).colspan(2).row();
-        tCollab2.add(netLog).height(btny*5).colspan(2).row();
-        tCollab.add( tCollab1 );
-        //tCollab.add( tCollab2 );
-    }
 
 
     public void logNet(String s){
@@ -21863,7 +21301,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     }
 
 
-    private void broadcast(String text){
+    public void broadcast(String text){
         try {
             TextChat sr = new TextChat();
             sr.text=text;
@@ -21872,7 +21310,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }catch(Exception e){}
     }
 
-    private void talktoserver(String text){
+    public void talktoserver(String text){
         try {
             TextChat request = new TextChat();
             request.text = text;
@@ -21880,7 +21318,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }catch(Exception e){}
     }
 
-    private void slowdown(){
+    public void slowdown(){
         while(client.getTcpWriteBufferSize()>1024){
             try {
                 sleep( 20 ); //20
@@ -21904,7 +21342,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
-    private void pushdata(packet lh){
+    public void pushdata(packet lh){
         try {
             server.sendToAllTCP(lh);
         }catch(Exception e){
@@ -21912,7 +21350,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
-    private void stopServer() {
+    public void stopServer() {
         try {
             server.stop();
             isServer = false;
@@ -21922,7 +21360,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }catch(Exception e){}
     }
 
-    private void stopClient() {
+    public void stopClient() {
         try {
             if (isCreateRoom) {
                 destroyRoom();
@@ -21954,7 +21392,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
     }
 
 
-    private void destroyRoom() {
+    public void destroyRoom() {
         try {
             //server.stop();
             command c = new command();
@@ -21969,7 +21407,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }catch(Exception e){}
     }
 
-    private void leaveRoom() {
+    public void leaveRoom() {
         try {
             //client.stop();
 
@@ -21986,7 +21424,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
-    private void createRoom() {
+    public void createRoom() {
         try {
             //server.stop();
             if (!isClient){
@@ -22011,7 +21449,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }catch(Exception e){}
     }
 
-    private void joinRoom() {
+    public void joinRoom() {
         try {
             //client.stop();
 
@@ -22058,7 +21496,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
-    private void runServer(int port){
+    public void runServer(int port){
         try {
             if (port <=0){
                 logNet("Please enter port number.");
@@ -22081,7 +21519,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }catch(Exception e){}
     }
 
-    private void runClient(String aipi, int portNum){
+    public void runClient(String aipi, int portNum){
         try {
             if (portNum <=0){
                 logNet("Please enter port number.");
