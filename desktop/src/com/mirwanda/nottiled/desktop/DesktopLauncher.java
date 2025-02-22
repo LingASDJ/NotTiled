@@ -6,8 +6,8 @@ package com.mirwanda.nottiled.desktop;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import com.mirwanda.nottiled.MyGdxGame;
-import javax.swing.JOptionPane;
+import com.mirwanda.nottiled.NotiledAndoridPro;
+
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		/*
@@ -46,7 +46,7 @@ public class DesktopLauncher {
 		//cfg3.useOpenGL3( false,1,1 );
 		cfg3.setMaximized( true );
 		com.mirwanda.nottiled.nullInterface ni3= new com.mirwanda.nottiled.nullInterface();
-		new Lwjgl3Application(new MyGdxGame("",ni3), cfg3);
+		new Lwjgl3Application(new NotiledAndoridPro("",ni3), cfg3);
 
 	}
 }

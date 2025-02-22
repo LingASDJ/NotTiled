@@ -10,8 +10,8 @@ import java.util.ArrayList;
 // Method to initialize and populate language selection box and back button
 public class SelectLangs {
 
-    public static String[] getLangs(SelectBox sbLanguage, Skin skin, language z) {
-        sbLanguage = new SelectBox(skin);
+    public static String[] getLangs(Skin skin, language z) {
+        SelectBox sbLanguage = new SelectBox(skin);
         java.util.List<String> srr = new ArrayList<>();
         srr.add("English");
         srr.add("Chinese");

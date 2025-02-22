@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.*;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
-import android.provider.Settings;
-import android.speech.tts.*;
 
 import com.badlogic.gdx.backends.android.*;
 //import com.google.android.gms.ads.*;//
@@ -63,44 +61,9 @@ public class MainActivity extends AndroidApplication implements Interface
 	public void changelanguage(String lang)
 	{
 
-	switch (lang)
-	{
-		/*
-		case "English":
-			tts.setLanguage(Locale.ENGLISH);
-			break;
-		case "Bahasa Indonesia":
-			tts.setLanguage(new Locale("in_ID"));
-			break;
-		case "Spanish":
-			tts.setLanguage(new Locale("es_ES"));
-			break;
-		case "French":
-			tts.setLanguage(new Locale("fr_FR"));
-			break;
-		case "Chinese":
-			tts.setLanguage(new Locale("cmn_CN"));
-			break;
-		case "Japanese":
-			tts.setLanguage(new Locale("ja_JP"));
-			break;
-		case "Russian":
-			tts.setLanguage(new Locale("ru_RU"));
-			break;
-		case "Portuguese":
-			tts.setLanguage(new Locale("pt_PT"));
-			break;
-		case "Tagalog":
-			tts.setLanguage(new Locale("fil_PH"));
-			break;
+	}
 
-		 */
-	}
-		
-		// TODO: Implement this method
-	}
-	
-	
+
 	@Override
 	public boolean ispro()
 	{
@@ -154,20 +117,11 @@ public class MainActivity extends AndroidApplication implements Interface
 
 
 	boolean proVersion = true;
-	/**/
-	//public AdView adView;//
-	//private InterstitialAd mInterstitialAd;//
-	/**/
 	
 	@Override
 	public void showinterstitial(){
-		runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					if (proVersion) return;
-					//mInterstitialAd.show();//
-				}
-			});
+		runOnUiThread(() -> {
+});
 	}
 	
 	@Override
@@ -256,7 +210,7 @@ public class MainActivity extends AndroidApplication implements Interface
 		if (intent.getData()!=null) intend=intent.getData().toString();
 
 		AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-		initialize(new MyGdxGame(intend,this), cfg);
+		initialize(new NotiledAndoridPro(intend,this), cfg);
 
 	}
 
@@ -274,7 +228,6 @@ public class MainActivity extends AndroidApplication implements Interface
 			e.printStackTrace();
 		}
 
-		//throw new RuntimeException("Test Crash"); // Force a crash
 		requestAccess();
 		runGDX();
 
@@ -285,117 +238,11 @@ public class MainActivity extends AndroidApplication implements Interface
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
-		/*
-		tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-
-				@Override
-				public void onInit(int status) {
-					if(status != TextToSpeech.ERROR) {
-						tts.setLanguage(Locale.UK);
-						tts.setPitch(1f);
-						tts.setSpeechRate(1f);
-						//   tts.speak(SC_str, TextToSpeech.QUEUE_FLUSH, null,null);
-					}
-				}
-			});
-
-		 */
-
-
-//		final Billing billing = Aplikasi.get().getBilling();
- //       mCheckout = Checkout.forActivity(this, billing);
-  //      mCheckout.start();
-   //     mCheckout.loadInventory(Inventory.Request.create().loadAllPurchases(), new InventoryCallback());
-
-		/**/
-
-		//RelativeLayout layout = new RelativeLayout(this);
-
-        // Do the stuff that initialize() would do for you
-		/*
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-							 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-     */
-
-
-        // Create the libgdx View
-        //View gameView = initializeForView(new MyGdxGame(intend,this));
-		//layout.addView(gameView);
-
-
-		//Create and setup interstitial
-
-		/*
-		mInterstitialAd = new InterstitialAd(this);
-		String ads;
-		if (BuildConfig.DEBUG) {
-			ads = "ca-app-pub-3940256099942544/1033173712";
-		}else{
-			ads = "ca-app-pub-0329741361926795/8939201077";
-		}
-
-		if (!proVersion){
-			mInterstitialAd.setAdUnitId(ads);
-			mInterstitialAd.loadAd(new AdRequest.Builder().build());
-			mInterstitialAd.setAdListener(new AdListener() {
-					@Override
-					public void onAdClosed() {
-						mInterstitialAd.loadAd(new AdRequest.Builder().build());
-					}
-				});
-		}
-
-        // Create and setup the Banner
-        adView = new AdView(this);
-        adView.setAdSize(AdSize.BANNER);
-		if (BuildConfig.DEBUG){
-			adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111"); // Put in your secret key here
-		}else
-		{
-        	adView.setAdUnitId("ca-app-pub-0329741361926795/9130772767"); // Put in your secret key here
-		}
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-		adView.setVisibility(View.GONE);
-        // Add the libgdx view
-
-        // Add the AdMob view
-        RelativeLayout.LayoutParams adParams =
-        	new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-											RelativeLayout.LayoutParams.WRAP_CONTENT);
-        adParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        adParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-
-        layout.addView(adView, adParams);
-
-		 */
-
-        // Hook it all up
-        //setContentView(layout);
-		/**/
-
     }
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged( hasFocus );
-
-
-
-		/* black bar.
-		if (hasFocus){
-			getWindow().getDecorView().setSystemUiVisibility(
-					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-							| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-							| View.SYSTEM_UI_FLAG_FULLSCREEN
-							| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-							| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY );
-		}
-
-		 */
 	}
 
 	@Override

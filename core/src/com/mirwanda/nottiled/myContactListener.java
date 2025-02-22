@@ -6,12 +6,11 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import static com.mirwanda.nottiled.obj.objecttype.MARKER;
 import static com.mirwanda.nottiled.obj.objecttype.POINTER;
 
 public class myContactListener implements ContactListener {
-        MyGdxGame game;
-        public myContactListener(MyGdxGame game){
+        NotiledAndoridPro game;
+        public myContactListener(NotiledAndoridPro game){
             this.game=game;
         }
 

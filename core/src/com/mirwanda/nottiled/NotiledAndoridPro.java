@@ -141,6 +141,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import java.util.Queue;
 
 import static java.lang.Thread.sleep;
 
@@ -150,19 +151,11 @@ import de.tomgrill.gdxdialogs.core.dialogs.GDXTextPrompt;
 import de.tomgrill.gdxdialogs.core.listener.TextPromptListener;
 
 
-public class MyGdxGame extends ApplicationAdapter implements GestureListener {
+public class NotiledAndoridPro extends ApplicationAdapter implements GestureListener {
     private static final boolean isDesktop = false;
-    final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tffint = new com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter.DigitsOnlyFilter();
-    final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tfffloat = new com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter() {
-        public boolean acceptChar(TextField p1, char c) {
-            return Character.toString( c ).matches( "[0-9.-]+" );
-        }
-    };
-    final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tffcolor = new com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter() {
-        public boolean acceptChar(TextField p1, char c) {
-            return Character.toString( c ).matches( "[a-fA-F0-9#]+" );
-        }
-    };
+    final TextField.TextFieldFilter tffint = new TextField.TextFieldFilter.DigitsOnlyFilter();
+    final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tfffloat = (p1, c) -> Character.toString( c ).matches( "[0-9.-]+" );
+    final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tffcolor = (p1, c) -> Character.toString( c ).matches( "[a-fA-F0-9#]+" );
     public Tutorials tutor = new Tutorials();
     public com.mirwanda.nottiled.Interface face;
     public guis gui = new guis();
@@ -185,7 +178,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     String temproname = "";
     String temprotype = "";
     String temprovalue = "";
-    private java.util.List<Integer> swatchValue = new ArrayList<Integer>();
+    private List<Integer> swatchValue = new ArrayList<Integer>();
 
     Texture txMinimap;
     float delta;
@@ -199,8 +192,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     Table lastStage;
     String sender;
     boolean swatches = false;
-    int senderID; 
-    int selTsetID; 
+    int senderID;
+    int selTsetID;
     String fps = "";
 
 
@@ -226,7 +219,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     String orientation = "orthogonal";
     String tiledversion = "1.9.1";
     String maptype = "map";
-    java.util.List<Long> spr;
+    List<Long> spr;
 
     enum ViewMode {STACK, SINGLE, ALL, CUSTOM}
 
@@ -275,23 +268,23 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     BitmapFont str1;
     decoder decoder = new decoder();
     Skin skin,skin2;
-    java.util.List<property> properties = new ArrayList<property>();
-    java.util.List<layer> layers = new ArrayList<layer>();
+    List<property> properties = new ArrayList<property>();
+    List<layer> layers = new ArrayList<layer>();
     layer cliplayer = new layer();
     int clipsource = 0;
-    java.util.List<tileset> tilesets = new ArrayList<tileset>();
-    java.util.List<tileset> tilesets2 = new ArrayList<tileset>();
-    java.util.List<drawer> drawers = new ArrayList<drawer>();
-    java.util.List<autotile> autotiles = new ArrayList<autotile>();
-    java.util.List<TextField> tf = new ArrayList<TextField>();
-    java.util.List<Label> tla = new ArrayList<Label>();
-    java.util.List<layerhistory> undolayer = new ArrayList<layerhistory>();
-    java.util.List<layerhistory> redolayer = new ArrayList<layerhistory>();
+    List<tileset> tilesets = new ArrayList<tileset>();
+    List<tileset> tilesets2 = new ArrayList<tileset>();
+    List<drawer> drawers = new ArrayList<drawer>();
+    List<autotile> autotiles = new ArrayList<autotile>();
+    List<TextField> tf = new ArrayList<TextField>();
+    List<Label> tla = new ArrayList<Label>();
+    List<layerhistory> undolayer = new ArrayList<layerhistory>();
+    List<layerhistory> redolayer = new ArrayList<layerhistory>();
 
-    java.util.List<layerobjecthistory> undolayerobject = new ArrayList<>();
-    java.util.List<layerobjecthistory> redolayerobject = new ArrayList<>();
+    List<layerobjecthistory> undolayerobject = new ArrayList<>();
+    List<layerobjecthistory> redolayerobject = new ArrayList<>();
 
-    java.util.List<TileCache> tcaches = new ArrayList<TileCache>();
+    List<TileCache> tcaches = new ArrayList<TileCache>();
 
     layer tempLayer;
     tileset tempTset;
@@ -357,7 +350,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     Table tImageLayer;
     TextField tfImageName, tfImageSource, tfImageKey, tfImageOpacity, tfImageOffsetX, tfImageOffsetY;
     SelectBox sbPropType, sbPropValbool;
-    TextArea fPropVal; 
+    TextArea fPropVal;
     TextButton bPropValfile, bPropApply, bPropCancel, bPropCopy, bPropPaste, bPropGid, bProppng, bPropCp;
     String clipProp = "", clipobjcpy = "";
     com.badlogic.gdx.scenes.scene2d.ui.List<String> llayerlist;
@@ -405,7 +398,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     Preferences prefs;
     boolean loadingfile;
     boolean bypassads = false;
-    java.util.List<tile> tiles;
+    List<tile> tiles;
     int sprX, sprY, margin, spacing;
     int xpos, ypos;
     float camA, camB, camC, camD;
@@ -465,7 +458,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private Slider sdScrollSpeed, sdGridOpacity;
     private SelectBox sbLanguage;
     private Online templates = new Online();
-    private java.util.List<Boolean> autoed = new ArrayList<Boolean>();
+    private List<Boolean> autoed = new ArrayList<Boolean>();
     private int position;
     private Table ttools;
     private int tilesetsize;
@@ -479,7 +472,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private boolean sEnableBlending;
     private CheckBox cbEnableBlending;
     private String cammode = "";
-    private java.util.List<Boolean> massprops = new ArrayList<Boolean>();
+    private List<Boolean> massprops = new ArrayList<Boolean>();
     private int mapstartSelect;
     private int mapendSelect;
     private int mapinitialSelect;
@@ -561,11 +554,10 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private int newTerrainID;
     private boolean lockUI;
 
-    public MyGdxGame(String intend, Interface face)//, AdView ads)
+    public NotiledAndoridPro(String intend, Interface face)
     {
         this.intend = intend;
         this.face = face;
-        //this.ads= ads;
     }
 
     public static long getUsedMemorySize() {
@@ -585,10 +577,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     }
 
-    public static java.util.List<String> splitEqually(String text, int size) {
-        // Give the list the right capacity to start with. You could use an array
-        // instead if you wanted.
-        java.util.List<String> ret = new ArrayList<String>( (text.length() + size - 1) / size );
+    public static List<String> splitEqually(String text, int size) {
+        List<String> ret = new ArrayList<String>( (text.length() + size - 1) / size );
 
         for (int start = 0; start < text.length(); start += size) {
             ret.add( text.substring( start, Math.min( text.length(), start + size ) ) );
@@ -863,9 +853,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     byte[] nativeData;
-    java.util.List<byte[]> nativeDatas = new ArrayList<byte[]>();
+    List<byte[]> nativeDatas = new ArrayList<byte[]>();
     String nativeFilename = "";
-    java.util.List<String> nativeFilenames = new ArrayList<String>();
+    List<String> nativeFilenames = new ArrayList<String>();
     String nativeStatus = "";
     String nativeUri = "";
 
@@ -1841,7 +1831,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             redolayer.add( lh );
                             histcount++;
                             if (!lh.isFollower()) {
-                                java.util.List<layerhistory> templist = new ArrayList<layerhistory>();
+                                List<layerhistory> templist = new ArrayList<layerhistory>();
 
                                 for (int t = 0; t < undolayer.size() - histcount; t++) {
                                     templist.add( undolayer.get( t ) );
@@ -2164,7 +2154,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
             ts = tilesets.get( seltset );
 
-            java.util.List<terrain> tr = tilesets.get( seltset ).getTerrains();
+            List<terrain> tr = tilesets.get( seltset ).getTerrains();
 
 
             if (pickAuto) { //auto list
@@ -3645,7 +3635,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     Gdx.gl.glBlendFunc( GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA );
                     batch.setColor( 1, 1, 1, layers.get( jo ).getOpacity() );
                 }
-                java.util.List<drawer> drawers = new ArrayList<drawer>();
+                List<drawer> drawers = new ArrayList<drawer>();
                 drawers.clear();
                 for (int a = aa; a < bb; a++) {
                     for (int b = cc; b < dd; b++) {
@@ -3727,7 +3717,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     } //for  b
                 }//for a
 
-                //java.util.Collections.sort(drawers);//fps hogger
+                //Collections.sort(drawers);//fps hogger
                 int counting = 0;
                 for (drawer drawer : drawers) {
 
@@ -6150,9 +6140,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         l.setType( layer.Type.TILE );
         l.setVisible( true );
         l.setName( "Tile 1" );
-        java.util.List<Long> ls = new ArrayList<Long>();
-        java.util.List<Integer> lts = new ArrayList<Integer>();
-        java.util.List<Integer> ltl = new ArrayList<Integer>();
+        List<Long> ls = new ArrayList<Long>();
+        List<Integer> lts = new ArrayList<Integer>();
+        List<Integer> ltl = new ArrayList<Integer>();
 
         for (long i = 0; i < Tw * Th; i++) {
             ls.add( (long) 0 );
@@ -6319,7 +6309,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
 
 
-    private void showtsetselection(final java.util.List<tileset> tset) {
+    private void showtsetselection(final List<tileset> tset) {
         bigman = new Table();
         bigman.setFillParent( true );
         Table tsetsel = new Table();
@@ -6582,24 +6572,21 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 final FileHandle tmpFile = FileHandle.tempFile( "mode2" );
                 tmpFile.write( httpResponse.getResultAsStream(), false );
-                Gdx.app.postRunnable( new Runnable() {
-                    @Override
-                    public void run() {
-                        String sss = tmpFile.readString();
+                Gdx.app.postRunnable(() -> {
+                    String sss = tmpFile.readString();
 
-                        try {
-                            templates = new Online();
-                            FileHandle fh = Gdx.files.absolute( basepath+"NotTiled/sample/template/" + foldname + "/template.tmx" );
-                            fh.writeString( sss, false );
-                            refreshOnline();
-                            msgbox( z.downloadcomplete );
-                            downloading = false;
+                    try {
+                        templates = new Online();
+                        FileHandle fh1 = Gdx.files.absolute( basepath+"NotTiled/sample/template/" + foldname + "/template.tmx" );
+                        fh1.writeString( sss, false );
+                        refreshOnline();
+                        msgbox( z.downloadcomplete );
+                        downloading = false;
 
-                        } catch (Exception e) {
-                            ErrorBung( e, "enyoh.txt" );
-                        }
+                    } catch (Exception e) {
+                        ErrorBung( e, "enyoh.txt" );
                     }
-                } );
+                });
             }
 
             @Override
@@ -7135,7 +7122,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 gotoStage( tRecent );
                 lrecentlist.setItems();
 
-                java.util.List<String> spt = new ArrayList<>();
+                List<String> spt = new ArrayList<>();
                 for (int i = 0; i < recents.getPaths().size(); i++) {
                     if (recents.getFilenames().get(i)!=null) {
                         spt.add( "["+i+"] " + recents.getFilenames().get( i ) );
@@ -7316,7 +7303,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 gotoStage( tTutorial );
                 ltutorial.setItems();
 
-                java.util.List<String> spt = new ArrayList<String>();
+                List<String> spt = new ArrayList<String>();
                 for (int i = 0; i < tutor.getT().size(); i++) {
                     spt.add( tutor.getT().get( i ).getName() );
                 }
@@ -7395,7 +7382,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     public void rwmod(String[] args) throws IOException {
-        java.util.List<String> srcFiles = Arrays.asList(args);
+        List<String> srcFiles = Arrays.asList(args);
         FileOutputStream fos = new FileOutputStream(curdir+"/"+curfile+".rwmod");
         ZipOutputStream zipOut = new ZipOutputStream(fos);
         for (String srcFile : srcFiles) {
@@ -7578,7 +7565,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     Pixmap pbg, pts;
-    java.util.List<Color> tscolor;
+    List<Color> tscolor;
 
     private void traceBackground(){
         if (background==null){
@@ -8946,11 +8933,11 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                 for (int jo = 0; jo < layers.size(); jo++) {
                     if (layers.get( jo ).getType() == layer.Type.TILE && layers.get( jo ).isVisible()) {
-                        java.util.List<drawer> drawers = new ArrayList<drawer>();
+                        List<drawer> drawers = new ArrayList<drawer>();
                         drawers.clear();
-                        java.util.List<drawer> drawers2 = new ArrayList<drawer>();
+                        List<drawer> drawers2 = new ArrayList<drawer>();
                         drawers2.clear();
-                        java.util.List<drawer> drawers3 = new ArrayList<drawer>();
+                        List<drawer> drawers3 = new ArrayList<drawer>();
                         drawers3.clear();
                         for (int a = aa; a < bb; a++) {
                             for (int b = cc; b < dd; b++) {
@@ -9149,7 +9136,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             } //for  b
                         }//for a
 
-                        java.util.Collections.sort( drawers );//fps hogger
+                        Collections.sort( drawers );//fps hogger
 
                         for (drawer drawer : drawers) {
                             drawer.draw( pm2, tilesets, Tsw, Tsh );
@@ -9249,7 +9236,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                 for (int jo = 0; jo < layers.size(); jo++) {
                     if (layers.get(jo).getType() == layer.Type.TILE && layers.get(jo).isVisible()) {
-                        java.util.List<drawer> drawers = new ArrayList<drawer>();
+                        List<drawer> drawers = new ArrayList<drawer>();
                         drawers.clear();
                         for (int a = aa; a < bb; a++) {
                             for (int b = cc; b < dd; b++) {
@@ -9337,7 +9324,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             } //for  b
                         }//for a
 
-                        java.util.Collections.sort(drawers);//fps hogger
+                        Collections.sort(drawers);//fps hogger
 
                         for (drawer drawer : drawers) {
                             drawer.draw(pm2, tilesets, Tsw, Tsh);
@@ -9421,7 +9408,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 flag = "00";
                 int jo = selLayer;
                 if (layers.get(jo).getType() == layer.Type.TILE && layers.get(jo).isVisible()) {
-                    java.util.List<drawer> drawers = new ArrayList<drawer>();
+                    List<drawer> drawers = new ArrayList<drawer>();
                     drawers.clear();
                     for (int a = aa; a < bb; a++) {
                         for (int b = cc; b < dd; b++) {
@@ -9531,7 +9518,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         } //for  b
                     }//for a
 
-                    //java.util.Collections.sort(drawers);//fps hogger
+                    //Collections.sort(drawers);//fps hogger
 
                     for (drawer drawer : drawers) {
                         drawer.draw(pm2, tilesets, Tsw, Tsh);
@@ -9666,7 +9653,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         subsetx = 0;
                     }
                     if (layers.get(jo).getType()!=layer.Type.TILE) continue;
-                    java.util.List<drawer> drawers = new ArrayList<drawer>();
+                    List<drawer> drawers = new ArrayList<drawer>();
                     drawers.clear();
                     for (int a = aa; a < bb; a++) {
                         for (int b = cc; b < dd; b++) {
@@ -9749,7 +9736,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         } //for  b
                     }//for a
 
-                    java.util.Collections.sort(drawers);//fps hogger
+                    Collections.sort(drawers);//fps hogger
 
                     for (drawer drawer : drawers) {
                         drawer.draw(pm2, tilesets, Tsw, Tsh);
@@ -9803,8 +9790,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     public void newgeneration(int birthlimit, int deathlimit, long livestr, int livetset, long deadstr, int deadtset) {
-        java.util.List<Long> strt = layers.get(selLayer).getStr();
-        java.util.List<Integer> tsett = layers.get(selLayer).getTset();
+        List<Long> strt = layers.get(selLayer).getStr();
+        List<Integer> tsett = layers.get(selLayer).getTset();
 
         int total = Tw * Th;
         for (int k = 0; k < total; k++) {
@@ -9871,7 +9858,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                                 int[] tdata = t.getTerrain();
                                 int[] ndat = new int[]{tdata[1], tdata[0], tdata[3], tdata[2]};
 
-                                java.util.List<Integer> lint = new ArrayList<Integer>();
+                                List<Integer> lint = new ArrayList<Integer>();
 
                                 for (int u = 0; u < tilesets.get(newtset).getTiles().size(); u++) {
                                     tile xo = tilesets.get(newtset).getTiles().get(u);
@@ -9929,7 +9916,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                                 int[] tdata = t.getTerrain();
                                 int[] ndat = new int[]{tdata[2], tdata[3], tdata[0], tdata[1]};
 
-                                java.util.List<Integer> lint = new ArrayList<Integer>();
+                                List<Integer> lint = new ArrayList<Integer>();
 
                                 for (int u = 0; u < tilesets.get( newtset ).getTiles().size(); u++) {
                                     tile xo = tilesets.get( newtset ).getTiles().get( u );
@@ -10003,7 +9990,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                                 int[] tdata = t.getTerrain();
                                 int[] ndat = new int[]{tdata[3], tdata[2], tdata[1], tdata[0]};
 
-                                java.util.List<Integer> lint = new ArrayList<Integer>();
+                                List<Integer> lint = new ArrayList<Integer>();
 
                                 for (int u = 0; u < tilesets.get(newtset).getTiles().size(); u++) {
                                     tile xo = tilesets.get(newtset).getTiles().get(u);
@@ -10205,7 +10192,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     }
 
-    java.util.List<obj> selobjs = new ArrayList<>();
+    List<obj> selobjs = new ArrayList<>();
     public void loadPropEditor() {
 		/*
 		 Table tPropEditor;
@@ -10322,7 +10309,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         bPropApply.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                java.util.List<property> pp = new ArrayList<property>();
+                List<property> pp = new ArrayList<property>();
 
                 switch (sender) {
                     case "object":
@@ -10377,7 +10364,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         boolean ada = false;
                         int ka = 0;
                         property tgt = null;
-                        java.util.List<property> ppt = null;
+                        List<property> ppt = null;
 
                         for (int k = 0; k < tilesets.get(seltset).getTiles().size(); k++) {
                             if (tilesets.get(seltset).getTiles().get(k).getTileID() == o) {
@@ -10450,7 +10437,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                         for (int k = 0; k < tilesets.get(selTsetID).getTiles().size(); k++) {
                             if (tilesets.get(selTsetID).getTiles().get(k).getTileID() == i) {
-                                java.util.List<property> ppt = tilesets.get(selTsetID).getTiles().get(k).getProperties();
+                                List<property> ppt = tilesets.get(selTsetID).getTiles().get(k).getProperties();
                                 for (int j = 0; j < ppt.size(); j++) {
                                     if (ppt.get(j).getName().equalsIgnoreCase(n) && ppt.get(j).getValue().equalsIgnoreCase(v)) {
                                         ada = true;
@@ -10716,14 +10703,11 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         zoomTreshold = prefs.getInteger("zoom", 2);
         loadViewMode();
 
-        //优化选择语言
         sbLanguage = new SelectBox(skin);
-
         ArrayList<String> srr = new ArrayList<>();
         srr.add("English");
         srr.add("Chinese");
-        sbLanguage.setItems(srr.toArray(new String[0]));
-        SelectLangs.getLangs(sbLanguage,skin,z);
+        sbLanguage.setItems((Object[])srr.toArray(new String[0]));
 
         bBack3 = new TextButton(z.back, skin);
         bBack3.addListener(new ChangeListener() {
@@ -10755,7 +10739,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 tfCustomFont.setText(sCustomFont);
                 frwpath.setText(rwpath);
 
-                SelectLangs.getLangs(sbLanguage,skin,z);
+                SelectLangs.getLangs(skin,z);
 
                 cbResize.setChecked(sResizeTiles);
                 oldlang = language;
@@ -11229,7 +11213,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     }
 
-    java.util.List<layerhistory> elha = new ArrayList<layerhistory>();
+    List<layerhistory> elha = new ArrayList<layerhistory>();
 
     public void snapWholeMapPhase1(int zeLayer){
         elha.clear();
@@ -11318,8 +11302,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 }
 
                 layer newlayer = new layer();
-                java.util.List<Long> newstr = new ArrayList<Long>();
-                java.util.List<Integer> newtset = new ArrayList<Integer>();
+                List<Long> newstr = new ArrayList<Long>();
+                List<Integer> newtset = new ArrayList<Integer>();
 
                 for (int i = 0; i < Tw * Th; i++) {
                     newstr.add((long) 0);
@@ -11375,9 +11359,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 layer newlayer = new layer();
 
                 if (newLayerType==layer.Type.TILE) {
-                    java.util.List<Long> newstr = new ArrayList<Long>();
-                    java.util.List<Integer> newtset = new ArrayList<Integer>();
-                    java.util.List<Integer> newtile = new ArrayList<Integer>();
+                    List<Long> newstr = new ArrayList<Long>();
+                    List<Integer> newtset = new ArrayList<Integer>();
+                    List<Integer> newtile = new ArrayList<Integer>();
 
                     for (int i = 0; i < Tw * Th; i++) {
                         newstr.add((long) 0);
@@ -11533,7 +11517,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void changed(ChangeEvent event, Actor actor) {
                 int dex = llayerlist.getSelectedIndex();
                 if (dex > 0) {
-                    java.util.Collections.swap(layers, dex, dex - 1);
+                    Collections.swap(layers, dex, dex - 1);
                     refreshLayerList();
                     //update caches
                     updateObjectCollision();
@@ -11575,7 +11559,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         tLayerMgmt.add(bBackLayer).padBottom(5);
     }
 
-    public void refreshProperties(java.util.List<property> at) {
+    public void refreshProperties(List<property> at) {
         lproplist.setItems();
         int saiz = at.size();
 
@@ -11650,7 +11634,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int dex = lproplist.getSelectedIndex();
-                java.util.List<property> pp = new ArrayList<property>();
+                List<property> pp = new ArrayList<property>();
                 switch (sender) {
                     case "object":
                         pp = selobjs.get(0).getProperties();
@@ -11689,7 +11673,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int dex = lproplist.getSelectedIndex();
-                java.util.List<property> pp = new ArrayList<property>();
+                List<property> pp = new ArrayList<property>();
                 switch (sender) {
                     case "object":
                         pp = selobjs.get(0).getProperties();
@@ -11769,7 +11753,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 try {
-                    java.util.List<property> pp = new ArrayList<property>();
+                    List<property> pp = new ArrayList<property>();
                     switch (sender) {
 
                         case "auto":
@@ -11937,7 +11921,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void changed(ChangeEvent event, Actor actor) {
                 if (lproplist.getItems().size == 0) return;
                 int dex = lproplist.getSelectedIndex();
-                java.util.List<property> pp = new ArrayList<property>();
+                List<property> pp = new ArrayList<property>();
                 switch (sender) {
                     case "object":
                         pp = selobjs.get(0).getProperties();
@@ -12014,7 +11998,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void changed(ChangeEvent event, Actor actor) {
                 int dex = lproplist.getSelectedIndex();
 
-                java.util.List<property> pp = new ArrayList<property>();
+                List<property> pp = new ArrayList<property>();
                 switch (sender) {
                     case "object":
                         pp = selobjs.get(0).getProperties();
@@ -12040,7 +12024,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 }
                 int saiz = pp.size();
                 if (dex > 0) {
-                    java.util.Collections.swap(pp, dex, dex - 1);
+                    Collections.swap(pp, dex, dex - 1);
 
                     refreshProperties(pp);
 
@@ -12052,7 +12036,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         bRemoveProp.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                java.util.List<property> pp = new ArrayList<property>();
+                List<property> pp = new ArrayList<property>();
                 switch (sender) {
                     case "object":
                         pp = selobjs.get(0).getProperties();
@@ -12148,10 +12132,10 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         tblmain.add(sp);
         tblmain.setFillParent(true);
         tbl.defaults().width(btnx).height(btny).padBottom(2);
-        //java.util.List<TextButton> at = new ArrayList<TextButton>();
+        //List<TextButton> at = new ArrayList<TextButton>();
 
         for (int i = 0; i < autotiles.size(); i++) {
-            java.util.List<property> sz = autotiles.get(i).getProperties();
+            List<property> sz = autotiles.get(i).getProperties();
             String type = "";
             String name = "";
             boolean hidden = false;
@@ -12311,7 +12295,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         tblmain.add(sp);
         tblmain.setFillParent(true);
         tbl.defaults().width(btnx).height(btny*1.5f).padBottom(2);
-        //java.util.List<TextButton> at = new ArrayList<TextButton>();
+        //List<TextButton> at = new ArrayList<TextButton>();
         int tt = 0;
         TextButton tit = new TextButton("+", skin);
         TextButton tut = new TextButton(z.back, skin);
@@ -12339,7 +12323,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             //////
                             int dex = Integer.parseInt(actor.getName());
                             if (dex < layers.size()-1) {
-                                java.util.Collections.swap(layers, dex, dex + 1);
+                                Collections.swap(layers, dex, dex + 1);
                                 resetCaches();
                             }
                             //////
@@ -12363,7 +12347,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             //////
                             int dex = Integer.parseInt(actor.getName());
                             if (dex > 0) {
-                                java.util.Collections.swap(layers, dex, dex - 1);
+                                Collections.swap(layers, dex, dex - 1);
                                 resetCaches();
                             }
                             //////
@@ -12702,7 +12686,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         tblmain.add(sp);
         tblmain.setFillParent(true);
         tbl.defaults().width(btnx).padBottom(2);
-        //java.util.List<TextButton> at = new ArrayList<TextButton>();
+        //List<TextButton> at = new ArrayList<TextButton>();
         tbl.add(new Label(z.tilelayer, skin)).row();
         for (int i = 0; i < 5; i++) {
             String name = "";
@@ -12789,7 +12773,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                     if (none) alltemplates.add(name); //jadi yang ga masuk kategori gak ilang.
                 }
-                java.util.Collections.sort(alltemplates);
+                Collections.sort(alltemplates);
                 lptlist.setItems(alltemplates.toArray(new String[alltemplates.size()]));
                 ////////////////fitter the data
                 lptlist.setItems(new String[]{});
@@ -12846,7 +12830,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                                 if (none) alltemplates.add(name); //jadi yang ga masuk kategori gak ilang.
                             }
-                            java.util.Collections.sort(alltemplates);
+                            Collections.sort(alltemplates);
                             lptlist.setItems(alltemplates.toArray(new String[0]));
 
                             //   gotoStage(tPropsMgmt);
@@ -13078,7 +13062,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void changed(ChangeEvent event, Actor actor) {
                 int dex = lautolist.getSelectedIndex();
                 if (dex > 0) {
-                    java.util.Collections.swap(autotiles, dex, dex - 1);
+                    Collections.swap(autotiles, dex, dex - 1);
                     refreshAutoMgmt();
                 }
             }
@@ -13309,7 +13293,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 int saiz = tilesets.size();
 
                 if (dex > 0) {
-                    java.util.Collections.swap(tilesets, dex, dex - 1);
+                    Collections.swap(tilesets, dex, dex - 1);
                     CacheAllTset();
                     //reindexing
                     templastID = 1;
@@ -13327,7 +13311,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 if (saiz > 0) {
                     int dex = ltsetlist.getSelectedIndex();
                     tilesets.remove(dex);
-                    java.util.List<Integer> nyot = new ArrayList<Integer>();
+                    List<Integer> nyot = new ArrayList<Integer>();
                     CacheAllTset();
                     if (seltset > 0) seltset -= 1;
                     //reindexing
@@ -13511,9 +13495,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                     if (nTh > Th) {//expand height
 
-                        java.util.List<Long> tStrs = new ArrayList<Long>();
-                        java.util.List<Integer> tTsets = new ArrayList<Integer>();
-                        java.util.List<Integer> tTiles = new ArrayList<Integer>();
+                        List<Long> tStrs = new ArrayList<Long>();
+                        List<Integer> tTsets = new ArrayList<Integer>();
+                        List<Integer> tTiles = new ArrayList<Integer>();
 
                         for (int k = 0; k < Tw; k++) {
                             tStrs.add((long) 0);
@@ -13523,9 +13507,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                         for (int j = 0; j < layers.size(); j++) {
                             if (layers.get(j).getType()!=layer.Type.TILE) continue;
-                            java.util.List<Long> strs = layers.get(j).getStr();
-                            java.util.List<Integer> tsets = layers.get(j).getTset();
-                            java.util.List<Integer> tiles = layers.get(j).getTile();
+                            List<Long> strs = layers.get(j).getStr();
+                            List<Integer> tsets = layers.get(j).getTset();
+                            List<Integer> tiles = layers.get(j).getTile();
                             for (int i = 0; i < nTh - Th; i++) {
 
                                 if (cb2.isChecked()) {
@@ -13562,9 +13546,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                     int nTw = Integer.parseInt(fTw.getText());
                     if (nTw > Tw) {//expand width
-                        java.util.List<Long> tStrs = new ArrayList<Long>();
-                        java.util.List<Integer> tTsets = new ArrayList<Integer>();
-                        java.util.List<Integer> tTiles = new ArrayList<Integer>();
+                        List<Long> tStrs = new ArrayList<Long>();
+                        List<Integer> tTsets = new ArrayList<Integer>();
+                        List<Integer> tTiles = new ArrayList<Integer>();
 
                         for (int k = 0; k < nTw - Tw; k++) {
                             tStrs.add((long) 0);
@@ -13574,9 +13558,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                         for (int j = 0; j < layers.size(); j++) {
                             if (layers.get(j).getType()!=layer.Type.TILE) continue;
-                            java.util.List<Long> strs = layers.get(j).getStr();
-                            java.util.List<Integer> tsets = layers.get(j).getTset();
-                            java.util.List<Integer> tiles = layers.get(j).getTile();
+                            List<Long> strs = layers.get(j).getStr();
+                            List<Integer> tsets = layers.get(j).getTset();
+                            List<Integer> tiles = layers.get(j).getTile();
 
                             for (int i = Th; i > 0; i--) {
                                 int moyeng = i * Tw;
@@ -13851,9 +13835,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 if (dex > 0) {
 
 
-                    java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                    List<tile> tiles = tilesets.get(selTsetID).getTiles();
 
-                    java.util.Collections.swap(tiles, dex, dex - 1);
+                    Collections.swap(tiles, dex, dex - 1);
                     String[] srr = new String[tiles.size()];
                     for (int i = 0; i < tiles.size(); i++) {
                         srr[i] = Integer.toString(tiles.get(i).getTileID());
@@ -13871,7 +13855,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             public void changed(ChangeEvent event, Actor actor) {
                 if (tilesets.size() > 0) {
 
-                    java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                    List<tile> tiles = tilesets.get(selTsetID).getTiles();
 
                     if (tiles.size() > 0) {
                         int dex = ltilelist.getSelectedIndex();
@@ -14271,7 +14255,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 }
                 int dexo = lframelist.getSelectedIndex();
 
-                java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                List<tile> tiles = tilesets.get(selTsetID).getTiles();
 
                 tiles.get(selTileID).getAnimation().get(dexo).setDuration(Integer.parseInt(input));
 
@@ -14309,7 +14293,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 selTileID = -1;
                 anime = false;
 					/*
-					java.util.List <tile> tiles = tilesets.get(selTsetID).getTiles();
+					List <tile> tiles = tilesets.get(selTsetID).getTiles();
 
 					String[] srr = new String[tiles.size()];
 					for (int i=0;i < tiles.size();i++)
@@ -14355,7 +14339,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                List<tile> tiles = tilesets.get(selTsetID).getTiles();
 
                 if (tiles.get(selTileID).getAnimation().size() > 0) {
                     getNewTextInput(pEditFrame, "Edit Duration", Integer.toString(tiles.get(selTileID).getAnimation().get(lframelist.getSelectedIndex()).getDuration()), "");
@@ -14370,9 +14354,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 int dex = lframelist.getSelectedIndex();
                 if (dex > 0) {
 
-                    java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                    List<tile> tiles = tilesets.get(selTsetID).getTiles();
 
-                    java.util.Collections.swap(tiles.get(selTileID).getAnimation(), dex, dex - 1);
+                    Collections.swap(tiles.get(selTileID).getAnimation(), dex, dex - 1);
 
                     int dexa = tiles.get(selTileID).getAnimation().size();
                     if (dexa > 0) {
@@ -14394,7 +14378,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 deletinganim = true;
-                java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                List<tile> tiles = tilesets.get(selTsetID).getTiles();
 
                 if (tiles.get(selTileID).getAnimation().size() > 0) {
                     int dex = lframelist.getSelectedIndex();
@@ -15059,7 +15043,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             //if (t.getProperties().get(m).getType()!=null) srz.attribute("", "type", t.getProperties().get(m).getType().toLowerCase());
                             if (t.getProperties().get(m).getValue() != null) {
                                 if (t.getProperties().get(m).getName().equalsIgnoreCase("embedded_tileset")) {
-                                    java.util.List<String> values = splitEqually(t.getProperties().get(m).getValue(), 100);
+                                    List<String> values = splitEqually(t.getProperties().get(m).getValue(), 100);
                                     for (int g = 0; g < values.size(); g++) {
                                         srz.text(values.get(g) + "\n");
                                     }
@@ -16786,9 +16770,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             l.setType( layer.Type.TILE );
             l.setVisible( true );
             l.setName( "Tile 1" );
-            java.util.List<Long> ls = new ArrayList<Long>();
-            java.util.List<Integer> lts = new ArrayList<Integer>();
-            java.util.List<Integer> ltl = new ArrayList<Integer>();
+            List<Long> ls = new ArrayList<Long>();
+            List<Integer> lts = new ArrayList<Integer>();
+            List<Integer> ltl = new ArrayList<Integer>();
 
             for (long i = 0; i < Tw * Th; i++) {
                 ls.add( (long) 0 );
@@ -16983,8 +16967,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             }
                         }
                         for (int k = 0; k < layers.size(); k++) {
-                            java.util.List<Long> ls = new ArrayList<Long>();
-                            java.util.List<Integer> lts = new ArrayList<Integer>();
+                            List<Long> ls = new ArrayList<Long>();
+                            List<Integer> lts = new ArrayList<Integer>();
 
                             for (long i = 0; i < Tw * Th; i++) {
                                 if (fill!=-1 && k==0){
@@ -18250,9 +18234,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     }
 
-    public java.util.List<Integer> cacheTset(java.util.List<Long> spr) {
+    public List<Integer> cacheTset(List<Long> spr) {
         tilesetsize = tilesets.size();
-        java.util.List<Integer> nyot = new ArrayList<>();
+        List<Integer> nyot = new ArrayList<>();
         for (int s = 0; s < spr.size(); s++) {
             hex = Long.toHexString(spr.get(s));
             trailer = "00000000" + hex;
@@ -18275,7 +18259,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
         log("prepare caching tset...");
         //hog
-        java.util.List<Integer> copy = new ArrayList<>();
+        List<Integer> copy = new ArrayList<>();
         for (int k = 0; k<Tw*Th;k++){
             copy.add(Integer.valueOf( -1 ));
         }
@@ -18339,7 +18323,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         return 1;
     }
 
-    public void loadtsx(FileHandle source, java.util.List<tileset> tilesets, String curdir){
+    public void loadtsx(FileHandle source, List<tileset> tilesets, String curdir){
         String tsxpath = "";
         String owner = "";
         String isi = "";
@@ -18896,7 +18880,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     boolean ada = false;
                     int ka = 0;
                     property tgt = null;
-                    java.util.List<property> ppt = null;
+                    List<property> ppt = null;
 
                     for (int k = 0; k < tilesets.get(selTsetID).getTiles().size(); k++) {
                         if (tilesets.get(selTsetID).getTiles().get(k).getTileID() == o) {
@@ -18948,7 +18932,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
 
                 }
-                java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                List<tile> tiles = tilesets.get(selTsetID).getTiles();
                 ltilelist.setItems();
                 String[] srr = new String[tiles.size()];
                 for (int i = 0; i < tiles.size(); i++) {
@@ -19430,7 +19414,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                         newanim.setTileID(num - ts.getFirstgid());
 
-                        java.util.List<tile> tiles = tilesets.get(selTsetID).getTiles();
+                        List<tile> tiles = tilesets.get(selTsetID).getTiles();
                         boolean ada = false;
                         tile oldanim;
                         for (int o = 0; o < tiles.size(); o++) {
@@ -19928,7 +19912,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     }
 
-    java.util.List<obj> tempObjx = new ArrayList<obj>();
+    List<obj> tempObjx = new ArrayList<obj>();
 
     public static double roundToHalf(double d) {
         return Math.round(d * 2) / 2.0;
@@ -20782,8 +20766,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         if (tilesets.isEmpty()) return;
 
         ATGraph = new ATGraph();
-        java.util.List<Vector2> history = new ArrayList<Vector2>();
-        java.util.List<Integer> historyA = new ArrayList<Integer>();
+        List<Vector2> history = new ArrayList<Vector2>();
+        List<Integer> historyA = new ArrayList<Integer>();
 
         AutoTile myAT = new AutoTile(-1);
         historyA.add(-1);
@@ -20840,12 +20824,12 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         }catch(Exception e){}
     }
 
-    java.util.List<tung> numanuma = new ArrayList<tung>();
+    List<tung> numanuma = new ArrayList<tung>();
 
     private boolean newTerrainify(int num, tile nx, int[] directions, boolean fill) {
         if (!nx.isTerrainForEditor()) return false;
         if (!nx.isCenter()) return true;
-        java.util.List<Integer> lint = new ArrayList<>();
+        List<Integer> lint = new ArrayList<>();
         int[] aa = null, bb=null, cc=null;
 
         if (nx != null) {
@@ -21020,7 +21004,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 if (bb != null) {
                     cc = terrainInt( i, aa, bb );
                     //log(cc[0]+","+cc[1]+","+cc[2]+","+cc[3]);
-                    java.util.List<Integer> lint = new ArrayList<Integer>();
+                    List<Integer> lint = new ArrayList<Integer>();
                     tile x;
                     for (int u = 0; u < tilesets.get( curtset ).getTiles().size(); u++) {
                         x = tilesets.get( curtset ).getTiles().get( u );
@@ -21133,10 +21117,10 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         int id;
         boolean dest;
         boolean checked;
-        java.util.List<Integer> hist = new ArrayList<Integer>();
+        List<Integer> hist = new ArrayList<Integer>();
 
     }
-    java.util.List<sirch> sears = new ArrayList<sirch>();
+    List<sirch> sears = new ArrayList<sirch>();
 
 
     private boolean recurseSearch(int i, int[] tujuan){
@@ -21268,7 +21252,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     boolean isJoinRoom = false;
     String activeRoom = "";
     String myID="";
-    public java.util.List<actvClients> activeClients = new ArrayList<actvClients>();
+    public List<actvClients> activeClients = new ArrayList<actvClients>();
 
     TextPromptListener til;
 
@@ -22662,7 +22646,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
                             histcount++;
                             if (!lh.isFollower()) {
-                                java.util.List<layerhistory> templist = new ArrayList<layerhistory>();
+                                List<layerhistory> templist = new ArrayList<layerhistory>();
 
                                 for (int t = 0; t < undolayer.size() - histcount; t++) {
                                     templist.add(undolayer.get(t));
@@ -22724,7 +22708,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         if (!pertamax) {
                             if (!lh.isFollower()) {
 
-                                java.util.List<layerhistory> templist = new ArrayList<layerhistory>();
+                                List<layerhistory> templist = new ArrayList<layerhistory>();
 
                                 for (int t = 0; t < redolayer.size() - histcount; t++) {
                                     templist.add(redolayer.get(t));
@@ -23637,8 +23621,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
         snapWholeMapPhase1(0);
 		/* //This code works but slow.
-		java.util.List<layer> prevlayers = new ArrayList<layer>();
-		java.util.List<layer> nextlayers = new ArrayList<layer>();
+		List<layer> prevlayers = new ArrayList<layer>();
+		List<layer> nextlayers = new ArrayList<layer>();
 
 		for (int j=0;j<autoundolayer;j++)
 		{
@@ -24156,7 +24140,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
 
     public void fillthis(int numa, long oia, long froma, int directiona) {
-        java.util.Queue<floodfill> q = new LinkedList<>();
+        Queue<floodfill> q = new LinkedList<>();
         q.add(new floodfill(numa, oia, froma, directiona));
         while (!q.isEmpty()) {
             floodfill n = q.remove();
@@ -26447,57 +26431,4 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         textureData.disposePixmap();
         return tex;
     }
-
-    private int powerize(int ww) {
-        if (ww < 16) {
-            return 16;
-        } else if (ww > 16 && ww < 32) {
-            return 32;
-        } else if (ww > 32 && ww < 64) {
-            return 64;
-        } else if (ww > 64 && ww < 128) {
-            return 128;
-        } else if (ww > 128 && ww < 256) {
-            return 256;
-        } else if (ww > 256 && ww < 512) {
-            return 512;
-        } else if (ww > 512 && ww < 1024) {
-            return 1024;
-        } else if (ww > 1024 && ww < 2048) {
-            return 2048;
-        } else if (ww > 2048 && ww < 4096) {
-            return 4096;
-        } else if (ww > 4096) {
-            return 8192;
-        }
-        return 0;
-    }
-
-    int createPixel(int r, int g, int b) {
-        return 0xff000000 | (r << 16) | (g << 8) | b;
-    }
-
-
-
-    public void signapk() throws IOException {
-        /*
-        SignedJar bcApk = new SignedJar(
-                new FileOutputStream("out.apk"), signChain, signCert, signKey);
-        JarFile jsApk = new JarFile(new File("in.apk"));
-        Enumeration<JarEntry> entries = jsApk.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            String name = entry.getName();
-            if (!entry.isDirectory() && !name.startsWith("META-INF/")) {
-                InputStream eis = jsApk.getInputStream(entry);
-                bcApk.addFileContents(name, IOUtils.toByteArray(eis));
-                eis.close();
-            }
-        }
-        jsApk.close();
-        bcApk.close();
-
-         */
-    }
-
 }
