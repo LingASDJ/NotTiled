@@ -48,7 +48,7 @@ public abstract class Filter<T> {
 	protected ShaderProgram program = null;
 	private boolean programBegan = false;
 
-	public Filter (ShaderProgram program) {
+	protected Filter (ShaderProgram program) {
 		this.program = program;
 	}
 
