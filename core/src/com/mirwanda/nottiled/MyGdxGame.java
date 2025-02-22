@@ -100,6 +100,7 @@ import com.github.czyzby.noise4j.map.generator.cellular.CellularAutomataGenerato
 import com.github.czyzby.noise4j.map.generator.room.dungeon.DungeonGenerator;
 import com.mirwanda.nottiled.ai.ATGraph;
 import com.mirwanda.nottiled.ai.AutoTile;
+import com.mirwanda.nottiled.langs.SelectLangs;
 import com.mirwanda.nottiled.platformer.game;
 import com.poisson.DiskGenerator;
 import com.poisson.Point;
@@ -637,6 +638,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     @Override
     public void create() {
         log( "Gdx create started!" );
+
+
+
         OS= face.getOS();
         //Gdx basepath now refere to Android/data/com.mirwanda.nottiled/files/
         basepath = Gdx.files.getExternalStoragePath();
@@ -660,6 +664,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             reloadLanguage();
             log( "Language error, default to english!" );
 
+            destroyRoom();
         }
         gd = new GestureDetector( this );
         ip = new InputProcessor() {
@@ -813,8 +818,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         im.addProcessor(gd);
         im.addProcessor(ip);
 
-
-        initSD();
         initBox2D();
         loadGdxStuff();
         loadTouchpad();
@@ -859,7 +862,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                         new ExternalFileHandleResolver()
                 )
         );
-
     }
 
     public Box2DDebugRenderer b2dr;
@@ -1030,40 +1032,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
 
     private void initallthings() {
         try {
-
             initializeThings();
-
-            //msgbox("Welcome to NotTiled 1.0.8");
-			/*
-			if (!prefs.getBoolean("tutorial", false))
-			{
-				beg();
-			}
-			*/
-			/*
-			 language lang=new language();
-			 defaultlang(lang);
-			 Json json = new Json();
-			 writeThis("language.tmx",json.prettyPrint(lang));
-			 */
-            //msgbox("auto.json saved!");
-            //loadingfile=false;
-
-			/*
-			try{
-
-					autotiles at=new autotiles();
-					Json json = new Json();
-					FileHandle f = new FileHandle(curdir+"/auto.json");
-					at = json.fromJson(autotiles.class, f);
-					autotiles=at.getAutotiles();
-					refreshAutoMgmt();
-					}catch(Exception e)
-					{
-						msgbox("place auto.json on the same folder with the tmx file.");
-					}
-			*/
-
         } catch (Exception e) {
             ErrorBung( e, "errorloginit.txt" );
         }
@@ -5791,11 +5760,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         tOpen.setFillParent( true );
     }
 
-    private void initSD() {
-    }
-
-
-
     private void initErrorHandling() {
         Thread.setDefaultUncaughtExceptionHandler( new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread t, Throwable e) {
@@ -5940,65 +5904,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         ui = new SpriteBatch();
         uis = new myShapeRenderer();
         sr = new ShapeRendererPlus();
-        //dialog=new Dialog(z.info,skin,"");
-        //str1 = new BitmapFont();
-
-        /*
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        FileHandle fileHandl = Gdx.files.internal( "languages/characters" );
-        Map<String, String> vars = new HashMap<String, String>();
-        String allstr = fileHandl.readString();
-        String[] cumi = allstr.split( "\r\n" );
-        for (int ad = 0; ad < cumi.length; ad++) {
-            String[] cuma = cumi[ad].split( ">>>" );
-            vars.put( cuma[0], cuma[1] );
-        }
-        log(vars.get( language ));
-        parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS+ vars.get( language );
-        parameter.borderColor = new Color( .5f, .5f, .5f, .9f );
-        parameter.borderWidth = 0;
-
-        if (ssx < ssy) {
-            if (fontsize == 0) fontsize = 48 * ssx / 1080;
-
-        } else {
-            if (fontsize == 0) fontsize = 48 * ssy / 1080;
-
-        }
-        parameter.size = fontsize;
-        parameter.shadowColor = new Color( 0f, 0f, 0f, .9f );
-        parameter.shadowOffsetY = 4;
-        FreeTypeFontGenerator generator = null;
-
-        String filenam = "font.ttf";
-        if (language.equalsIgnoreCase( "Chinese" )) {
-            filenam = "chinese.ttf";
-        }
-        if (language.equalsIgnoreCase( "Japanese" )) {
-            filenam = "japanese.otf";
-        }
-
-        log(filenam);
-
-        if (sCustomFont.equalsIgnoreCase( "" )) {
-            log("empty custom font");
-            FileHandle fff = Gdx.files.internal( filenam );
-            if (fff.exists()) log("file exists");
-            generator = new FreeTypeFontGenerator( Gdx.files.internal( filenam ) );
-        } else {
-            try {
-                log("custom font");
-                generator = new FreeTypeFontGenerator( Gdx.files.absolute( sCustomFont ) );
-            } catch (Exception e) {
-                log("custom font exception");
-                generator = new FreeTypeFontGenerator( Gdx.files.internal( filenam ) );
-            }
-        }
-        generator.setMaxTextureSize( 99999 );
-        str1 = generator.generateFont( parameter );
-        generator.dispose();
-
-         */
 
         /////////////////////////
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -8265,8 +8170,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         TextButton hvmirrorrev = new TextButton( z.mirrorreverse, skin );
         TextButton randomize = new TextButton( z.randommap, skin );
         TextButton replacetiles = new TextButton( z.replacetiles, skin );
-        TextButton generateterrain = new TextButton( "Generate Terrain Set", skin );
-        TextButton tracebackground = new TextButton( "Trace Background", skin );
+        TextButton generateterrain = new TextButton( z.grtset, skin );
+        TextButton tracebackground = new TextButton( z.tracebg, skin );
         TextButton toback = new TextButton( z.back, skin );
 
         //TextButton replacetile=new TextButton("Replace Tiles",skin);
@@ -10834,23 +10739,15 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         zoomTreshold = prefs.getInteger("zoom", 2);
         loadViewMode();
 
+        //优化选择语言
         sbLanguage = new SelectBox(skin);
 
-        java.util.List<String> srr = new ArrayList<String>();
+        ArrayList<String> srr = new ArrayList<>();
         srr.add("English");
-        srr.add("Spanish");
-        srr.add("Russian");
         srr.add("Chinese");
-        srr.add("Japanese");
-        srr.add("French");
-        srr.add("Portuguese");
-        srr.add("Tagalog");
-        srr.add("Belarusian");
-        srr.add("Turkish");
-        srr.add("Ukranian");
-        srr.add("Indonesian");
+        sbLanguage.setItems(srr.toArray(new String[0]));
+        SelectLangs.getLangs(sbLanguage,skin,z);
 
-        sbLanguage.setItems((Object[])srr.toArray(new String[0]));
         bBack3 = new TextButton(z.back, skin);
         bBack3.addListener(new ChangeListener() {
             @Override
@@ -10865,8 +10762,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gotoStage(tPreference);
-
-
                 cbMinimap.setChecked(sMinimap);
                 cbShowGrid.setChecked(sShowGrid);
                 cbShowFPS.setChecked(sShowFPS);
@@ -10882,7 +10777,9 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 fFontsize.setText(Integer.toString(fontsize));
                 tfCustomFont.setText(sCustomFont);
                 frwpath.setText(rwpath);
-                sbLanguage.setSelected(language);
+
+                SelectLangs.getLangs(sbLanguage,skin,z);
+
                 cbResize.setChecked(sResizeTiles);
                 oldlang = language;
                 oldfontsize = fontsize;
@@ -11024,7 +10921,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                 prefs.putInteger("gridy", sGridY).flush();
                 backToMap();
                 resetCaches();
-                if (!language.equalsIgnoreCase(oldlang) || fontsize != oldfontsize  || sCustomFont != oldcustomfont) {
+                if (!language.equalsIgnoreCase(oldlang)) {
                     updateLanguage(language);
                 }
             }
@@ -11055,7 +10952,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         tPreference2.add(fzoomtresh).width(btnx / 2).padBottom(2).row();
         tPreference2.add(new Label(z.background, skin)).width(btnx / 2);
         tPreference2.add(fBgcolor).width(btnx / 2).padBottom(2).row();
-        tPreference2.add(new Label("Custom Font", skin)).width(btnx / 2);
+        tPreference2.add(new Label(z.customfont, skin)).width(btnx / 2);
         tPreference2.add(tfCustomFont).width(btnx / 2).row();
         tPreference2.add(tbcustomfont).colspan(2).width(btnx).row();
         tPreference2.add(new Label(z.fontsize, skin)).width(btnx / 2);
@@ -17911,7 +17808,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             cc.room=activeRoom;
             cc.from = myID;
             client.sendTCP( cc );
-            logNet( "[C] Opening new map..." );
+            logNet( z.opennewmap );
         }
     }
 
@@ -21432,7 +21329,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
             cc.room=activeRoom;
             cc.from = myID;
             client.sendTCP( cc );
-            logNet( "[C] Pushing map update..." );
+            logNet( z.pushupdatemap );
         }
     }
 
@@ -21649,16 +21546,16 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                     command cmd = (command) object;
                     switch (cmd.command) {
                         case "registered":
-                            logNet( "[C] Registered as: " + cmd.from);
+                            logNet( z.regroom + cmd.from);
                             break;
                         case "roomCreateFailed":
-                            logNet( "[C] Room already exist!");
+                            logNet( z.regalredyexits);
                             break;
                         case "roomCreateOK":
                             isCreateRoom = true;
                             activeRoom = roomName.getText();
-                            tbCreateRoom.setText("Destroy Room");
-                            logNet("[C] Room created: " + roomName.getText());
+                            tbCreateRoom.setText(z.destyroom);
+                            logNet(z.createseroom + roomName.getText());
                             break;
                         case "roomDestroyed":
                             if (cmd.room.equalsIgnoreCase( activeRoom )){
@@ -21667,21 +21564,21 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                                 activeRoom = "";
                                 tbCreateRoom.setText(z.createroom);
                                 tbJoinRoom.setText(z.joinroom);
-                                logNet("[C] Room destroyed: " + roomName.getText());
+                                logNet(z.destyroomalt + roomName.getText());
                             }
                             break;
                         case "joinRequestAccepted":
-                            logNet( "[C] Joined room :"+cmd.room);
-                            logNet( "[C] Loading map data...");
+                            logNet( z.joinroomalt +cmd.room);
+                            logNet( z.loadingmap);
                             isJoinRoom = true;
                             activeRoom = cmd.room;
                             tbJoinRoom.setText( z.leaveroom );
                             break;
                         case "joinRequestRejected":
-                            logNet( "[C] Failed to join room :"+cmd.room);
+                            logNet( z.failedroom +cmd.room);
                             break;
                         case "leaveRequestAccepted":
-                            logNet( "[C] Left room :"+cmd.room);
+                            logNet( z.leftroom +cmd.room);
                             isJoinRoom = false;
                             activeRoom = "";
                             tbJoinRoom.setText( z.joinroom);
@@ -21689,7 +21586,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             break;
                         case "leaveInformation":
                             if (cmd.room.equalsIgnoreCase(activeRoom)) {
-                                logNet( "[CI] "+cmd.data+" left the room.");
+                                logNet( z.console +cmd.data+z.playerleaveroom);
                             }
                             break;
                         case "startData":
@@ -21714,13 +21611,13 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             break;
                         case "joinInformation":
                             if (cmd.room.equalsIgnoreCase(activeRoom) && !cmd.data.equalsIgnoreCase( myID )) {
-                                logNet( "[CI] "+cmd.data+" entered the room.");
+                                logNet( z.console +cmd.data+z.playerjoinroom);
                                 if (isCreateRoom){
                                     //send the map
                                     saveMap(curdir + "/" + curfile);
                                     //read map as text
                                     FileHandle ff = Gdx.files.absolute( curdir +"/"+ curfile );
-                                    logNet( "[C] Sending map data...");
+                                    logNet( z.sendmapdata);
 
                                     String dat = ff.readString();
                                     ///////
@@ -21759,7 +21656,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             break;
                         case "mapInformation":
                             if (cmd.from.equalsIgnoreCase( myID )) {
-                                logNet( "[CI] map data received!");
+                                logNet( z.sendmapar);
                                 FileHandle fh = Gdx.files.absolute( basepath+"NotTiled/tempNetworkMap.tmx" );
                                 fh.writeString( clientMapData,false);
                                 clientMapData="";
@@ -21769,7 +21666,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
                             break;
                         case "mapInformationAll":
                             if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
-                                logNet( "[CI] map data received!");
+                                logNet( z.sendmapar);
                                 FileHandle fh = Gdx.files.absolute( curdir + "/" + curfile);
 
                                 fh.writeString( clientMapData,false);

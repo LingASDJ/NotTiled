@@ -43,7 +43,7 @@ public class language
 	String reloadsamples;
 	String copytorustedwarfare;
 	String exit;
-	String back;
+	public String back;
 	String preferences;
 	String background;
 	String manage;
@@ -392,4 +392,27 @@ public class language
 	String importx;
 	String importok;
 	String adjustobjects;
+
+
+	//NTCN
+	String customfont;
+	String grtset;
+	String tracebg;
+	String opennewmap;
+	String pushupdatemap;
+	String regroom;
+	String regalredyexits;
+	String destyroom;
+	String createseroom;
+	String destyroomalt;
+	String joinroomalt;
+	String loadingmap;
+	String failedroom;
+
+	String leftroom;
+	String sendmapdata;
+	String sendmapar;
+	String console;
+	String playerjoinroom;
+	String playerleaveroom;
 }

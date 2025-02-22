@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mirwanda.nottiledling"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--uses-permission android:name="com.android.vending.BILLING" -->
     <application
-        android:name="com.mirwanda.nottiled.Aplikasi"
+        android:name="com.mirwanda.nottiled.AppMainRector"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:isGame="true"
-        android:appCategory="game"
         android:largeHeap="true"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme"
-        android:resizeableActivity = "true"
-        android:hasFragileUserData="true"
         android:requestLegacyExternalStorage="true">
         
         <!---
@@ -29,7 +23,6 @@
         
     <activity
                  android:name="com.mirwanda.nottiled.MainActivity"
-                 android:label="@string/app_name"
                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:exported="true">
                  <intent-filter>
