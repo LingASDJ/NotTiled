@@ -23,13 +23,5 @@ public class Text extends TextualMetaEvent
         super(tick, delta, MetaEvent.TEXT_EVENT, text);
     }
 
-    public void setText(String t)
-    {
-        super.setText(t);
-    }
 
-    public String getText()
-    {
-        return super.getText();
-    }
 }
