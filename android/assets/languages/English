@@ -415,4 +415,6 @@ sendmapar: "[CI] map data received!"
 console: "[CI] "
 playerjoinroom: "entered the room."
 playerleaveroom: "left the room."
+zerodown: "Parameters less than “0” can not be rendered, please fill in the tile ID or select the appropriate ID through the tile selection tool before replacing the parcel."
+replacenextdown: "Please enter a Tile ID or select it by choosing a Tile Select Tools.\n\nYou have not selected any parcel ID at this time, so you cannot replace the parcel."
 }

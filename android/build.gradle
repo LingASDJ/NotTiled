@@ -30,7 +30,7 @@ android {
         targetSdkVersion 33
         compileSdkVersion 34
         versionCode 90
-        versionName "1.8.8"
+        versionName "1.8.8-BETA2"
         multiDexEnabled true
     }
     buildTypes {

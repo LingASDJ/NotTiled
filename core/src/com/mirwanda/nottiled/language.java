@@ -165,6 +165,8 @@ public class language
 	String randomize;
 	String exportfinished;
 	String resizetiles;
+	String replacenextdown;
+	String zerodown;
 	String fontsize;
 	String loadingfiles;
 	String exporttolua;
@@ -380,6 +382,7 @@ public class language
 	String storageaccess;
 	String exporttomidi;
 	String dls;
+
 	String recordwav;
 	String stop;
 	String recording;

@@ -4629,7 +4629,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
             //I think user return main menu here lol :D
             if (lastStage == tMenu) {
                 setMenuMap();
-                gotoStage( tMenu );
+                /*😡*/gotoStage(tMenu);/*😡*/
             }
 
             //gotoStage(lastStage);
@@ -8377,17 +8377,29 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         treplacetiles.add( runreplace ).width( btnx ).colspan( 2 ).row();
         treplacetiles.add( repback ).width( btnx ).colspan( 2 );
 
-        runreplace.addListener( new ChangeListener() {
+        runreplace.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                long p1 = Long.parseLong( fprevstr.getText() );
-                int p2 = getTsetFromSpr((int) p1);
-                long p3 = Long.parseLong( fnextstr.getText() );
-                int p4 = getTsetFromSpr((int) p3);;
-                replacetiles( p1, p2, p3, p4 );
+                String prevText = fprevstr.getText();
+                String nextText = fnextstr.getText();
+
+                if (!prevText.isEmpty() && !nextText.isEmpty()) {
+                    long p1 = Long.parseLong(prevText);
+                    int p2 = getTsetFromSpr((int) p1);
+                    long p3 = Long.parseLong(nextText);
+                    int p4 = getTsetFromSpr((int) p3);
+
+                    if (p1 > -1 && p3 > -1) {
+                        replacetiles(p1, p2, p3, p4);
+                    } else {
+                        msgbox(z.zerodown);
+                    }
+                } else {
+                    msgbox(z.replacenextdown);
+                }
             }
-        } );
-        ///////////////////
+        });
+
     }
 
     private void replacetiles(long p1, int p2, long p3, int p4) {
