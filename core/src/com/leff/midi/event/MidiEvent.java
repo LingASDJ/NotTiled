@@ -28,7 +28,7 @@ public abstract class MidiEvent implements Comparable<MidiEvent>
     protected long mTick;
     protected VariableLengthInt mDelta;
 
-    public MidiEvent(long tick, long delta)
+    protected MidiEvent(long tick, long delta)
     {
         mTick = tick;
         mDelta = new VariableLengthInt((int) delta);
