@@ -151,7 +151,7 @@ import de.tomgrill.gdxdialogs.core.listener.TextPromptListener;
 
 
 public class MyGdxGame extends ApplicationAdapter implements GestureListener {
-    private static final boolean isDesktop = false;//(Gdx.app.getType() == Application.ApplicationType.Desktop);
+    private static final boolean isDesktop = false;
     final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tffint = new com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter.DigitsOnlyFilter();
     final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tfffloat = new com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter() {
         public boolean acceptChar(TextField p1, char c) {
@@ -182,20 +182,12 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     String oldcustomfont;
     PostProcessor postProcessor;
     Slider slfirstgen;
-    //Animation<TextureRegion> animation;
     String temproname = "";
     String temprotype = "";
     String temprovalue = "";
     private java.util.List<Integer> swatchValue = new ArrayList<Integer>();
 
     Texture txMinimap;
-
-    //////////////////////////////////////////////////////
-//            VARIABLES
-//////////////////////////////////////////////////////
-
-
-    ////////////////////////////////////////////////////////////////
     float delta;
 
 
@@ -207,8 +199,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     Table lastStage;
     String sender;
     boolean swatches = false;
-    int senderID; //custom properties
-    int selTsetID; //tiles
+    int senderID; 
+    int selTsetID; 
     String fps = "";
 
 
@@ -314,13 +306,11 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     TextButton bApply, bCancel, bRemove, bProps;
     Table tNF, tMP;
     TextPromptListener pSaveAs;
-    //nf
     TextField fNFilename, fNCurdir, fNTsw, fNTsh, fNTw, fNTh;
     SelectBox sbNMapFormat;
     SelectBox sbNMapRenderOrder;
     SelectBox sbNMapOrientation;
     TextButton bNSelDir, bNNew, bNNewplus, bNCancel;
-    //mp
     TextField fFilename, fCurdir, fTsw, fTsh, fTw, fTh, fTsx;
     SelectBox sbMapFormat;
     SelectBox sbMapRenderOrder;
@@ -367,7 +357,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     Table tImageLayer;
     TextField tfImageName, tfImageSource, tfImageKey, tfImageOpacity, tfImageOffsetX, tfImageOffsetY;
     SelectBox sbPropType, sbPropValbool;
-    TextArea fPropVal; //str,int,float,color
+    TextArea fPropVal; 
     TextButton bPropValfile, bPropApply, bPropCancel, bPropCopy, bPropPaste, bPropGid, bProppng, bPropCp;
     String clipProp = "", clipobjcpy = "";
     com.badlogic.gdx.scenes.scene2d.ui.List<String> llayerlist;
@@ -415,7 +405,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     Preferences prefs;
     boolean loadingfile;
     boolean bypassads = false;
-    //fastah mastah
     java.util.List<tile> tiles;
     int sprX, sprY, margin, spacing;
     int xpos, ypos;
@@ -477,9 +466,7 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private SelectBox sbLanguage;
     private Online templates = new Online();
     private java.util.List<Boolean> autoed = new ArrayList<Boolean>();
-    private java.util.List<String> recentfiles = new ArrayList<String>();
     private int position;
-    private int kyut;
     private Table ttools;
     private int tilesetsize;
     private Table nullTable;
@@ -514,7 +501,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private TextButton bTsPropCustomProp;
     private String oldowner;
     private property tempe;
-    private boolean propertystart;
     private boolean alreadyloaded;
     private String intend;
     private recents recents = new recents();
@@ -535,7 +521,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private TextField fzoomtresh, frwpath;
     private CheckBox cball;
     private Table bigman;
-    private boolean zooming;
     private float autosave = 0f;
     private float redraw = 0f;
     private float rotator = 0f;
@@ -558,8 +543,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private float prevy = 0;
     private float velx;
     private float vely;
-    private float velredx;
-    private float velredy;
     private int fontsize;
     private TextField fFontsize, fAutoSaveInterval;
     private float nofling;
@@ -576,10 +559,8 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     private XmlPullParser myParser;
     private float statustimeout;
     private int newTerrainID;
-    private boolean n;
     private boolean lockUI;
 
-    //private AdView ads;
     public MyGdxGame(String intend, Interface face)//, AdView ads)
     {
         this.intend = intend;
@@ -629,9 +610,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
         // TODO: Implement this method
     }
 
-    //////////////////////////////////////////////////////
-//            APP CYCLE
-//////////////////////////////////////////////////////
     String basepath;
     float waittoloadlist=-1;
 
@@ -1257,7 +1235,6 @@ public class MyGdxGame extends ApplicationAdapter implements GestureListener {
     }
 
     String texta = "";
-    private float dotTimer = 0f; // 计时器，用于控制点的动态效果
     private int dotCount = 0; // 当前显示的点的数量
     private static final float DOT_INTERVAL = 0.5f; // 每个点的间隔时间
 
