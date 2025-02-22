@@ -36,14 +36,12 @@ public class MainActivity extends AndroidApplication implements Interface
 	private static final int CREATE_REQUEST_CODE = 40;
 	private static final int OPEN_REQUEST_CODE = 41;
 	private static final int REGAIN_ACCESS_CODE = 44;
-	private static final int SAVE_REQUEST_CODE = 42;
 	private static final int SAVEAS_REQUEST_CODE = 43;
 	private static final int BINARY_CREATE_CODE = 39;
 	private static final int REQUEST_TREE_CODE = 45;
 	Uri currentMAP = null;
 	SharedPreferences myPrefs;
 	SharedPreferences.Editor prefs;
-	//TextToSpeech tts;
 	PackageInfo pInfo;
 	String version;
 	@Override
@@ -155,8 +153,6 @@ public class MainActivity extends AndroidApplication implements Interface
 	}
 
 
-	//private ActivityCheckout mCheckout;
-	private static final String AD_FREE = "adfree";
 	boolean proVersion = true;
 	/**/
 	//public AdView adView;//
