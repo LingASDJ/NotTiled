@@ -4626,7 +4626,8 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         if (kartu == "stage") {
             //setMenuMap();
             gotoStage( lastStage );
-            if (lastStage == tMenu || lastStage == tMap) {
+            //I think user return main menu here lol :D
+            if (lastStage == tMenu) {
                 setMenuMap();
                 gotoStage( tMenu );
             }
