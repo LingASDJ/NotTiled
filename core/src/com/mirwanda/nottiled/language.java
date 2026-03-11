@@ -416,6 +416,21 @@ public class language
 	public String sendmapdata;
 	public String sendmapar;
 	public String console;
+	public String serverstop;
+	public String disconnectclientalt;
+	public String requstroomleave;
+	public String notconnectedserver;
+	public String alredyjoinedroom;
+
+
 	public String playerjoinroom;
 	public String playerleaveroom;
+	public String exportaststorge;
+	public String exportaststorgemore;
+	public String exportremixedpdf;
+
+	public String enterroomname;
+
+	public String normalmapeditor;
+
 }

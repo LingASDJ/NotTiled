@@ -98,7 +98,7 @@ import com.mirwanda.nottiled.ai.ATGraph;
 import com.mirwanda.nottiled.ai.AutoTile;
 
 import com.mirwanda.nottiled.platformer.game;
-import com.mirwanda.nottiled.utils.NotTiledServer;
+
 import com.mirwanda.nottiled.utils.NotTiledUntils;
 import com.poisson.DiskGenerator;
 import com.poisson.Point;
@@ -150,7 +150,7 @@ import de.tomgrill.gdxdialogs.core.listener.TextPromptListener;
 
 
 public class NotiledAndoridPro extends ApplicationAdapter implements GestureListener {
-  
+
     final TextField.TextFieldFilter tffint = new TextField.TextFieldFilter.DigitsOnlyFilter();
     final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tfffloat = (p1, c) -> Character.toString( c ).matches( "[0-9.-]+" );
     final com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter tffcolor = (p1, c) -> Character.toString( c ).matches( "[a-fA-F0-9#]+" );
@@ -818,8 +818,8 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         loadPropEditor();
         loadPropTemplate();
         loadImageLayer();
+        loadKryonet();
 
-        NotTiledServer.loadKryonet(this);
         NotTiledUntils.initializePostProcessor(this);
 
         createSwatches();
@@ -836,6 +836,539 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
                         new ExternalFileHandleResolver()
                 )
         );
+    }
+
+    private void loadKryonet(){
+        server = new Server(9999999,9999999);
+        serverkryo = server.getKryo();
+        serverkryo.register(TextChat.class);
+        serverkryo.register(layerhistory.class);
+        serverkryo.register(PlayerState.class);
+        serverkryo.register(command.class);
+
+        client = new Client();
+        clientkryo = client.getKryo();
+        clientkryo.register(TextChat.class);
+        clientkryo.register(layerhistory.class);
+        clientkryo.register(PlayerState.class);
+        clientkryo.register(command.class);
+
+        server.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+                if (object instanceof TextChat) {
+                    TextChat request = (TextChat)object;
+                    broadcast(request.text);
+                    lcollabstatus.setText(request.text);
+
+                } else if (object instanceof command) {
+                    command cmd = (command) object;
+                    switch (cmd.command){
+                        case "registerID":
+                            actvClients acv = new actvClients();
+                            acv.id = cmd.data;
+                            acv.room="";
+                            activeClients.add(acv);
+                            logNet("[S] Registration requested by: " + acv.id);
+                            activeClients.add( acv );
+                            command cc = new command();
+                            cc.from=acv.id;
+                            cc.command = "registered";
+                            connection.sendTCP(cc);
+
+                            break;
+                        case "createRoom":
+                            boolean roomok=true;
+                            for (actvClients av : activeClients){
+                                if (av.creator && av.room.equalsIgnoreCase( cmd.room )){
+                                    roomok=false;
+                                }
+                            }
+
+                            if (roomok){
+
+
+                                for (actvClients av : activeClients){
+                                    if (av.id.equalsIgnoreCase( cmd.from )){
+                                        av.room = cmd.room;
+                                        av.creator = true;
+                                    }
+                                }
+                                cc = new command();
+                                cc.command = "roomCreateOK";
+                                connection.sendTCP(cc);
+                                logNet("[S] Created room: " + cmd.room);
+                            }
+                            else
+                            {
+                                cc = new command();
+                                cc.command = "roomCreateFailed";
+                                connection.sendTCP(cc);
+                                logNet("[S] Room not created: " + cmd.room);
+                            }
+                            break;
+                        case "destroyRoom":
+                            for (actvClients av : activeClients){
+                                if (av.room.equalsIgnoreCase( cmd.room )){
+                                    av.room = "";
+                                    av.creator = false;
+                                }
+                            }
+                            cc = new command();
+                            cc.command = "roomDestroyed";
+                            cc.room = cmd.room;
+                            server.sendToAllTCP( cc );
+                            logNet("[S] Broadcasted room destruction: " + cmd.room);
+                            break;
+
+
+                        case "joinRequest":
+                            //check if the room is available
+                            boolean isavail = false;
+                            for (actvClients av : activeClients){
+                                if (av.room.equalsIgnoreCase( cmd.room ) && av.creator){
+                                    isavail=true;
+                                }
+                            }
+
+                            if (isavail){
+                                //room is available
+                                for (actvClients av : activeClients){
+                                    if (av.id.equalsIgnoreCase( cmd.from )){
+                                        av.room = cmd.room;
+                                    }
+                                }
+
+                                cc = new command();
+                                cc.command = "joinRequestAccepted";
+                                cc.room = cmd.room;
+                                connection.sendTCP(cc);
+                                logNet("[S] Join Request accepted for: " + cmd.from + " @ room:" + cmd.room);
+
+                                logNet("[SB] broadcasting join information");
+                                cc = new command();
+                                cc.command = "joinInformation";
+                                cc.room = cmd.room;
+                                cc.data = cmd.from;
+                                server.sendToAllTCP( cc );
+                            } else{
+                                //room is not available
+                                cc = new command();
+                                cc.command = "joinRequestRejected";
+                                cc.room = cmd.room;
+                                connection.sendTCP(cc);
+                                logNet("[S] Join Request rejected for: " + cmd.from + " @ room:" + cmd.room);
+
+                            }
+
+
+
+                            break;
+                        case "leaveRequest":
+                            for (actvClients av : activeClients){
+                                if (av.id.equalsIgnoreCase( cmd.from )){
+                                    av.room = "";
+                                }
+                            }
+                            logNet("[S] left room for: " +cmd.from +" @ "+ cmd.room);
+                            cc = new command();
+                            cc.command = "leaveRequestAccepted";
+                            cc.room = cmd.room;
+                            connection.sendTCP( cc );
+
+                            logNet("[SB] broadcasting leave information");
+                            cc = new command();
+                            cc.command = "leaveInformation";
+                            cc.room = cmd.room;
+                            cc.data = cmd.from;
+                            server.sendToAllTCP( cc );
+
+                            break;
+                        case "startdata":
+                        case "data":
+                        case "startDataAll":
+                        case "dataAll":
+                        case "draw":
+                            //try {
+                            server.sendToAllTCP( cmd );
+
+                            break;
+                        case "readThisBoy":
+                            cc = new command();
+                            cc.command = "mapInformation";
+                            cc.from = cmd.from;
+                            cc.room = cmd.room;
+                            server.sendToAllTCP( cc );
+                            logNet("[SB] broadcasting map information");
+
+
+                            break;
+                        case "allReadThis":
+                            cc = new command();
+                            cc.command = "mapInformationAll";
+                            cc.from = cmd.from;
+                            cc.room = cmd.room;
+                            server.sendToAllTCP( cc );
+                            logNet("[SB] broadcasting open map information");
+
+
+                            break;
+                        //}catch(Exception e){
+                        //    ErrorBung( e,"MOMON.TXT" );
+                        //}
+                        case "disconnect":
+                            logNet("[S] Disconnect Request...");
+                            int flag=-1;
+                            for (int i=0;i<activeClients.size();i++){
+                                if (activeClients.get( i ).id.equalsIgnoreCase( cmd.from )){
+
+                                    flag=i;
+                                }
+
+                            }
+                            if (flag!=-1){
+                                activeClients.remove( flag );
+                                logNet("[S] Client erased.");
+                            }
+
+                    }
+                } else if (object instanceof layerhistory) {
+                    layerhistory response = (layerhistory)object;
+                    Gdx.app.log("hi","received from client");
+                    pushdata(response);
+                }
+            }
+        });
+
+        client.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+
+                if (object instanceof command) {
+                    command cmd = (command) object;
+                    switch (cmd.command) {
+                        case "registered":
+                            logNet( "[C] Registered as: " + cmd.from);
+                            break;
+                        case "roomCreateFailed":
+                            logNet( "[C] Room already exist!");
+                            break;
+                        case "roomCreateOK":
+                            isCreateRoom = true;
+                            activeRoom = roomName.getText();
+                            tbCreateRoom.setText("Destroy Room");
+                            logNet("[C] Room created: " + roomName.getText());
+                            break;
+                        case "roomDestroyed":
+                            if (cmd.room.equalsIgnoreCase( activeRoom )){
+                                isCreateRoom = false;
+                                isJoinRoom = false;
+                                activeRoom = "";
+                                tbCreateRoom.setText(z.createroom);
+                                tbJoinRoom.setText(z.joinroom);
+                                logNet("[C] Room destroyed: " + roomName.getText());
+                            }
+                            break;
+                        case "joinRequestAccepted":
+                            logNet( "[C] Joined room :"+cmd.room);
+                            logNet( "[C] Loading map data...");
+                            isJoinRoom = true;
+                            activeRoom = cmd.room;
+                            tbJoinRoom.setText( z.leaveroom );
+                            break;
+                        case "joinRequestRejected":
+                            logNet( "[C] Failed to join room :"+cmd.room);
+                            break;
+                        case "leaveRequestAccepted":
+                            logNet( "[C] Left room :"+cmd.room);
+                            isJoinRoom = false;
+                            activeRoom = "";
+                            tbJoinRoom.setText( z.joinroom);
+
+                            break;
+                        case "leaveInformation":
+                            if (cmd.room.equalsIgnoreCase(activeRoom)) {
+                                logNet( "[CI] "+cmd.data+" left the room.");
+                            }
+                            break;
+                        case "startData":
+                            if (cmd.from.equalsIgnoreCase( myID )) {
+                                clientMapData = "";
+                            }
+                            break;
+                        case "data":
+                            if (cmd.from.equalsIgnoreCase( myID )) {
+                                clientMapData += cmd.data;
+                            }
+                            break;
+                        case "startDataAll":
+                            if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
+                                clientMapData = "";
+                            }
+                            break;
+                        case "dataAll":
+                            if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
+                                clientMapData += cmd.data;
+                            }
+                            break;
+                        case "joinInformation":
+                            if (cmd.room.equalsIgnoreCase(activeRoom) && !cmd.data.equalsIgnoreCase( myID )) {
+                                logNet( "[CI] "+cmd.data+" entered the room.");
+                                if (isCreateRoom){
+                                    //send the map
+                                    saveMap(curdir + "/" + curfile);
+                                    //read map as text
+                                    FileHandle ff = Gdx.files.absolute( curdir +"/"+ curfile );
+                                    logNet( "[C] Sending map data...");
+
+                                    String dat = ff.readString();
+                                    ///////
+                                    command cc = new command();
+                                    cc.command = "startData";
+                                    cc.from = cmd.data;
+                                    cc.room = cmd.room;
+                                    connection.sendTCP( cc );
+
+                                    int len = dat.length();
+                                    for (int i=0;i<len;i+=BufferSize){
+                                        String part = dat.substring(i, Math.min(len, i + BufferSize));
+                                        cc = new command();
+                                        cc.command = "data";
+                                        cc.room = cmd.room;
+                                        cc.from = cmd.data;
+                                        cc.data = part;
+                                        slowdown();
+                                        connection.sendTCP( cc );
+                                    }
+                                    ///////
+                                    cc = new command();
+                                    cc.command = "readThisBoy";
+                                    cc.from = cmd.data;
+                                    connection.sendTCP( cc );
+
+
+
+
+
+                                }else
+                                {
+                                    //pause until that guy finished opening;
+                                }
+                            }
+                            break;
+                        case "mapInformation":
+                            if (cmd.from.equalsIgnoreCase( myID )) {
+                                logNet( "[CI] map data received!");
+                                FileHandle fh = Gdx.files.absolute( basepath+"NotTiled/tempNetworkMap.tmx" );
+                                fh.writeString( clientMapData,false);
+                                clientMapData="";
+                                backToMap();
+                                loadtmx( basepath+"NotTiled/tempNetworkMap.tmx"  );
+                            }
+                            break;
+                        case "mapInformationAll":
+                            if (!cmd.from.equalsIgnoreCase( myID ) && cmd.room.equalsIgnoreCase(activeRoom)) {
+                                logNet( "[CI] map data received!");
+                                FileHandle fh = Gdx.files.absolute( curdir + "/" + curfile);
+
+                                fh.writeString( clientMapData,false);
+                                clientMapData="";
+                                backToMap();
+                                loadtmx( curdir + "/" + curfile );
+                            }
+                            break;
+                        case "draw":
+                            if (cmd.room.equalsIgnoreCase(activeRoom) && !cmd.from.equalsIgnoreCase( myID )) {
+                                layerhistory h = (layerhistory) cmd.lh;
+                                if (h.undo) {
+
+                                    long frm = h.from;
+                                    long toe = h.to;
+                                    int frmts = h.oldtset;
+                                    int toets = h.newtset;
+                                    int frmtl = h.oldtile;
+                                    int toetl = h.newtile;
+                                    h.from = toe;
+                                    h.to = frm;
+                                    h.oldtset = toets;
+                                    h.newtset = frmts;
+                                    h.undo = false;
+                                    h.oldtile = toetl;
+                                    h.newtile = frmtl;
+                                }
+                                undolayer.add(h);
+                                redolayer.clear();
+                                layers.get(h.getLayer()).getStr().set(h.getLocation(), h.getTo());
+                                layers.get(h.getLayer()).getTset().set(h.getLocation(), h.getNewtset());
+                                layers.get(h.getLayer()).getTile().set(h.getLocation(), h.getNewtile());
+                                updateCache(h.getLocation());
+                            }
+                            break;
+                    }
+                }
+
+            }
+
+        });
+
+        tCollab = new Table();
+        tCollab.setFillParent(true);
+        tCollab.defaults().width(btnx).height(btny).padBottom(2);
+
+        tCollab1 = new Table();
+        tCollab1.defaults().width(btnx).height(btny).padBottom(2);
+
+        tCollab2 = new Table();
+        tCollab2.defaults().width(btnx).height(btny).padBottom(2);
+
+        Label lTitle = new Label(z.collaboration,skin);
+        tbHost = new TextButton(z.runserver,skin);
+        Label lRemote = new Label(z.remoteip,skin);
+        tfRemoteIP = new TextField("45.125.44.66",skin);
+        tfPort = new TextField("20254",skin);
+        tbJoin = new TextButton(z.join,skin);
+        roomName = new TextField("room1", skin);
+        uniqueID = new TextField("Steve", skin);
+        tbCreateRoom = new TextButton(z.createroom,skin);
+        tbJoinRoom = new TextButton(z.joinroom,skin);
+        clearLog = new TextButton(z.clearlog,skin);
+        pushUpdateBtn = new TextButton(z.pushupdate,skin);
+        tbJoin = new TextButton(z.join,skin);
+        netLog = new TextArea("",skin);
+        TextButton tbBack = new TextButton(z.back,skin);
+        lcollabstatus = new Label(z.status+": "+z.readytoconnect,skin);
+        final TextField tfMessage = new TextField("",skin);
+        TextButton tbSendMsg = new TextButton(z.sendmessage,skin);
+
+        pushUpdateBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                pushUpdate();
+            }
+        });
+
+        tbSendMsg.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (isServer){
+                    broadcast( tfMessage.getText() );
+                    tfMessage.setText( "" );
+                }
+                if (isClient){
+                    talktoserver(tfMessage.getText());
+                    tfMessage.setText("");
+                }
+            }
+        });
+
+
+        tbBack.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                backToMap();
+            }
+        });
+
+        til = new TextPromptListener() {
+
+            @Override
+            public void confirm(String input) {
+                if (input == "") {
+                    return;
+                }
+
+                runServer(Integer.parseInt(input));
+            }
+
+            @Override
+            public void cancel() {
+            }
+
+        };
+
+
+        tbHost.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (!isServer) {
+                    runServer( Integer.parseInt( tfPort.getText() ) );
+                }else
+                {
+                    stopServer();
+                }
+            }
+        });
+
+        tbJoin.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (!isClient) {
+                    runClient(tfRemoteIP.getText(), Integer.parseInt(tfPort.getText()));
+                }else
+                {
+                    stopClient();
+                }
+            }
+        });
+
+        tbCreateRoom.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (!isCreateRoom) {
+                    createRoom();
+                }else
+                {
+                    destroyRoom();
+                }
+            }
+        });
+
+        tbJoinRoom.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (!isJoinRoom) {
+                    joinRoom();
+                }else
+                {
+                    leaveRoom();
+                }
+            }
+        });
+
+        clearLog.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                netLog.setText("");
+            }
+        });
+
+        tCollab1.add(lTitle).colspan(2).row();
+        //tCollab1.add(new Label(z.port,skin)).width(btnx/2);
+        //tCollab1.add(tfPort).width(btnx/2).row();
+        //tCollab1.add(tbHost).colspan(2).row();
+        //tCollab1.add(lRemote).width(btnx/2);
+        //tCollab1.add(tfRemoteIP).width(btnx/2).row();
+        tCollab1.add(new Label(z.uniqueid,skin)).width(btnx/2);
+        tCollab1.add(uniqueID).width(btnx/2).row();
+        tCollab1.add(tbJoin).colspan(2).row();
+
+        tCollab1.add(new Label(z.room,skin)).width(btnx/2);
+        tCollab1.add(roomName).width(btnx/2).row();
+        tCollab1.add(tbCreateRoom).colspan(2).row();
+        tCollab1.add(tbJoinRoom).colspan(2).row();
+        //tCollab1.add(clearLog).colspan(2).row();
+        tCollab1.add(pushUpdateBtn).colspan(2).row();
+
+        tCollab1.add(tbBack).colspan(2).row();
+        tCollab1.add(lcollabstatus).colspan(2).row();
+
+        tCollab2.add(new Label(z.netlog,skin)).colspan(2).row();
+        tCollab2.add(netLog).height(btny*5).colspan(2).row();
+        tCollab.add( tCollab1 );
+        //tCollab.add( tCollab2 );
     }
 
     public Box2DDebugRenderer b2dr;
@@ -1012,6 +1545,71 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         }
     }
 
+    public void showUpdates() {
+        Table boss = new Table();
+        Table table = new Table();
+        table.center();
+        table.defaults().height( btny );
+        boss.setWidth( btnx );
+        boss.setFillParent( true );
+        ScrollPane spp = new ScrollPane( table );
+
+        TextButton back = new TextButton(z.back, skin);
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                backToMap();
+            }
+        });
+        boss.add(back).width(90).padBottom(5);
+
+        FileHandle handle;
+
+        switch (language) {
+            case "Chinese":
+                if (Gdx.app.getType()==Android){
+                    handle = Gdx.files.internal( "android/updates_cn.txt" );
+                } else {
+                    handle = Gdx.files.internal( "desktop/updates_cn.txt" );
+                }
+                break;
+            default:
+                handle = Gdx.files.internal( "updates.txt" );
+        }
+
+        String text = handle.readString();
+        String[] wordsArray = text.replace( "\r\n", "\n" ).replace( "\r", "\n" ).split( "\n", -1 );
+
+        for (int i = 0; i < wordsArray.length; i++) {
+            String[] h = wordsArray[i].split( ">" );
+            switch (h[0]) {
+                case "l":
+                    Label lbl = new Label( h[1], skin );
+                    lbl.setWrap( true );
+                    lbl.setColor( 1, 1, 0, 1 );
+                    lbl.setAlignment( Align.center );
+                    table.add( lbl ).width( btnx ).padBottom( 10 ).row();
+                    break;
+                case "m":
+                    lbl = new Label( h[1], skin );
+                    lbl.setWrap( true );
+                    lbl.setColor( 1, 1, 0, 1 );
+                    lbl.setAlignment( Align.center );
+                    table.add( lbl ).width( btnx ).padTop( 5 ).row();
+                    break;
+                case "s":
+                    lbl = new Label( h[1], skin );
+                    lbl.setWrap( true );
+                    lbl.setAlignment( Align.center );
+                    table.add( lbl ).width( btnx ).row();
+                    break;
+            }
+        }
+
+        boss.add( spp );
+        gotoStage( boss );
+    }
+
     public void showCredits() {
         Table boss = new Table();
         Table table = new Table();
@@ -1022,7 +1620,19 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         ScrollPane spp = new ScrollPane( table );
 
 
-        FileHandle handle = Gdx.files.internal( "credits.txt" );
+        FileHandle handle;
+
+        switch (language) {
+            case "Chinese":
+                if (Gdx.app.getType()==Android){
+                    handle = Gdx.files.internal( "android/credits_cn.txt" );
+                } else {
+                    handle = Gdx.files.internal( "desktop/credits_cn.txt" );
+                }
+                break;
+            default:
+                handle = Gdx.files.internal( "credits.txt" );
+        }
 
         String text = handle.readString();
         String[] wordsArray = text.replace( "\r\n", "\n" ).replace( "\r", "\n" ).split( "\n", -1 );
@@ -6590,9 +7200,9 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         SelectBox sbExport = new SelectBox(skin);
 
         if (Gdx.app.getType()==Android){
-            sbExport.setItems((Object[]) new String[]{"Export to storage", z.exportastemplate, z.exporttopng, z.selectionastileset, z.exportastileset,"Export as Remixed Dungeon map", z.exporttolua,z.exporttojson,z.exporttomidi});
-        }else{
-            sbExport.setItems((Object[]) new String[]{"Export as...", z.exportastemplate, z.exporttopng, z.selectionastileset, z.exportastileset,"Export as Remixed Dungeon map", z.exporttolua,z.exporttojson,z.exporttomidi});
+            sbExport.setItems((Object[]) new String[]{z.exportaststorge, z.exportastemplate, z.exporttopng, z.selectionastileset, z.exportremixedpdf, z.exporttolua,z.exporttojson,z.exporttomidi});
+        } else {
+            sbExport.setItems((Object[]) new String[]{z.exportaststorge, z.exportastemplate, z.exporttopng, z.selectionastileset, z.exportastileset, z.exportremixedpdf, z.exporttolua,z.exporttojson,z.exporttomidi});
         }
 
         tExport.add( new Label( z.filename, skin ) ).row();
@@ -7031,7 +7641,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         bTutorial.addListener( new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gotoStage( tTutorial );
+                showUpdates();
             }
         } );
 
@@ -7157,7 +7767,13 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         bDiscord.addListener( new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.net.openURI( "https://discord.gg/pZBGBKr" );
+                switch (language) {
+                    case "Chinese":
+                        Gdx.net.openURI( "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=jQlvKp1Yw2BSuPubZ3Gcp316rKfsfkY_&authKey=d0aDwOlP%2Fxs7now4uuxUvy%2B9H%2Fa6S0p8cujMDi7d8JiLTLDpjHNjXOScQJSWtqPI&noverify=0&group_code=1032853805" );
+                        break;
+                    default:
+                        Gdx.net.openURI( "https://discord.gg/pZBGBKr" );
+                }
             }
         } );
 
@@ -7194,11 +7810,10 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
             public void changed(ChangeEvent event, Actor actor) {
                 switch (language) {
                     case "Chinese":
-                        Gdx.net.openURI( "https://b23.tv/FzXVKG" );
+                        Gdx.net.openURI( "https://b23.tv/T7xWFdr" );
                         break;
                     default:
                         Gdx.net.openURI( "https://www.youtube.com/playlist?list=PLaZhehDwQZIKlNPsMKqR3YRYxvdWctWt9" );
-
                 }
 
             }
@@ -7267,15 +7882,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         bTutorial.addListener( new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gotoStage( tTutorial );
-                ltutorial.setItems();
-
-                List<String> spt = new ArrayList<String>();
-                for (int i = 0; i < tutor.getT().size(); i++) {
-                    spt.add( tutor.getT().get( i ).getName() );
-                }
-                ltutorial.setItems( spt.toArray( new String[0] ) );
-
+                showUpdates();
             }
         } );
 
@@ -7373,22 +7980,25 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         if (landscape) {
             tLinks = new Table();
             tLinks.setFillParent( true );
+
             tLinks.defaults().width( btnx ).height( btny + 2 ).padBottom( 2 );
             Table tLinks2 = new Table();
             tLinks2.defaults().width( btnx ).height( btny * 2 ).padBottom( 2 );
             Table tLinks1 = new Table();
             tLinks1.defaults().width( btnx ).height( btny * 2 ).padBottom( 2 );
+
+            tLinks1.add( new Label( z.normalmapeditor, skin ) ).padTop( 10 ).row();
             tLinks1.add( bLicense ).row();
             //Links1.add( bManual ).row();
             tLinks1.add( bVideos ).row();
             tLinks1.add( bDiscord ).row();
             //tLinks1.add( bWhatsapp ).row();
-            tLinks1.add( bReload ).row();
-            tLinks1.add( bCopyto ).row();
+            //tLinks1.add( bReload ).row();
+            //tLinks1.add( bCopyto ).row();
 
             tLinks2.add( new Label( z.thirdpartyapps, skin ) ).padTop( 10 ).row();
             tLinks2.add( bRusted ).row();
-            tLinks2.add( bWardate ).row();
+            //tLinks2.add( bWardate ).row();
             tLinks2.add( bManualCN ).row();
             tLinks2.add( bBack3 );
             tLinks.add( tLinks1 );
@@ -7397,17 +8007,15 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
             tLinks = new Table();
             tLinks.setFillParent( true );
             tLinks.defaults().width( btnx ).height( btny + 2 ).padBottom( 2 );
+            tLinks.add( new Label( z.normalmapeditor, skin ) ).padTop( 10 ).row();
             tLinks.add( bLicense ).row();
             //tLinks.add( bManual ).row();
             tLinks.add( bVideos ).row();
             tLinks.add( bDiscord ).row();
             //tLinks.add( bWhatsapp ).row();
-            tLinks.add( bReload ).row();
-            tLinks.add( bCopyto ).row();
             tLinks.add( bBack3 ).row();
             tLinks.add( new Label( z.thirdpartyapps, skin ) ).padTop( 10 ).row();
             tLinks.add( bRusted ).row();
-            tLinks.add( bWardate ).row();
             tLinks.add( bManualCN ).row();
         }
     }
@@ -7472,15 +8080,17 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
             tMenu1.add( bOpen ).row();
             tMenu1.add( bRecent ).row();
             tMenu1.add( bSave ).row();
-            tMenu1.add( bSaveAs ).row();
+            //tMenu1.add( bSaveAs ).row();
             if (Gdx.app.getType()==Android) tMenu2.add( bImporter).row();
             tMenu1.add( bExporter ).row();
-            tMenu2.add( bTutorial ).row();
+            tMenu1.add( bReload ).row();
             tMenu2.add( bPreference ).row();
             tMenu2.add( bLinks ).row();
             tMenu2.add( credito ).row();
+            tMenu2.add( bBack ).row();
             tMenu2.add( bExit ).row();
-            tMenu2.add( bBack );
+            tMenu2.add( bTutorial );
+
             tMenu.add( tMenu1 );
             tMenu.add( tMenu2 );
         } else {
@@ -7497,11 +8107,12 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
             tMenu.add( bSaveAs ).row();
             if (Gdx.app.getType()==Android)  tMenu.add( bImporter).row();
             tMenu.add( bExporter ).row();
-            tMenu.add( bTutorial ).row();
+            tMenu.add( bReload ).row();
             tMenu.add( bPreference ).row();
             tMenu.add( bLinks ).row();
             tMenu.add( credito ).row();
             tMenu.add( bExit ).row();
+            tMenu.add( bTutorial ).row();
             tMenu.add( bBack );
 
         }
@@ -10973,7 +11584,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
         loadPropTemplate();
         loadImageLayer();
 
-        NotTiledServer.loadKryonet(this);
+        loadKryonet();
         NotTiledUntils.initializePostProcessor(this);
     }
 
@@ -21516,7 +22127,7 @@ public class NotiledAndoridPro extends ApplicationAdapter implements GestureList
                 return;
             }
             server.start();
-            server.bind(port, 54777);
+            server.bind(port, 23281);
             if (mygame !=null){
                 //mygame.server = server;
             }

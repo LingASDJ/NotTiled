@@ -1,0 +1,516 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+<generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator>
+<!-- Entry为一个块 -->
+<entry>
+<!-- 修改Title值 -->
+<title type="html">}有关于辉梦域名备案重要通知}</title>
+<!-- href后面接链接 其他不改-->
+<link href="www.baidu.com" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<!-- 修改日期时间 -->
+<published>4000-3-3T12:50:00+00:00</published>
+<updated>4000-3-3T12:50:00+00:00</updated>
+<!-- 请不改ID值 -->
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<!-- 作者名字 -->
+<name>MLPD制作组</name>
+</author>
+<!-- 获取图片，上面为在items.png获取，当然，你也可以直接获取sprites文件夹内的素材文件 -->
+<category term="SHPD_ICON_v464: ITEM: 100"/>
+<category term="SHPD_ICON_v533: sprites/npc/ATRI.png, 0, 0, 16, 16"/>
+<!-- 新闻卡片里面的内容 -->
+<summary type="html">
+尊敬的各位玩家：
+因主域名需配合国家相关部门进行备案审核，
+3月4日起所有关联服务将暂时关停，
+恢复时间预计需20-35个工作日（具体以备案进度为准）。
+受影响的平台包括：
+· 游戏下载站
+· 官方博客
+· 游戏Wiki百科
+
+关停期间须知：
+所有服务暂停期间，玩家将无法访问上述平台及功能。
+如有紧急问题，
+可通过QQ群艾特群主，或联系管理员反馈
+游戏内已下载内容不受影响，
+但部分联网功能将暂时受限。
+
+备案完成后：
+我们将第一时间在群公告通知恢复情况，感谢大家的耐心等待。
+因不可抗力造成的体验中断，我们深表歉意！
+备案是为保障服务长期稳定运行的必要流程，感谢各位的理解与支持！
+辉梦工作室总部-2025年3月3日
+</summary>
+</entry>
+<entry>
+<!-- 修改Title值 -->
+<title type="html">魔绫四周年版本已经更新</title>
+<!-- href后面接链接 其他不改-->
+<link href="www.baidu.com" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<!-- 修改日期时间 -->
+<published>4000-2-2T12:50:00+00:00</published>
+<updated>4000-2-2T12:50:00+00:00</updated>
+<!-- 请不改ID值 -->
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<!-- 作者名字 -->
+<name>MLPD制作组</name>
+</author>
+<!-- 获取图片，上面为在items.png获取，当然，你也可以直接获取sprites文件夹内的素材文件 -->
+<category term="SHPD_ICON_v464: ITEM: 63"/>
+<category term="SHPD_ICON_v533: sprites/npc/ATRI.png, 0, 0, 16, 16"/>
+<!-- 新闻卡片里面的内容 -->
+<summary type="html">
+难以想象，魔绫已经4岁啦！
+而且今天还是元宵+魔绫生日
+
+全新版本已经更新，祝各位玩的高兴！
+
+新内容：
+1.BossRush3.0震撼来袭
+2.新系统：藏品系统预载，可在开发者模式测试
+3.金蝶2.0完整版来袭
+
+更多更新，查阅游戏内部更新日志
+</summary>
+</entry>
+<!-- Entry为一个块 -->
+<entry>
+<!-- 修改Title值 -->
+<title type="html">重新起航，四周年快乐</title>
+<!-- href后面接链接 其他不改-->
+<link href="www.baidu.com" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<!-- 修改日期时间 -->
+<published>4000-2-1T12:50:00+00:00</published>
+<updated>4000-2-1T12:50:00+00:00</updated>
+<!-- 请不改ID值 -->
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<!-- 作者名字 -->
+<name>MLPD制作组</name>
+</author>
+<!-- 获取图片，上面为在items.png获取，当然，你也可以直接获取sprites文件夹内的素材文件 -->
+<category term="SHPD_ICON_v464: ITEM: 63"/>
+<category term="SHPD_ICON_v533: sprites/npc/whiteling.png, 0, 0, 16, 16"/>
+<!-- 新闻卡片里面的内容 -->
+<summary type="html">
+由于之前的合作服务器炸了，游戏新闻现在重新建立。
+正好今天初五，为马日，寓意马到成功
+为大家先献上金蝶2.0，以及一些优化
+祝各位蛇年大吉，巳巳如意，新年快乐！！！
+</summary>
+</entry>
+<entry>
+<title type="html">{魔绫像素地牢祝各位小年大吉{</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-2-9T03:00:00+00:00</published>
+<updated>3057-2-9T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v464: ITEM: 500"/>
+<summary type="html">
+全新兑换码:MLPD_XiaonianYei_
+
+由于游戏高亮显示问题，
+MLPD后接英文下划线哦
+
+兑换码内容：
+2025枚钴币，一些核子可乐，
+一些龙王祝福合剂，几个全肉大饼
+
+{兑换码有效期至：2025.1.28(除夕)---23：00前{
+
+温馨提示：
+若要兑换，需要更新最新版0.8.0.5才可。
+兑换码仅有一次兑换机会，
+目前游戏内兑换和0层兑换都已实装，请根据自己的心意去选择你自己最合适的兑换时机。
+
+再次祝各位小年快乐！！！
+辉梦-魔绫像素地牢运营组
+2025/1/22 01:20 发布
+</summary>
+</entry>
+<entry>
+<title type="html">新兑换码-SP4</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-2-5T03:00:00+00:00</published>
+<updated>3057-2-5T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v464: ITEM: 420"/>
+<summary type="html">
+你需要更新到SP4版本才可以兑换，
+游戏内推送尚未开始，
+目前仅魔绫总群进行了推送
+
+新兑换码：
+SP4-READY
+礼包内容：
+400钴币，400金币初始补给
+
+同时，
+MLPD_SORRY兑换码下架
+</summary>
+</entry>
+<entry>
+<title type="html">第一批兑换码</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-2-4T03:00:00+00:00</published>
+<updated>3057-2-4T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v464: ITEM: 520"/>
+<summary type="html">
+需要使用最新版，SP3++
+兑换码大全：
+MLPD下划线Christmas-2024
+MLPD下划线SORRY
+MLPDZERO
+辉梦-魔绫像素地牢-运营组
+
+由于显示问题，下划线请手动打（英文的下划线哦）
+
+再次祝各位圣诞节快乐
+</summary>
+</entry>
+<entry>
+<title type="html">魔绫像素地牢-制作组特别通讯#3</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-2-1T03:00:00+00:00</published>
+<updated>3057-2-1T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/npc/pinkfox.png, 0, 0, 16, 16"/>
+<summary type="html">
+你们好啊，我是粉色狐狸，我即将在下个版本和大家见面，
+接下来，我将为大家带来新的一期制作组通讯!
+
+于前几日更新的V0.7.9.9-SP已经有一段时间，
+在此希望各位玩家在新版本玩得高兴。
+寂灭灯火是一次新的尝试，以及果子二代。
+它们还有很多需要改进的地方，我们会继续为大家带来更多有趣的东西。
+以下，是特别通讯的节点。
+
+▶通讯节点1----千变万化，惊鸿万物
+变幻莫测这个挑战已经有一段时间了，
+对于里面的小BOSS和变幻莫测的一些新的改进正在幕后准备中。
+在即将到来的新变幻莫测中，你们将遭遇更多有趣的事件。
+变幻莫测预计将于12月上旬更新，敬请期待。
+与之同步上线还有四大惊鸿奖。
+
+▶通讯节点2----血月古堡（万圣DLC）
+上一次根据提丰的一些线索，我们知道古堡仍有谜题尚未揭开。
+在血月季到来之际，一位神秘的信使再次指引我们前往古堡。
+魔绫像素地牢-血月古堡外传，将于12月中旬更新，敬请期待。
+
+▶通讯节点3----万物尘埃，虚无试炼
+世间万物对于宇宙来说都是一粒尘埃，熵增不可避免，
+祂想要考验你是否能成为这个世界的转机。
+你会接受考验吗？
+魔绫像素地牢-虚无幻梦之章（泡泡BOSS战完整版）
+将于12月下旬更新，敬请期待。
+
+▶以上，即为本次特别通讯内容◀
+辉梦工作室–魔绫制作组
+▶通用兑换码：
+MLPDZERO
+【后续0.8版本更新后即可领取奖励】
+</summary>
+</entry>
+<entry>
+<title type="html">万圣内容延期说明</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-31T03:00:00+00:00</published>
+<updated>3057-1-31T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/npc/ATRI.png, 0, 0, 16, 16"/>
+<summary type="html">
+由于近期我现实生活出现了巨大变故，
+Ling暂时无法投入到万圣节内容开发，
+为了确保大家能玩到完整且稳定万圣内容，
+万圣内容将延期更新，具体请关注游戏内新闻说明。
+
+不过大家不用担心，今日会有一次底层迭代更新，
+修复了许多bug并且同步了破碎2.5.0的底层系统，
+以及一些调整
+
+希望这个版本可以让大家玩魔绫有一种新的感觉，
+万圣内容将会在后续更新，
+具体详见后续游戏动态情报。
+
+辉梦-魔绫运营组 2024-10-30 23：25
+</summary>
+</entry>
+<entry>
+<title type="html">信：学徒</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-29T03:00:00+00:00</published>
+<updated>3057-1-29T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/hollow/apprentice_witch.png, 96, 0, 16, 16"/>
+<summary type="html">
+并不是谁的天资聪慧，就能获得"魔女"的称号
+
+这一句话，是众多 见习魔女 天天在念叨的一句话
+
+对于她们而言，从见习成为正式，
+有一些可能一生到尽头都无法成为
+
+每当血月之时，祂会降临，
+并考验她们的实力，
+最终，进行 优胜劣汰
+
+胜者成为正式的魔女，
+败者继续当见习或者自我消散.......
+
+祂不言，而我也没有办法.......
+这是我们最终的结局........
+除非，祂能离开.......
+
+魔绫像素地牢-血月古堡外传
+敬请期待
+</summary>
+</entry>
+<entry>
+<title type="html">信：躯壳</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-27T03:00:00+00:00</published>
+<updated>3057-1-27T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/hollow/frankenstein.png, 80, 0, 16, 20"/>
+<summary type="html">
+艾莉很喜欢制作人偶，每当血月升起时。
+她的家中就会出现很多人偶，
+可艾莉不知道的是，人偶已经在她的栩栩如生雕刻下，被给予了生命。
+
+又是一次血月升起，可艾莉家却空荡荡的。
+
+人偶们借着血月的光芒，开始动了起来。
+它们四处寻找自己的主人，
+却找不到她的踪迹，
+时间一长，它们丧失了理智，
+会寻找任何活着的东西，撕碎它们的灵魂！
+
+而这癫狂的模样，正是她所期待的模样。
+
+我喜欢它们这样癫狂的模样，
+所以现在我可以成为你的一份子了吗?
+
+艾莉小姐，我■■■，■■■■■。
+
+--------Dr.艾莉
+
+魔绫像素地牢-血月古堡外传
+敬请期待
+</summary>
+</entry>
+<entry>
+<title type="html">信：光芒</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-26T03:00:00+00:00</published>
+<updated>3057-1-26T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/hollow/Silence_Witch.png, 80, 0, 16, 16"/>
+<summary type="html">
+时隔十月，血月再次升起，
+若隐若现的古堡再次浮出水面。
+也许提丰已经警告了你们古堡其中的危险，
+
+但这一次我们必定需要找出其中的真相。
+
+冒险者，你是否可以成为祂所看中的种子
+还是说，你会与我们决一死战，
+
+一切的结局，等待你去书写
+
+而在最后幽寂的光芒消逝前，
+
+祂 会见证你的成长！
+--------Silence
+
+魔绫像素地牢-血月古堡外传
+敬请期待
+</summary>
+</entry>
+<entry>
+<title type="html">关于新模式的一些注意事项</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-17T03:00:00+00:00</published>
+<updated>3057-1-17T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v464: ITEM: 262"/>
+<summary type="html">
+目前百变之旅bug较多，还请各位谨慎游玩。
+我会在后续版本对百变之旅进行调整。
+</summary>
+</entry>
+<entry>
+<title type="html">v0.7.6.5-更新公告</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-16T03:00:00+00:00</published>
+<updated>3057-1-16T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/greenslting.png, 0, 0, 16, 20"/>
+<summary type="html">
+魔绫像素地牢--07月08日更新公告 
+
+感谢您对《魔绫像素地牢》的关注与支持。
+《魔绫像素地牢》计划将于2024年07月08日16:00 ~ 16:30 期间进行游戏本体版本升级。
+更新完成后，你可体验全新V0.7.6.5版本。
+
+计划更新时间：
+2024年07月08日16:00 ~ 16:30 期间
+
+更新内容：
+◆同步破碎2.4.2，饰品系统和炼金系统等内容也会相继同步
+◆BossRush七月内容扩展
+◆新附魔：流逝即将到来
+◆糯米大剑加入落白商店
+◆基因突变挑战内容调整优化
+◆变幻莫测挑战内容调整优化
+◆战士前两层天赋实装和优化
+◆部分UI优化和修复
+◆修复上个版本的各种Bug
+◆全新特殊模式：百变之旅开启
+
+更新补偿：冰蓝方孔钴币*200
+补偿范围：已经支持钴币更新补偿的所有版本
+
+更新开始后，你可以在以下渠道获取更新：
+1.官方总群获取新版本
+2.游戏内部推送后自行更新
+3.魔绫像素地牢博客上更新
+4.魔绫像素地牢下载站点中心更新
+
+[本次更新不排除延迟更新的可能，如若延迟则请关注官方发布的具体发布时间[
+
+2024.07.08 03:30发布
+辉梦-魔绫像素地牢运营组
+</summary>
+</entry>
+<entry>
+<title type="html">0.7.5.0挑战异常问题</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-10T03:00:00+00:00</published>
+<updated>3057-1-10T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/npc/lostwhite.png, 0, 0, 16, 18"/>
+<summary type="html">
+关于部分玩家的挑战异常，无法开启挑战的问题
+临时解决方案如下:
+1.开个新游戏
+2.菜单 选择重新开始，
+在人生模拟器中只勾选 删除存档 并确定
+后续挑战选择将会正常，并且无需再次处理
+
+在下次更新之前，请先使用此临时方案进行解决。
+此问题带来的诸多不便还请谅解，感谢您的支持。
+</summary>
+</entry>
+<entry>
+<title type="html">龙腾虎跃-高考加油</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-9T03:00:00+00:00</published>
+<updated>3057-1-9T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/npc/ATRI.png, 0, 0, 16, 16"/>
+<summary type="html">
+祝各位2024的高考小伙伴们：
+高考加油！！！
+祝各位：
+金榜题名，龙标夺归！
+考的全会，蒙的全对，
+下笔如有神！逢考必过！
+</summary>
+</entry>
+<entry>
+<title type="html">0.7.5.0更新预告</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-8T03:00:00+00:00</published>
+<updated>3057-1-8T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/npc/null.png, 0, 0, 16, 18"/>
+<summary type="html">
+魔绫像素地牢-魔法结晶【六月核心主题】
+
+V0.7.5.0更新预告:
+感谢你对魔绫像素地牢的支持，根据六月航行日志，
+我们将在6月4日进行新版本更新，
+更新版本推送后，
+您可以通过游戏内部 or 群文件 or 官网进行更新
+
+本次更新主要针对于：
+查种器，部分法杖数值调整，
+部分武器数值优化，
+一些新的内容，部分UI优化迭代
+更多更新，敬请期待新版本
+
+辉梦-魔绫运营组 2024-6-3
+</summary>
+</entry>
+<entry>
+<title type="html">惊鸿杯陆续实装预告</title>
+<link href="#" rel="alternate" type="text/html" title="ShatteredPD v1.0.0 and iOS release!"/>
+<published>3057-1-7T03:00:00+00:00</published>
+<updated>3057-1-7T03:00:00+00:00</updated>
+<id>https://shatteredpixel.com/blog/coming-soon-to-shattered-seeded-runs</id>
+<author>
+<name>JDSA Ling</name>
+</author>
+<category term="SHPD_INGAME"/>
+<category term="SHPD_ICON_v533: sprites/npc/lostwhite.png, 0, 0, 16, 18"/>
+<summary type="html">
+最近正在计划实装一些惊鸿杯获奖物品，
+敬请期待后续版本！
+</summary>
+</entry>
+</feed>

@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 90,
-      "versionName": "1.8.8-BETA2",
+      "versionCode": 91,
+      "versionName": "1.8.8-BETA4",
       "outputFile": "android-release.apk"
     }
   ],

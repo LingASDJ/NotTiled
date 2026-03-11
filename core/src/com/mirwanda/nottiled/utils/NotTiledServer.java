@@ -397,9 +397,9 @@ public class NotTiledServer {
         game.tbHost = new TextButton(game.z.runserver,game.skin);
 
         //知捷云
-        game.tfRemoteIP = new TextField("127.0.0.1",game.skin);
+        game.tfRemoteIP = new TextField("45.125.44.66",game.skin);
 
-        game.tfPort = new TextField("45372",game.skin);
+        game.tfPort = new TextField("20254",game.skin);
         game.tbJoin = new TextButton(game.z.join,game.skin);
         game.roomName = new TextField("room1", game.skin);
         game.uniqueID = new TextField("Steve", game.skin);

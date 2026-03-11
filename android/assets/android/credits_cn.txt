@@ -1,17 +1,17 @@
-l>NotTiled Credits
-m>Developer
+l>NotTiled 制作组
+m>开发者
 s>WandsMire
-l>NotTiled CN
-m>Developer
+l>NotTiled CN 制作组
+m>主开发者
 s>JDSA Ling
-m> Soft Test
+m> 软件测试
 s>[ECM]HamSter
-m>Patrons
+m>赞助者
 s>Luke (Rusted Warfare developer)
 s>Nathan Thompson
-m>Supporter
+m>支持者
 s>Mortimer
-m>Contributors
+m>贡献者
 s>Reik-RTS
 s>Jose
 s>Ralsei (General Airon)
@@ -20,11 +20,11 @@ s>PoLLeN
 s>KusVoSlavuSatane
 s>Mark
 s>Gato
-m>CN-MiFan_Department:
+m>中国-特别贡献者：
 s>RT1_JMJS
 s>[ECM]HamSter
 s>JDSA Ling
-m>Translators
+m>翻译人员
 s>WandsMire (English & Bahasa)
 s>Paon (Japanese)
 s>PasteK (French)
@@ -33,11 +33,11 @@ s>Tstis (Russian & Ukrainian)
 s>General Airon (Tagalog)
 s>RT1_JMJS (Chinese)
 s>[ECM]HamSter (Chinese)
-s>Mustafa Hilmi Pehlivanlı (Turkish)
+s>Mustafa Hilmi Pehlivanl? (Turkish)
 s>REDGRAUN (Belarusian)
-m>Assets
+m>素材
 s>Kyrise's Free 16x16 RPG Icon Pack
-m>Special thanks to
+m>特别感谢
 s>Thorbjorn Lindeijer
 s>Luke
 s>VIP Janta
@@ -46,6 +46,3 @@ s>Textual TEttinger
 s>Rusted Warfare community
 s>All NotTiled users
 s>Contact me if you think I should put you name here :)
-
-
-

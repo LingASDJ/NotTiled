@@ -29,8 +29,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 33
         compileSdkVersion 34
-        versionCode 90
-        versionName "1.8.8-BETA2"
+        versionCode 91
+        versionName "1.8.8-BETA4"
         multiDexEnabled true
     }
     buildTypes {
